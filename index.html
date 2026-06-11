@@ -1,370 +1,638 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Sannu & Mossu: Echoes of Destiny</title>
+<title>Sannu &amp; Mossu: Echoes of Destiny — Chapter 1</title>
+<meta name="description" content="A cinematic visual novel RPG. Follow Sannu and Mossu as their destiny unfolds. Chapter 1: The Promise Park.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;background:#0b0e1a;font-family:'Georgia',serif;color:#eee;overflow:hidden;}
-  #stage{
-    position:relative;width:100vw;height:100vh;height:100dvh;
-    background:linear-gradient(180deg,#1a2238 0%,#0b0e1a 60%,#05060c 100%);
-    display:flex;align-items:flex-end;justify-content:center;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #f5c842;
+    --blue-glow: #7fd1ff;
+    --red-glow: #ff7070;
+    --deep-bg: #0a0714;
+    --sannu-color: #4fc3f7;
+    --mossu-color: #ef5350;
   }
-  /* park scene elements */
-  .scene{position:absolute;inset:0;overflow:hidden;}
-  .sun{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;
-    background:radial-gradient(circle,#ffd9a0,#ff9f6b 60%,transparent 75%);filter:blur(2px);opacity:.8;}
-  .hill{position:absolute;bottom:0;width:100%;height:35%;background:#1f2a44;border-radius:50% 50% 0 0/100% 100% 0 0;}
-  .hill2{position:absolute;bottom:0;width:120%;left:-10%;height:25%;background:#16203a;border-radius:50% 50% 0 0/100% 100% 0 0;}
-  .tree{position:absolute;bottom:25%;width:0;height:0;}
-  .tree .trunk{width:8px;height:60px;background:#3a2c20;margin:0 auto;}
-  .tree .leaves{width:60px;height:60px;border-radius:50%;background:#2e4a33;position:absolute;top:-40px;left:-26px;box-shadow:0 0 20px #2e4a3380;}
+  html, body { height: 100%; width: 100%; background: var(--deep-bg); font-family: 'Lato', sans-serif; color: #eee; overflow: hidden; }
 
-  /* characters - silhouettes with glow */
-  .char{
-    position:absolute;bottom:30%;width:110px;height:240px;
-    transition:transform .4s ease, opacity .4s ease;
-  }
-  .char svg{width:100%;height:100%;filter:drop-shadow(0 0 18px var(--glow));}
-  #sannu{left:28%;--glow:#7fd1ff;}
-  #mossu{right:28%;--glow:#ff7f7f;}
-  .char.dim{opacity:.35;filter:grayscale(60%);}
-  .char.hidden{opacity:0;pointer-events:none;}
-  .char.bounce{animation:bounce .6s ease;}
-  @keyframes bounce{0%{transform:translateY(0)}30%{transform:translateY(-12px)}60%{transform:translateY(0)}100%{transform:translateY(0)}}
+  #stage { position: relative; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
 
-  /* dialogue box */
-  #dialogue{
-    position:absolute;bottom:0;left:0;width:100%;
-    background:linear-gradient(180deg,transparent,#05060cdd 25%);
-    padding:16px 16px 20px;
-    box-sizing:border-box;
-  }
-  #namebox{
-    display:inline-block;padding:6px 18px;border-radius:8px 8px 0 0;
-    font-weight:bold;letter-spacing:2px;font-size:13px;text-transform:uppercase;
-    margin-bottom:-2px;
-  }
-  #namebox.sannu{background:#7fd1ff;color:#06203a;}
-  #namebox.mossu{background:#ff7f7f;color:#3a0606;}
-  #namebox.narration{background:#888;color:#111;}
-  #textbox{
-    background:#05060cdd;border:1px solid #ffffff22;border-radius:0 8px 8px 8px;
-    padding:16px 18px;font-size:16px;line-height:1.5;min-height:70px;
-    max-height:32vh;overflow-y:auto;
-  }
-  #continueHint{
-    text-align:right;margin-top:6px;font-size:11px;opacity:.6;
-    animation:pulse 1.6s infinite;
-  }
-  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+  .scene { position: absolute; inset: 0; background: linear-gradient(180deg, #0d1a0a 0%, #1a2e10 20%, #2a4a1e 40%, #1c3a2a 65%, #0e2018 85%, #060e0a 100%); overflow: hidden; }
 
-  /* choices */
-  #choices{
-    position:absolute;bottom:0;left:0;width:100%;height:100%;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
-    background:#05060cdd;
-  }
-  .choiceBtn{
-    background:#10182bcc;border:1px solid #ffffff33;color:#fff;
-    font-family:inherit;font-size:16px;padding:14px 20px;border-radius:8px;
-    cursor:pointer;width:90%;max-width:400px;text-align:left;transition:.2s;
-  }
-  .choiceBtn:hover{background:#7fd1ff33;border-color:#7fd1ff;transform:translateX(6px);}
-  .hidden{display:none!important;}
+  .star { position: absolute; border-radius: 50%; background: #fff; animation: twinkle var(--dur, 3s) infinite ease-in-out; opacity: var(--op, 0.6); }
+  @keyframes twinkle { 0%, 100% { opacity: var(--op, 0.6); transform: scale(1); } 50% { opacity: 0.1; transform: scale(0.5); } }
 
-  /* relationship meter */
-  #relwrap{position:absolute;top:18px;right:24px;font-size:12px;letter-spacing:1px;text-align:right;}
-  #relbar{width:160px;height:8px;background:#222;border-radius:4px;overflow:hidden;margin-top:4px;border:1px solid #ffffff33;}
-  #relfill{height:100%;width:30%;background:linear-gradient(90deg,#ff7f7f,#7fd1ff);transition:width .6s;}
+  .sun { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, #fffde7, #fff9c4 30%, #ffd54f 60%, #ff8f00 80%, transparent 95%); box-shadow: 0 0 80px 30px rgba(255,210,50,0.4), 0 0 160px 60px rgba(255,160,0,0.2), 0 0 240px 80px rgba(255,120,0,0.08); animation: sunPulse 4s ease-in-out infinite; }
+  @keyframes sunPulse { 0%,100%{box-shadow:0 0 80px 30px rgba(255,210,50,.4),0 0 160px 60px rgba(255,160,0,.2);} 50%{box-shadow:0 0 100px 40px rgba(255,210,50,.55),0 0 200px 80px rgba(255,160,0,.28);} }
 
-  /* chapter title card */
-  #titlecard{
-    position:absolute;inset:0;background:#05060c;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:14px;z-index:50;
-    transition:opacity 1.2s;
-  }
-  #titlecard h1{font-size:38px;letter-spacing:6px;color:#7fd1ff;text-shadow:0 0 14px #7fd1ff80;}
-  #titlecard h2{font-size:20px;letter-spacing:10px;color:#ff7f7f;font-weight:normal;}
-  #titlecard p{font-size:13px;opacity:.6;letter-spacing:2px;}
-  #titlecard.fadeout{opacity:0;pointer-events:none;}
+  /* Sun rays */
+  .sun-ray { position: absolute; top: 5%; left: 50%; transform-origin: bottom center; width: 3px; background: linear-gradient(180deg, rgba(255,220,80,0.15), transparent); border-radius: 3px; animation: rayRotate 20s linear infinite; }
+  @keyframes rayRotate { from{transform:translateX(-50%) rotate(0deg);} to{transform:translateX(-50%) rotate(360deg);} }
 
-  /* fireflies / particles */
-  .firefly{position:absolute;width:4px;height:4px;border-radius:50%;background:#ffe9a0;
-    box-shadow:0 0 8px #ffe9a0; opacity:.7; animation:float 6s infinite ease-in-out;}
-  @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-30px) translateX(15px)}}
+  .cloud { position: absolute; border-radius: 50px; background: rgba(255,255,240,0.06); filter: blur(10px); animation: drift var(--dur, 30s) linear infinite; }
+  @keyframes drift { from{transform:translateX(-220px);} to{transform:translateX(110vw);} }
+
+  /* Layered hills */
+  .hills-back { position: absolute; bottom: 0; width: 110%; height: 48%; left: -5%; background: linear-gradient(180deg, #0d2010 0%, #071408 100%); border-radius: 60% 60% 0 0 / 80% 80% 0 0; }
+  .hills-mid { position: absolute; bottom: 0; width: 110%; height: 34%; left: -5%; background: linear-gradient(180deg, #142b16 0%, #0a1a0a 100%); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+  .hills-front { position: absolute; bottom: 0; width: 110%; height: 22%; left: -5%; background: linear-gradient(180deg, #1c3820 0%, #0e1f12 100%); border-radius: 30% 70% 0 0 / 50% 50% 0 0; }
+  .ground { position: absolute; bottom: 0; width: 100%; height: 10%; background: linear-gradient(180deg, #1a3a1e 0%, #0a1a0c 100%); }
+
+  /* Trees */
+  .tree-group { position: absolute; bottom: 10%; display: flex; flex-direction: column; align-items: center; }
+  .tree-leaves { border-radius: 50%; box-shadow: 0 0 25px rgba(30,80,40,0.5); }
+  .tree-trunk { background: linear-gradient(180deg, #3d2c1e, #2a1f14); border-radius: 3px; }
+
+  /* Grass blades */
+  .grass { position: absolute; bottom: 10%; width: 3px; border-radius: 3px 3px 0 0; animation: grassSway var(--gd,2.5s) ease-in-out infinite; transform-origin: bottom center; }
+  @keyframes grassSway { 0%,100%{transform:rotate(-6deg);} 50%{transform:rotate(6deg);} }
+
+  /* Park path */
+  .park-path { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 22%; background: linear-gradient(180deg, rgba(180,150,100,0.15), rgba(180,150,100,0.08)); border-radius: 10px 10px 0 0; }
+
+  /* Park bench */
+  .bench { position: absolute; bottom: 17%; left: 50%; transform: translateX(-50%); width: 130px; height: 50px; }
+  .bench-back { position: absolute; top: -18px; left: 0; right: 0; height: 15px; background: linear-gradient(180deg, #6d4c41, #4e342e); border-radius: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.5); }
+  .bench-seat { position: absolute; top: 0; left: 0; right: 0; height: 14px; background: linear-gradient(180deg, #6d4c41, #4e342e); border-radius: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.5); }
+  .bench-leg { position: absolute; bottom: 0; width: 10px; height: 30px; background: #3e2723; border-radius: 3px; }
+  .bench-leg.left { left: 12px; } .bench-leg.right { right: 12px; }
+
+  /* Flowers */
+  .flower { position: absolute; bottom: 10%; font-size: var(--size,16px); animation: sway var(--dur2,2.5s) ease-in-out infinite; opacity: 0.85; }
+  @keyframes sway { 0%,100%{transform:rotate(-5deg);} 50%{transform:rotate(5deg);} }
+
+  /* Fireflies */
+  .firefly { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #ffe082; box-shadow: 0 0 10px 3px #ffd54f; animation: flyAround var(--fdur,6s) ease-in-out infinite; opacity: 0; }
+  @keyframes flyAround { 0%{opacity:0;transform:translate(0,0);} 20%{opacity:.9;} 50%{opacity:.6;transform:translate(var(--fx,40px),var(--fy,-30px));} 80%{opacity:.9;} 100%{opacity:0;transform:translate(var(--fx2,-20px),var(--fy2,10px));} }
+
+  /* Butterflies */
+  .butterfly { position: absolute; animation: flutter var(--bd,4s) ease-in-out infinite; font-size: var(--bs,20px); }
+  @keyframes flutter { 0%{transform:translate(0,0) rotate(-5deg);} 25%{transform:translate(20px,-15px) rotate(5deg);} 50%{transform:translate(40px,0) rotate(-3deg);} 75%{transform:translate(20px,10px) rotate(4deg);} 100%{transform:translate(0,0) rotate(-5deg);} }
+
+  /* ===== CHARACTERS ===== */
+  .char { position: absolute; bottom: 17%; width: 140px; height: 300px; transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease; }
+  .char svg { width: 100%; height: 100%; }
+  #sannu { left: 20%; }
+  #mossu { right: 20%; }
+  .char.hidden { opacity: 0; pointer-events: none; transform: translateY(35px); }
+  .char.dim { opacity: 0.28; filter: saturate(0.2) brightness(0.5); }
+  .char.bounce { animation: charBounce 0.8s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes charBounce { 0%{transform:translateY(45px);opacity:0;} 100%{transform:translateY(0);opacity:1;} }
+  .char.speak { animation: charSpeak 0.35s ease; }
+  @keyframes charSpeak { 0%{transform:translateY(0);} 35%{transform:translateY(-10px);} 65%{transform:translateY(0);} }
+
+  /* ===== HUD ===== */
+  #relwrap { position: absolute; top: 18px; right: 18px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; z-index: 20; }
+  .bond-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; color: #f5c842; text-shadow: 0 0 10px rgba(245,200,66,0.7); }
+  #relbar { width: 160px; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; border: 1px solid rgba(255,255,255,0.12); overflow: hidden; }
+  #relfill { height: 100%; background: linear-gradient(90deg, #ef5350, #f5c842, #4fc3f7); border-radius: 3px; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 0 8px rgba(245,200,66,0.5); }
+  .bond-hearts { font-size: 12px; color: #f48fb1; text-shadow: 0 0 6px #f48fb1; }
+  #chapterTag { position: absolute; top: 18px; left: 18px; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; background: rgba(0,0,0,0.35); backdrop-filter: blur(10px); z-index: 20; }
+
+  /* ===== DIALOGUE ===== */
+  #dialogue { position: absolute; bottom: 0; left: 0; width: 100%; padding: 0 18px 18px; z-index: 20; }
+  .dialogue-inner { background: linear-gradient(135deg, rgba(8,5,18,0.94), rgba(16,10,32,0.96)); border: 1px solid rgba(245,200,66,0.18); border-radius: 16px; backdrop-filter: blur(20px); overflow: hidden; box-shadow: 0 -4px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04); position: relative; }
+  .dialogue-inner::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--speaker-color,#f5c842),transparent); transition:background 0.4s ease; }
+  #namebox { display:inline-flex; align-items:center; gap:8px; padding:10px 20px 0 20px; font-family:'Cinzel',serif; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--speaker-color,#f5c842); text-shadow:0 0 12px var(--speaker-color,rgba(245,200,66,.7)); }
+  .name-dot { width:6px; height:6px; border-radius:50%; background:var(--speaker-color,#f5c842); box-shadow:0 0 6px var(--speaker-color,#f5c842); animation:dotPulse 1.5s ease-in-out infinite; }
+  @keyframes dotPulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  #textbox { padding:12px 20px 14px; font-size:15px; line-height:1.7; color:rgba(255,255,255,0.88); min-height:70px; max-height:28vh; overflow-y:auto; letter-spacing:0.3px; }
+  #continueHint { text-align:right; padding:0 20px 14px; font-size:11px; letter-spacing:2px; color:rgba(255,255,255,0.35); animation:hintPulse 2s ease-in-out infinite; }
+  @keyframes hintPulse { 0%,100%{opacity:.3;} 50%{opacity:.9;} }
+
+  /* ===== CHOICES ===== */
+  #choices { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:radial-gradient(ellipse at center,rgba(8,5,18,.97),rgba(3,2,8,.98)); z-index:30; padding:20px; }
+  .choices-title { font-family:'Cinzel',serif; font-size:11px; letter-spacing:4px; color:rgba(245,200,66,.55); margin-bottom:8px; }
+  .choiceBtn { background:linear-gradient(135deg,rgba(15,10,30,.92),rgba(25,16,45,.92)); border:1px solid rgba(245,200,66,.18); color:rgba(255,255,255,.85); font-family:'Lato',sans-serif; font-size:15px; padding:16px 24px; border-radius:12px; cursor:pointer; width:100%; max-width:450px; text-align:left; transition:all .3s cubic-bezier(.34,1.56,.64,1); position:relative; overflow:hidden; backdrop-filter:blur(10px); box-shadow:0 4px 20px rgba(0,0,0,.35); }
+  .choiceBtn::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,#f5c842,#4fc3f7); opacity:0; transition:opacity .3s; }
+  .choiceBtn::after { content:'▶'; position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:10px; color:#f5c842; opacity:0; transition:opacity .3s,right .3s; }
+  .choiceBtn:hover { background:linear-gradient(135deg,rgba(35,22,70,.95),rgba(48,28,80,.95)); border-color:rgba(245,200,66,.5); transform:translateX(8px) scale(1.01); box-shadow:0 6px 30px rgba(0,0,0,.5),0 0 20px rgba(245,200,66,.07); color:#fff; }
+  .choiceBtn:hover::before { opacity:1; }
+  .choiceBtn:hover::after { opacity:1; right:14px; }
+
+  /* ===== TITLE CARD ===== */
+  #titlecard { position:absolute; inset:0; background:radial-gradient(ellipse at center,#0d1a08 0%,#060e04 70%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; z-index:50; transition:opacity 1.5s ease; }
+  .title-ornament { width:120px; height:1px; background:linear-gradient(90deg,transparent,#f5c842,transparent); margin:8px 0; }
+  #titlecard h1 { font-family:'Cinzel',serif; font-size:42px; letter-spacing:8px; background:linear-gradient(135deg,#f5c842,#fffde7,#f5c842); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 25px rgba(245,200,66,.55)); }
+  #titlecard h2 { font-family:'Cinzel',serif; font-size:13px; letter-spacing:14px; color:rgba(255,255,255,.45); font-weight:400; }
+  #titlecard .chapter-name { font-family:'Lato',sans-serif; font-size:14px; letter-spacing:4px; color:#a5d6a7; font-weight:300; text-shadow:0 0 15px rgba(165,214,167,.6); }
+  #titlecard .start-hint { position:absolute; bottom:38px; font-size:12px; letter-spacing:3px; color:rgba(255,255,255,.28); animation:hintPulse 2.5s ease-in-out infinite; }
+  .title-particle { position:absolute; width:3px; height:3px; border-radius:50%; background:#f5c842; opacity:.6; animation:titleFloat var(--dur3,5s) ease-in-out infinite; }
+  @keyframes titleFloat { 0%,100%{transform:translateY(0) translateX(0) scale(1);opacity:0;} 20%{opacity:.6;} 50%{transform:translateY(-80px) translateX(var(--tx,20px)) scale(1.5);opacity:.8;} 80%{opacity:.3;} }
+  #titlecard.fadeout { opacity:0; pointer-events:none; }
+
+  .hidden { display:none !important; }
+  #textbox::-webkit-scrollbar { width:4px; }
+  #textbox::-webkit-scrollbar-thumb { background:rgba(245,200,66,.3); border-radius:2px; }
+
+  .ripple { position:absolute; border-radius:50%; width:20px; height:20px; background:rgba(245,200,66,.25); pointer-events:none; animation:rippleOut .6s ease-out forwards; transform:translate(-50%,-50%); }
+  @keyframes rippleOut { to{width:90px;height:90px;opacity:0;} }
 </style>
 </head>
 <body>
 <div id="stage">
-  <div class="scene">
+
+  <div class="scene" id="scene">
     <div class="sun"></div>
-    <div class="hill2"></div>
-    <div class="hill"></div>
-    <div class="tree" style="left:8%"><div class="leaves"></div><div class="trunk"></div></div>
-    <div class="tree" style="left:78%"><div class="leaves"></div><div class="trunk"></div></div>
-    <div class="tree" style="left:50%;bottom:22%"><div class="leaves"></div><div class="trunk"></div></div>
+    <!-- Sun rays -->
+    <div class="sun-ray" style="height:200px;left:calc(50% - 1px);top:10%;transform-origin:top center;animation-duration:25s;opacity:.4;"></div>
+    <!-- Clouds -->
+    <div class="cloud" style="width:200px;height:55px;top:20%;left:-5%;--dur:38s;"></div>
+    <div class="cloud" style="width:130px;height:38px;top:28%;left:25%;--dur:52s;animation-delay:-18s;"></div>
+    <div class="cloud" style="width:170px;height:44px;top:14%;left:62%;--dur:44s;animation-delay:-10s;"></div>
+    <!-- Hills -->
+    <div class="hills-back"></div>
+    <div class="hills-mid"></div>
+    <div class="hills-front"></div>
+    <div class="ground"></div>
+    <!-- Park path -->
+    <div class="park-path"></div>
+    <!-- Trees -->
+    <div class="tree-group" style="left:3%">
+      <div class="tree-leaves" style="width:75px;height:75px;background:radial-gradient(circle,#2e7d32,#1b5e20);"></div>
+      <div class="tree-trunk" style="width:11px;height:55px;"></div>
+    </div>
+    <div class="tree-group" style="left:10%">
+      <div class="tree-leaves" style="width:52px;height:52px;background:radial-gradient(circle,#388e3c,#1b5e20);"></div>
+      <div class="tree-trunk" style="width:8px;height:38px;"></div>
+    </div>
+    <div class="tree-group" style="right:3%">
+      <div class="tree-leaves" style="width:82px;height:82px;background:radial-gradient(circle,#2e7d32,#1b5e20);"></div>
+      <div class="tree-trunk" style="width:11px;height:58px;"></div>
+    </div>
+    <div class="tree-group" style="right:12%">
+      <div class="tree-leaves" style="width:58px;height:58px;background:radial-gradient(circle,#388e3c,#1b5e20);"></div>
+      <div class="tree-trunk" style="width:9px;height:42px;"></div>
+    </div>
+    <!-- Grass -->
+    <div class="grass" style="left:32%;height:18px;background:#2e7d32;--gd:2.1s;animation-delay:.3s;"></div>
+    <div class="grass" style="left:34%;height:14px;background:#388e3c;--gd:2.6s;animation-delay:.8s;"></div>
+    <div class="grass" style="left:60%;height:16px;background:#2e7d32;--gd:2.3s;"></div>
+    <div class="grass" style="left:62%;height:12px;background:#43a047;--gd:2.8s;animation-delay:1s;"></div>
+    <div class="grass" style="left:20%;height:15px;background:#388e3c;--gd:2.4s;animation-delay:.5s;"></div>
+    <div class="grass" style="left:75%;height:17px;background:#2e7d32;--gd:2.2s;animation-delay:.2s;"></div>
+    <!-- Flowers -->
+    <div class="flower" style="left:28%;--size:18px;--dur2:2.2s;">🌸</div>
+    <div class="flower" style="left:36%;--size:15px;--dur2:3s;animation-delay:.5s;">🌼</div>
+    <div class="flower" style="left:57%;--size:17px;--dur2:2.8s;animation-delay:1s;">🌸</div>
+    <div class="flower" style="left:64%;--size:13px;--dur2:2s;animation-delay:.3s;">🌻</div>
+    <div class="flower" style="left:18%;--size:14px;--dur2:3.2s;animation-delay:.8s;">🌼</div>
+    <div class="flower" style="left:72%;--size:15px;--dur2:2.5s;animation-delay:.6s;">🌸</div>
+    <!-- Butterflies -->
+    <div class="butterfly" style="left:40%;bottom:35%;--bd:5s;--bs:18px;animation-delay:1s;">🦋</div>
+    <div class="butterfly" style="left:55%;bottom:42%;--bd:7s;--bs:14px;animation-delay:3s;">🦋</div>
+    <!-- Bench -->
+    <div class="bench">
+      <div class="bench-back"></div>
+      <div class="bench-seat"></div>
+      <div class="bench-leg left"></div>
+      <div class="bench-leg right"></div>
+    </div>
   </div>
 
-  <!-- Sannu silhouette -->
+  <!-- ===== SANNU — Fair skin, black ponytail, blue glasses, light blue hoodie ===== -->
   <div class="char hidden" id="sannu">
-    <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="50" cy="210" rx="34" ry="8" fill="#000" opacity="0.3"/>
-      <!-- legs -->
-      <rect x="38" y="150" width="10" height="55" rx="4" fill="var(--glow)"/>
-      <rect x="52" y="150" width="10" height="55" rx="4" fill="var(--glow)"/>
-      <!-- dress/body -->
-      <path d="M30 90 L70 90 L78 155 L22 155 Z" fill="var(--glow)"/>
-      <!-- arms -->
-      <rect x="18" y="95" width="9" height="50" rx="4" fill="var(--glow)"/>
-      <rect x="73" y="95" width="9" height="50" rx="4" fill="var(--glow)"/>
-      <!-- head -->
-      <circle cx="50" cy="65" r="26" fill="var(--glow)"/>
-      <!-- hair -->
-      <path d="M24 60 Q20 30 50 28 Q80 30 76 60 Q78 75 70 80 L68 60 Q50 50 32 60 L30 80 Q22 75 24 60Z" fill="var(--glow)" opacity="0.85"/>
-      <!-- glasses -->
-      <rect x="30" y="62" width="16" height="10" rx="2" fill="#0b0e1a"/>
-      <rect x="54" y="62" width="16" height="10" rx="2" fill="#0b0e1a"/>
-      <rect x="46" y="65" width="8" height="3" fill="#0b0e1a"/>
+    <svg viewBox="0 0 130 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sannuGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#4fc3f7" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#4fc3f7" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="sannuFace" cx="45%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#fde8d8"/>
+          <stop offset="100%" stop-color="#f5c8a8"/>
+        </radialGradient>
+        <radialGradient id="sannuBody" cx="50%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#5bc8f5"/>
+          <stop offset="100%" stop-color="#1e88e5"/>
+        </radialGradient>
+      </defs>
+      <!-- Character aura/glow -->
+      <ellipse cx="65" cy="170" rx="65" ry="150" fill="url(#sannuGlow)" opacity="0.12"/>
+      <!-- Ground shadow -->
+      <ellipse cx="65" cy="292" rx="42" ry="7" fill="#000" opacity="0.22"/>
+      <!-- Shoes - white sneakers -->
+      <rect x="41" y="272" width="20" height="13" rx="6" fill="#eceff1"/>
+      <rect x="69" y="272" width="20" height="13" rx="6" fill="#eceff1"/>
+      <rect x="41" y="278" width="20" height="5" rx="0" fill="#cfd8dc" opacity="0.7"/>
+      <rect x="69" y="278" width="20" height="5" rx="0" fill="#cfd8dc" opacity="0.7"/>
+      <!-- Legs - fair skin -->
+      <rect x="44" y="205" width="15" height="70" rx="7" fill="#fde8d8"/>
+      <rect x="71" y="205" width="15" height="70" rx="7" fill="#fde8d8"/>
+      <!-- Light blue hoodie body -->
+      <path d="M25 195 Q65 208 105 195 L100 185 Q65 196 30 185 Z" fill="#1565c0"/>
+      <rect x="25" y="130" width="80" height="70" rx="12" fill="url(#sannuBody)"/>
+      <!-- Hoodie zipper line -->
+      <rect x="63" y="130" width="4" height="70" fill="#1565c0" opacity="0.5"/>
+      <!-- Hoodie pockets -->
+      <rect x="30" y="178" width="22" height="18" rx="5" fill="#1565c0" opacity="0.75"/>
+      <rect x="78" y="178" width="22" height="18" rx="5" fill="#1565c0" opacity="0.75"/>
+      <!-- Circuit details on hoodie -->
+      <line x1="33" y1="148" x2="48" y2="148" stroke="#4fc3f7" stroke-width="1" opacity="0.55"/>
+      <line x1="48" y1="148" x2="48" y2="158" stroke="#4fc3f7" stroke-width="1" opacity="0.55"/>
+      <circle cx="48" cy="158" r="2.5" fill="#4fc3f7" opacity="0.65"/>
+      <line x1="97" y1="148" x2="82" y2="148" stroke="#4fc3f7" stroke-width="1" opacity="0.55"/>
+      <circle cx="82" cy="148" r="2" fill="#4fc3f7" opacity="0.55"/>
+      <!-- Arms - fair skin -->
+      <rect x="8" y="133" width="19" height="65" rx="9" fill="#1e88e5"/>
+      <rect x="103" y="133" width="19" height="65" rx="9" fill="#1e88e5"/>
+      <!-- Arm skin showing at cuffs -->
+      <rect x="8" y="185" width="19" height="18" rx="9" fill="#fde8d8"/>
+      <rect x="103" y="185" width="19" height="18" rx="9" fill="#fde8d8"/>
+      <!-- Hands - fair -->
+      <ellipse cx="17" cy="205" rx="10" ry="9" fill="#fde8d8"/>
+      <ellipse cx="113" cy="205" rx="10" ry="9" fill="#fde8d8"/>
+      <!-- Neck - fair -->
+      <rect x="58" y="112" width="14" height="22" rx="7" fill="#fde8d8"/>
+      <!-- Head - fair skin -->
+      <ellipse cx="65" cy="86" rx="34" ry="36" fill="url(#sannuFace)"/>
+      <!-- Ears - slightly rosier -->
+      <ellipse cx="31" cy="88" rx="6" ry="8" fill="#f5c8a8"/>
+      <ellipse cx="99" cy="88" rx="6" ry="8" fill="#f5c8a8"/>
+      <!-- Inner ear -->
+      <ellipse cx="31" cy="89" rx="3" ry="4" fill="#f0b898" opacity="0.6"/>
+      <ellipse cx="99" cy="89" rx="3" ry="4" fill="#f0b898" opacity="0.6"/>
+      <!-- Hair - black high ponytail -->
+      <path d="M32 76 Q28 42 65 36 Q102 42 98 76 Q100 94 96 102 L96 76 Q65 62 34 76 L34 102 Q30 94 32 76Z" fill="#1a1a2e"/>
+      <!-- Ponytail band -->
+      <ellipse cx="65" cy="40" rx="9" ry="7" fill="#1a1a2e"/>
+      <!-- Ponytail -->
+      <path d="M58 32 Q52 12 60 2 Q65 8 70 32" fill="#1a1a2e"/>
+      <path d="M62 28 Q58 14 63 4 Q66 10 68 28" fill="#2a2a3e"/>
+      <!-- Hair tie (red) -->
+      <rect x="59" y="35" width="12" height="6" rx="3" fill="#ef5350"/>
+      <circle cx="65" cy="38" r="3" fill="#e53935"/>
+      <!-- Hair shine -->
+      <path d="M38 62 Q42 52 52 58" stroke="#4a4a6e" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <!-- Eyes -->
+      <ellipse cx="50" cy="84" rx="8.5" ry="8" fill="#fff"/>
+      <ellipse cx="80" cy="84" rx="8.5" ry="8" fill="#fff"/>
+      <circle cx="50" cy="85" r="5.5" fill="#4e342e"/>
+      <circle cx="80" cy="85" r="5.5" fill="#4e342e"/>
+      <circle cx="48" cy="84" r="2.5" fill="#000"/>
+      <circle cx="78" cy="84" r="2.5" fill="#000"/>
+      <!-- Eye shine -->
+      <circle cx="52" cy="82" r="2" fill="#fff" opacity="0.92"/>
+      <circle cx="82" cy="82" r="2" fill="#fff" opacity="0.92"/>
+      <circle cx="48" cy="86" r="1" fill="#fff" opacity="0.5"/>
+      <circle cx="78" cy="86" r="1" fill="#fff" opacity="0.5"/>
+      <!-- Eyebrows -->
+      <path d="M42 74 Q50 70 58 73" stroke="#1a1a2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M72 73 Q80 70 88 74" stroke="#1a1a2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <!-- Upper eyelash -->
+      <path d="M42 80 Q50 77 58 80" stroke="#1a1a2e" stroke-width="1.5" fill="none"/>
+      <path d="M72 80 Q80 77 88 80" stroke="#1a1a2e" stroke-width="1.5" fill="none"/>
+      <!-- Blue-rimmed glasses -->
+      <rect x="39" y="79" width="20" height="14" rx="6" fill="none" stroke="#1565c0" stroke-width="2.8"/>
+      <rect x="71" y="79" width="20" height="14" rx="6" fill="none" stroke="#1565c0" stroke-width="2.8"/>
+      <!-- Lens tint -->
+      <rect x="40" y="80" width="18" height="12" rx="5" fill="#4fc3f7" opacity="0.06"/>
+      <rect x="72" y="80" width="18" height="12" rx="5" fill="#4fc3f7" opacity="0.06"/>
+      <!-- Glasses bridge -->
+      <line x1="59" y1="85" x2="71" y2="85" stroke="#1565c0" stroke-width="2.2"/>
+      <!-- Glasses temples -->
+      <line x1="39" y1="85" x2="31" y2="83" stroke="#1565c0" stroke-width="1.8"/>
+      <line x1="91" y1="85" x2="99" y2="83" stroke="#1565c0" stroke-width="1.8"/>
+      <!-- Lens shine -->
+      <path d="M42 82 Q45 80 48 81" stroke="#4fc3f7" stroke-width="1.2" fill="none" opacity="0.8"/>
+      <path d="M74 82 Q77 80 80 81" stroke="#4fc3f7" stroke-width="1.2" fill="none" opacity="0.8"/>
+      <!-- Nose (subtle, fair) -->
+      <path d="M62 93 Q65 97 68 93" stroke="#e0a888" stroke-width="1.3" fill="none"/>
+      <!-- Mouth (gentle smile) -->
+      <path d="M56 103 Q65 110 74 103" stroke="#c47a6a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M58 104 Q65 109 72 104" fill="#f48b8b" opacity="0.25"/>
+      <!-- Cheek blush - fair skin pink -->
+      <ellipse cx="40" cy="96" rx="8" ry="5" fill="#ffb3b0" opacity="0.28"/>
+      <ellipse cx="90" cy="96" rx="8" ry="5" fill="#ffb3b0" opacity="0.28"/>
     </svg>
   </div>
 
-  <!-- Mossu silhouette -->
+  <!-- ===== MOSSU — Wheat skin, messy hair, silver bracelet, red t-shirt + blue jeans ===== -->
   <div class="char hidden" id="mossu">
-    <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="50" cy="210" rx="36" ry="8" fill="#000" opacity="0.3"/>
-      <!-- legs -->
-      <rect x="36" y="145" width="12" height="60" rx="4" fill="var(--glow)"/>
-      <rect x="52" y="145" width="12" height="60" rx="4" fill="var(--glow)"/>
-      <!-- body -->
-      <path d="M28 85 L72 85 L76 150 L24 150 Z" fill="var(--glow)"/>
-      <!-- arms -->
-      <rect x="14" y="90" width="11" height="55" rx="4" fill="var(--glow)"/>
-      <rect x="75" y="90" width="11" height="55" rx="4" fill="var(--glow)"/>
-      <!-- bracelet -->
-      <rect x="14" y="120" width="11" height="6" fill="#fff" opacity="0.9"/>
-      <!-- head -->
-      <circle cx="50" cy="62" r="27" fill="var(--glow)"/>
-      <!-- spiky hair -->
-      <path d="M22 55 L28 30 L38 50 L48 25 L55 50 L65 28 L78 55 Q80 70 70 78 L70 58 Q50 48 30 58 L30 78 Q20 70 22 55Z" fill="var(--glow)" opacity="0.85"/>
+    <svg viewBox="0 0 130 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="mossuGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ef5350" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#ef5350" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="mossuFace" cx="45%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#deb887"/>
+          <stop offset="100%" stop-color="#c8a060"/>
+        </radialGradient>
+        <linearGradient id="braceletG" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f5f5f5"/>
+          <stop offset="40%" stop-color="#9e9e9e"/>
+          <stop offset="100%" stop-color="#e8e8e8"/>
+        </linearGradient>
+      </defs>
+      <!-- Aura -->
+      <ellipse cx="65" cy="170" rx="68" ry="155" fill="url(#mossuGlow)" opacity="0.10"/>
+      <!-- Shadow -->
+      <ellipse cx="65" cy="292" rx="44" ry="7" fill="#000" opacity="0.22"/>
+      <!-- Shoes - black sneakers -->
+      <rect x="38" y="271" width="22" height="15" rx="7" fill="#212121"/>
+      <rect x="70" y="271" width="22" height="15" rx="7" fill="#212121"/>
+      <rect x="39" y="277" width="20" height="5" rx="2" fill="#fff" opacity="0.35"/>
+      <rect x="71" y="277" width="20" height="5" rx="2" fill="#fff" opacity="0.35"/>
+      <!-- Jeans - blue -->
+      <rect x="38" y="195" width="21" height="78" rx="9" fill="#1565c0"/>
+      <rect x="71" y="195" width="21" height="78" rx="9" fill="#1565c0"/>
+      <!-- Jeans seam -->
+      <line x1="48" y1="200" x2="48" y2="270" stroke="#0d47a1" stroke-width="1" opacity="0.45"/>
+      <line x1="82" y1="200" x2="82" y2="270" stroke="#0d47a1" stroke-width="1" opacity="0.45"/>
+      <!-- Jeans knee detail -->
+      <path d="M38 235 Q48 232 59 235" stroke="#0d47a1" stroke-width="1" fill="none" opacity="0.5"/>
+      <path d="M71 235 Q81 232 92 235" stroke="#0d47a1" stroke-width="1" fill="none" opacity="0.5"/>
+      <!-- Belt -->
+      <rect x="28" y="190" width="74" height="9" rx="4" fill="#3e2723"/>
+      <rect x="60" y="191" width="10" height="7" rx="1.5" fill="#c0a060"/>
+      <rect x="62" y="192" width="6" height="5" rx="1" fill="#8d6e3a"/>
+      <!-- Red T-shirt body -->
+      <rect x="26" y="126" width="78" height="70" rx="12" fill="#e53935"/>
+      <!-- T-shirt collar V-neck -->
+      <path d="M51 126 Q65 142 79 126" fill="#c62828"/>
+      <!-- Shirt wrinkle details -->
+      <line x1="45" y1="155" x2="45" y2="192" stroke="#c62828" stroke-width="1" opacity="0.35"/>
+      <line x1="85" y1="155" x2="85" y2="192" stroke="#c62828" stroke-width="1" opacity="0.35"/>
+      <!-- Arms - wheat skin -->
+      <rect x="6" y="128" width="22" height="68" rx="11" fill="#d4a96a"/>
+      <rect x="102" y="128" width="22" height="68" rx="11" fill="#d4a96a"/>
+      <!-- Sleeve band (shirt ending) -->
+      <rect x="6" y="126" width="22" height="18" rx="10" fill="#e53935"/>
+      <rect x="102" y="126" width="22" height="18" rx="10" fill="#e53935"/>
+      <!-- Hands - wheat -->
+      <ellipse cx="17" cy="200" rx="12" ry="10" fill="#d4a96a"/>
+      <ellipse cx="113" cy="200" rx="12" ry="10" fill="#d4a96a"/>
+      <!-- Fingers hint -->
+      <path d="M10 196 Q8 204 12 207" stroke="#c49858" stroke-width="1.2" fill="none"/>
+      <path d="M113 204 Q118 208 122 204" stroke="#c49858" stroke-width="1.2" fill="none"/>
+      <!-- SILVER BRACELET on LEFT wrist -->
+      <rect x="5" y="184" width="24" height="9" rx="4.5" fill="#bdbdbd"/>
+      <rect x="6" y="185" width="22" height="7" rx="3.5" fill="url(#braceletG)"/>
+      <!-- Bracelet gem -->
+      <circle cx="17" cy="188" r="3.5" fill="#90caf9"/>
+      <circle cx="17" cy="188" r="2" fill="#64b5f6"/>
+      <circle cx="15.5" cy="186.5" r="1" fill="#fff" opacity="0.8"/>
+      <!-- Bracelet glow -->
+      <ellipse cx="17" cy="188" rx="14" ry="7" fill="#90caf9" opacity="0.15"/>
+      <!-- Neck - wheat -->
+      <rect x="55" y="108" width="20" height="22" rx="9" fill="#d4a96a"/>
+      <!-- Head - wheat skin -->
+      <ellipse cx="65" cy="82" rx="37" ry="39" fill="url(#mossuFace)"/>
+      <!-- Ears -->
+      <ellipse cx="28" cy="84" rx="7" ry="9" fill="#c49858"/>
+      <ellipse cx="102" cy="84" rx="7" ry="9" fill="#c49858"/>
+      <ellipse cx="28" cy="85" rx="3.5" ry="5" fill="#b88c44" opacity="0.6"/>
+      <ellipse cx="102" cy="85" rx="3.5" ry="5" fill="#b88c44" opacity="0.6"/>
+      <!-- Messy hair (dark brown, natural black-brown) -->
+      <!-- Hair base -->
+      <path d="M28 72 Q26 38 65 34 Q104 38 102 72 Q104 90 100 100 L100 72 Q65 56 30 72 L30 100 Q26 90 28 72Z" fill="#2c1810"/>
+      <!-- Messy tufts -->
+      <path d="M32 58 Q28 36 44 34 Q38 52 32 58Z" fill="#2c1810"/>
+      <path d="M48 48 Q50 26 65 32 Q58 46 48 48Z" fill="#3a2010"/>
+      <path d="M82 48 Q80 26 65 32 Q72 46 82 48Z" fill="#3a2010"/>
+      <path d="M98 58 Q102 36 86 34 Q92 52 98 58Z" fill="#2c1810"/>
+      <!-- Forelock bits -->
+      <path d="M48 58 Q54 46 60 56 Q56 64 48 58Z" fill="#2c1810"/>
+      <path d="M72 56 Q78 44 84 55 Q80 63 72 56Z" fill="#2c1810"/>
+      <path d="M60 54 Q65 42 70 54 Q67 62 60 54Z" fill="#3a2010"/>
+      <!-- Hair highlight -->
+      <path d="M36 60 Q40 50 50 56" stroke="#4a3020" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <!-- Eyes (energetic, determined) -->
+      <ellipse cx="50" cy="81" rx="9" ry="8.5" fill="#fff"/>
+      <ellipse cx="80" cy="81" rx="9" ry="8.5" fill="#fff"/>
+      <circle cx="50" cy="82" r="6" fill="#3d2b1f"/>
+      <circle cx="80" cy="82" r="6" fill="#3d2b1f"/>
+      <circle cx="48" cy="81" r="2.8" fill="#000"/>
+      <circle cx="78" cy="81" r="2.8" fill="#000"/>
+      <!-- Eye shine -->
+      <circle cx="52" cy="79" r="2" fill="#fff" opacity="0.9"/>
+      <circle cx="82" cy="79" r="2" fill="#fff" opacity="0.9"/>
+      <circle cx="48" cy="83" r="1" fill="#fff" opacity="0.45"/>
+      <circle cx="78" cy="83" r="1" fill="#fff" opacity="0.45"/>
+      <!-- Eyebrows (bold, determined) -->
+      <path d="M40 71 Q50 66 60 70" stroke="#2c1810" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <path d="M70 70 Q80 66 90 71" stroke="#2c1810" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <!-- Upper eyelash -->
+      <path d="M41 76 Q50 73 59 76" stroke="#2c1810" stroke-width="1.8" fill="none"/>
+      <path d="M71 76 Q80 73 89 76" stroke="#2c1810" stroke-width="1.8" fill="none"/>
+      <!-- Nose (wheat-toned) -->
+      <path d="M61 90 Q65 95 69 90" stroke="#b8834e" stroke-width="1.5" fill="none"/>
+      <!-- Mouth (confident grin) -->
+      <path d="M54 100 Q65 109 76 100" stroke="#a0693a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M56 102 Q65 108 74 102" fill="#e8876a" opacity="0.2"/>
+      <!-- Cheeks (natural wheat blush) -->
+      <ellipse cx="37" cy="94" rx="9" ry="5" fill="#e8a060" opacity="0.2"/>
+      <ellipse cx="93" cy="94" rx="9" ry="5" fill="#e8a060" opacity="0.2"/>
     </svg>
   </div>
 
+  <!-- HUD -->
+  <div id="chapterTag">CH. 1 — THE PROMISE PARK</div>
   <div id="relwrap">
-    BOND<div id="relbar"><div id="relfill"></div></div>
+    <div class="bond-label">❤ BOND</div>
+    <div id="relbar"><div id="relfill"></div></div>
+    <div class="bond-hearts" id="bondHearts">♡ ♡ ♡</div>
   </div>
 
+  <!-- Dialogue -->
   <div id="dialogue">
-    <span id="namebox" class="narration">Narration</span>
-    <div id="textbox">Loading...</div>
-    <div id="continueHint">▶ click to continue</div>
+    <div class="dialogue-inner" style="--speaker-color:#a5d6a7">
+      <div id="namebox"><div class="name-dot"></div><span id="nametext">Narration</span></div>
+      <div id="textbox">Loading...</div>
+      <div id="continueHint">▶ click to continue</div>
+    </div>
   </div>
 
-  <div id="choices" class="hidden"></div>
+  <!-- Choices -->
+  <div id="choices" class="hidden">
+    <div class="choices-title">— MAKE YOUR CHOICE —</div>
+  </div>
 
+  <!-- Title Card -->
   <div id="titlecard">
+    <div class="title-ornament"></div>
     <h1>SANNU &amp; MOSSU</h1>
     <h2>ECHOES OF DESTINY</h2>
-    <p>CHAPTER 1 — THE PROMISE PARK</p>
-    <p style="margin-top:30px;opacity:.4">click anywhere to begin</p>
+    <div class="title-ornament"></div>
+    <div class="chapter-name">CHAPTER I — THE PROMISE PARK</div>
+    <div class="start-hint">✦ click anywhere to begin ✦</div>
   </div>
-</div>
 
+</div>
 <script>
-// ===================== AUDIO =====================
-const actx = new (window.AudioContext||window.webkitAudioContext)();
-function beep(freq,dur,type='sine',vol=0.12,slideTo=null){
-  const o=actx.createOscillator(), g=actx.createGain();
+// Generate stars & fireflies & title particles
+(function(){
+  const scene=document.getElementById('scene');
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=Math.random()*2+0.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--dur:${Math.random()*4+2}s;--op:${Math.random()*0.4+0.15};animation-delay:${Math.random()*5}s;`;
+    scene.appendChild(s);
+  }
+  for(let i=0;i<14;i++){
+    const f=document.createElement('div'); f.className='firefly';
+    f.style.cssText=`left:${18+Math.random()*64}%;bottom:${12+Math.random()*45}%;--fdur:${4+Math.random()*7}s;--fx:${(Math.random()-.5)*90}px;--fy:${-18-Math.random()*45}px;--fx2:${(Math.random()-.5)*70}px;--fy2:${(Math.random()-.5)*35}px;animation-delay:${Math.random()*7}s;`;
+    scene.appendChild(f);
+  }
+  const tc=document.getElementById('titlecard');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div'); p.className='title-particle';
+    p.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*65}%;--dur3:${4+Math.random()*5}s;--tx:${(Math.random()-.5)*60}px;animation-delay:${Math.random()*5}s;`;
+    tc.appendChild(p);
+  }
+})();
+
+// Audio
+const actx=new(window.AudioContext||window.webkitAudioContext)();
+function beep(freq,dur,type='sine',vol=0.1,slideTo=null){
+  const o=actx.createOscillator(),g=actx.createGain();
   o.type=type; o.frequency.value=freq;
-  if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, actx.currentTime+dur);
+  if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo,actx.currentTime+dur);
   g.gain.value=vol;
-  g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+dur);
+  g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+dur);
   o.connect(g); g.connect(actx.destination);
   o.start(); o.stop(actx.currentTime+dur);
 }
-const sfx = {
-  click:()=>beep(600,0.05,'sine',0.05,800),
-  choice:()=>beep(440,0.12,'triangle',0.08,660),
-  bond:()=>{beep(523,0.2,'sine',0.1); setTimeout(()=>beep(659,0.25,'sine',0.1),120);},
-  enter:()=>beep(330,0.3,'triangle',0.06,440)
+const sfx={
+  click:()=>beep(600,0.06,'sine',0.04,900),
+  choice:()=>{beep(440,0.1,'triangle',0.06,540);setTimeout(()=>beep(660,0.1,'triangle',0.04,760),80);},
+  bond:()=>{beep(523,0.2,'sine',0.08);setTimeout(()=>beep(659,0.25,'sine',0.08),130);setTimeout(()=>beep(784,0.3,'sine',0.06),280);},
+  enter:()=>beep(330,0.4,'triangle',0.05,528),
+  whoosh:()=>beep(200,0.35,'sawtooth',0.025,80)
 };
 let musicTimer=null;
 function startMusic(){
-  // gentle ambient arpeggio, pentatonic
-  const notes=[392,440,523,587,659,587,523,440];
+  const notes=[392,440,523,587,659,784,659,587,523,440];
   let i=0;
   musicTimer=setInterval(()=>{
-    beep(notes[i%notes.length]/2,1.1,'sine',0.025);
+    beep(notes[i%notes.length]/2,1.2,'sine',0.016);
+    if(i%4===0) beep(notes[(i+5)%notes.length]/4,2,'sine',0.009);
     i++;
-  },900);
+  },800);
 }
 
-// ===================== STORY DATA =====================
-// each node: speaker ('sannu'/'mossu'/'narration'), text, optional choices[], optional onEnter callback name
-const story = [
-  {speaker:'narration', text:"Sunlight spills through the trees of Promise Park. Two children sit on opposite ends of a quiet bench — strangers, for now."},
-  {speaker:'narration', text:"A small girl with glasses too big for her face stares at a butterfly resting on her knee.", show:'sannu'},
-  {speaker:'sannu', text:"...It's not flying away. Maybe it likes me."},
-  {speaker:'narration', text:"A boy with a worn bracelet on his wrist watches from a few steps away, curious.", show:'mossu'},
-  {speaker:'mossu', text:"Hey... is that butterfly hurt? Its wing looks bent."},
-  {speaker:'sannu', text:"I— I don't know. I was just looking at it."},
-  {speaker:'mossu', text:"Can I see? My grandpa taught me how to fix small wings. Sort of."},
-  {
-    speaker:'narration', text:"Sannu hesitates. This stranger seems kind, but...",
-    choices:[
-      {text:"Let him help with the butterfly", rel:+10, next:1},
-      {text:"Pull back, unsure of strangers", rel:-5, next:0}
-    ]
-  },
-  // branch 0: cautious
-  {speaker:'sannu', text:"I-I'd rather do it myself, thank you.", branch:0},
-  {speaker:'mossu', text:"Oh— okay. Sorry. I just thought... never mind.", branch:0},
-  {speaker:'narration', text:"He looks down, a little hurt, and sits back on his end of the bench. The butterfly flutters off on its own a moment later.", branch:0},
-  {speaker:'sannu', text:"...Wait. Thank you for asking, at least.", branch:0},
-  {speaker:'mossu', text:"No problem. I'm Mossu, by the way.", branch:0},
-  {speaker:'sannu', text:"Sannu.", branch:0},
-
-  // branch 1: trusting
-  {speaker:'sannu', text:"...Okay. Just be careful.", branch:1},
-  {speaker:'narration', text:"Mossu gently cups his hands around the butterfly. With surprising gentleness, he straightens its wing.", branch:1},
-  {speaker:'mossu', text:"There. Good as new, little guy.", branch:1},
-  {speaker:'narration', text:"The butterfly flutters into the air, circles them once, and disappears into the trees. Sannu watches with wide eyes.", branch:1},
-  {speaker:'sannu', text:"That was... amazing. How did you do that?", branch:1},
-  {speaker:'mossu', text:"Practice, I guess! I'm Mossu.", branch:1},
-  {speaker:'sannu', text:"I'm Sannu. Nice to meet you, Mossu.", branch:1, sfx:'bond'},
-
-  // merge point
-  {speaker:'narration', text:"For a while, neither says much. But something has shifted — a small thread now connects two strangers."},
-  {
-    speaker:'mossu', text:"So... do you come here a lot? To this park?",
-    choices:[
-      {text:"\"Every day after lessons. It's quiet here.\"", rel:+5, next:2},
-      {text:"\"First time, actually. I got lost.\"", rel:+5, next:2}
-    ]
-  },
-  {speaker:'sannu', text:"Maybe... maybe we could sit here again sometime? If you wanted to.", branch:2},
-  {speaker:'mossu', text:"Yeah. I'd like that. Same bench, same time tomorrow?", branch:2},
-  {speaker:'sannu', text:"...Promise?", branch:2},
-  {speaker:'mossu', text:"Promise.", branch:2, sfx:'bond'},
-  {speaker:'narration', text:"Neither of them knows it yet — but this small promise, made on an ordinary afternoon, will echo across the rest of their lives."},
-  {speaker:'narration', text:"— END OF CHAPTER 1 —", end:true}
+// Story
+const story=[
+  {speaker:'narration',text:"Sunlight spills through the ancient oak trees of Promise Park. Cherry blossoms drift lazily on the warm breeze — and on a quiet wooden bench, two strangers are about to change each other's lives forever."},
+  {speaker:'narration',text:"A small girl with glasses too big for her face stares intently at a butterfly that has landed on her knee. She barely breathes, afraid to startle it.",show:'sannu'},
+  {speaker:'sannu',text:"...It's not flying away. Maybe it likes me."},
+  {speaker:'narration',text:"A few steps away, a boy with a worn silver bracelet on his left wrist watches with quiet curiosity. He tilts his head, noticing something she hasn't.",show:'mossu'},
+  {speaker:'mossu',text:"Hey... is that butterfly hurt? Its wing looks a little bent."},
+  {speaker:'sannu',text:"I— I don't know. I was just looking at it."},
+  {speaker:'mossu',text:"Can I see? My grandpa taught me how to fix small wings. Sort of."},
+  {speaker:'narration',text:"Sannu hesitates. This stranger seems kind — but she's always been more comfortable with books than with people.",choices:[
+    {text:'✦  Let him help with the butterfly',rel:+10,next:1},
+    {text:'✧  Pull back — "I\'d rather do it myself."',rel:-5,next:0}
+  ]},
+  {speaker:'sannu',text:"I'd rather do it myself, thank you.",branch:0},
+  {speaker:'mossu',text:"Oh— okay. Sorry. I just thought... never mind.",branch:0},
+  {speaker:'narration',text:"He looks down, a little hurt, and quietly sits back on his end of the bench. The butterfly flutters off on its own a moment later.",branch:0},
+  {speaker:'sannu',text:"...Wait. Thank you for asking, at least.",branch:0},
+  {speaker:'mossu',text:"No problem. I'm Mossu, by the way.",branch:0},
+  {speaker:'sannu',text:"Sannu.",branch:0},
+  {speaker:'sannu',text:"...Okay. Just be careful.",branch:1},
+  {speaker:'narration',text:"Mossu gently cups his hands around the butterfly. With surprising gentleness — and a focus that surprises her — he carefully straightens its delicate wing.",branch:1},
+  {speaker:'mossu',text:"There. Good as new, little guy.",branch:1},
+  {speaker:'narration',text:"The butterfly flutters into the air, circles them once, and disappears into the sunlit trees. Sannu watches with wide eyes.",branch:1},
+  {speaker:'sannu',text:"That was... amazing. How did you do that?",branch:1},
+  {speaker:'mossu',text:"Practice, I guess! I'm Mossu.",branch:1},
+  {speaker:'sannu',text:"I'm Sannu. Nice to meet you, Mossu.",branch:1,sfx:'bond'},
+  {speaker:'narration',text:"For a while, neither says much. But something invisible has shifted — a small thread now connects two strangers on a sunlit bench."},
+  {speaker:'mossu',text:"So... do you come here a lot? To this park?",choices:[
+    {text:'✦  "Every day after lessons. It\'s quiet here."',rel:+5,next:2},
+    {text:'✧  "First time, actually. I got a little lost."',rel:+5,next:2}
+  ]},
+  {speaker:'sannu',text:"Maybe... maybe we could sit here again sometime? If you wanted to.",branch:2},
+  {speaker:'mossu',text:"Yeah. I'd really like that. Same bench, same time tomorrow?",branch:2},
+  {speaker:'sannu',text:"...Promise?",branch:2},
+  {speaker:'mossu',text:"Promise.",branch:2,sfx:'bond'},
+  {speaker:'narration',text:"Neither of them knows it yet — but this small promise, made on an ordinary golden afternoon, will echo across the rest of their lives."},
+  {speaker:'narration',text:"✦  — END OF CHAPTER 1 —  ✦",end:true}
 ];
 
-// ===================== STATE =====================
-let idx=0, relationship=30, currentBranch=null, started=false;
-
-const textbox=document.getElementById('textbox');
-const namebox=document.getElementById('namebox');
-const choicesDiv=document.getElementById('choices');
-const dialogueDiv=document.getElementById('dialogue');
-const sannuEl=document.getElementById('sannu');
-const mossuEl=document.getElementById('mossu');
-const relfill=document.getElementById('relfill');
-const continueHint=document.getElementById('continueHint');
+let idx=0,relationship=30,currentBranch=null,started=false;
+const SANNU_COLOR='#4fc3f7',MOSSU_COLOR='#ef5350',NARR_COLOR='#a5d6a7';
+const textbox=document.getElementById('textbox'),nametext=document.getElementById('nametext'),namebox=document.getElementById('namebox');
+const dialogueInner=namebox.closest('.dialogue-inner'),choicesDiv=document.getElementById('choices');
+const sannuEl=document.getElementById('sannu'),mossuEl=document.getElementById('mossu');
+const relfill=document.getElementById('relfill'),bondHearts=document.getElementById('bondHearts'),continueHint=document.getElementById('continueHint');
 
 function updateRelBar(){
-  relfill.style.width=Math.max(0,Math.min(100,relationship))+'%';
+  const pct=Math.max(0,Math.min(100,relationship));
+  relfill.style.width=pct+'%';
+  bondHearts.textContent=pct>=80?'♥ ♥ ♥':pct>=50?'♥ ♥ ♡':pct>=20?'♥ ♡ ♡':'♡ ♡ ♡';
 }
-
 function showChar(who){
-  if(who==='sannu'){ sannuEl.classList.remove('hidden'); sannuEl.classList.add('bounce'); setTimeout(()=>sannuEl.classList.remove('bounce'),600); }
-  if(who==='mossu'){ mossuEl.classList.remove('hidden'); mossuEl.classList.add('bounce'); setTimeout(()=>mossuEl.classList.remove('bounce'),600); }
+  const el=who==='sannu'?sannuEl:mossuEl;
+  el.classList.remove('hidden');
+  el.classList.add('bounce');
+  setTimeout(()=>el.classList.remove('bounce'),800);
+  sfx.whoosh();
 }
-
 function highlightSpeaker(speaker){
-  [sannuEl,mossuEl].forEach(el=>el.classList.remove('dim'));
-  if(speaker==='sannu' && !mossuEl.classList.contains('hidden')) mossuEl.classList.add('dim');
-  if(speaker==='mossu' && !sannuEl.classList.contains('hidden')) sannuEl.classList.add('dim');
+  [sannuEl,mossuEl].forEach(el=>el.classList.remove('dim','speak'));
+  if(speaker==='sannu'){if(!mossuEl.classList.contains('hidden'))mossuEl.classList.add('dim');sannuEl.classList.add('speak');}
+  if(speaker==='mossu'){if(!sannuEl.classList.contains('hidden'))sannuEl.classList.add('dim');mossuEl.classList.add('speak');}
 }
-
 function setNamebox(speaker){
-  namebox.className='';
-  if(speaker==='sannu'){ namebox.textContent='Sannu'; namebox.classList.add('sannu'); }
-  else if(speaker==='mossu'){ namebox.textContent='Mossu'; namebox.classList.add('mossu'); }
-  else { namebox.textContent='Narration'; namebox.classList.add('narration'); }
+  const color=speaker==='sannu'?SANNU_COLOR:speaker==='mossu'?MOSSU_COLOR:NARR_COLOR;
+  dialogueInner.style.setProperty('--speaker-color',color);
+  nametext.textContent={sannu:'Sannu',mossu:'Mossu',narration:'Narration'}[speaker]||'Narration';
 }
-
+let typeTimer=null;
+function typeText(text){
+  if(typeTimer) clearTimeout(typeTimer);
+  textbox.textContent='';
+  let i=0;
+  function next(){if(i<text.length){textbox.textContent+=text[i++];textbox.scrollTop=textbox.scrollHeight;typeTimer=setTimeout(next,20);}}
+  next();
+}
 function findNextIndex(from){
-  // skip nodes belonging to a different branch than currentBranch
   let i=from;
-  while(i<story.length){
-    const node=story[i];
-    if(node.branch===undefined || node.branch===currentBranch) return i;
-    i++;
-  }
+  while(i<story.length){const n=story[i];if(n.branch===undefined||n.branch===currentBranch)return i;i++;}
   return i;
 }
-
 function renderNode(){
-  if(idx>=story.length){ return; }
+  if(idx>=story.length)return;
   const node=story[idx];
-
-  if(node.show) showChar(node.show);
+  if(node.show)showChar(node.show);
   highlightSpeaker(node.speaker);
   setNamebox(node.speaker);
-  textbox.textContent=node.text;
-
-  if(node.sfx==='bond'){ sfx.bond(); relationship+=5; updateRelBar(); }
-
-  if(node.end){
-    continueHint.textContent='— click to continue to Chapter 2 —';
-    try{ localStorage.setItem('sm_bond', String(relationship)); }catch(e){}
-    return;
-  }
-
+  typeText(node.text);
+  if(node.sfx==='bond'){setTimeout(()=>{sfx.bond();relationship+=5;updateRelBar();},200);}
+  if(node.end){continueHint.textContent='✦ click to continue to Chapter 2 ✦';try{localStorage.setItem('sm_bond',String(relationship));}catch(e){}return;}
   if(node.choices){
     continueHint.classList.add('hidden');
     choicesDiv.classList.remove('hidden');
+    const title=choicesDiv.querySelector('.choices-title');
     choicesDiv.innerHTML='';
+    const t=document.createElement('div');t.className='choices-title';t.textContent='— MAKE YOUR CHOICE —';choicesDiv.appendChild(t);
     node.choices.forEach(choice=>{
-      const btn=document.createElement('button');
-      btn.className='choiceBtn';
-      btn.textContent=choice.text;
-      btn.onclick=()=>{
-        sfx.choice();
-        relationship+=choice.rel||0;
-        updateRelBar();
-        currentBranch = choice.next;
-        choicesDiv.classList.add('hidden');
-        continueHint.classList.remove('hidden');
-        idx = findNextIndex(idx+1);
-        renderNode();
-      };
+      const btn=document.createElement('button');btn.className='choiceBtn';btn.textContent=choice.text;
+      btn.onclick=()=>{sfx.choice();relationship+=choice.rel||0;updateRelBar();currentBranch=choice.next;choicesDiv.classList.add('hidden');continueHint.classList.remove('hidden');idx=findNextIndex(idx+1);renderNode();};
       choicesDiv.appendChild(btn);
     });
-  } else {
-    continueHint.classList.remove('hidden');
-  }
+  } else {continueHint.classList.remove('hidden');}
 }
-
 function advance(){
-  if(!started){
-    started=true;
-    document.getElementById('titlecard').classList.add('fadeout');
-    startMusic();
-    sfx.enter();
-    renderNode();
-    return;
-  }
+  if(!started){started=true;document.getElementById('titlecard').classList.add('fadeout');startMusic();sfx.enter();setTimeout(renderNode,400);return;}
   const node=story[idx];
-  if(node.end) {
-    // go to chapter 2
-    window.location.href = 'sannu_mossu_chapter2.html';
-    return;
-  }
-  if(node.choices) return; // must pick a choice
+  if(node.end){window.location.href='sannu_mossu_chapter2.html';return;}
+  if(node.choices)return;
   sfx.click();
-  idx = findNextIndex(idx+1);
+  idx=findNextIndex(idx+1);
   renderNode();
 }
-
-document.getElementById('stage').addEventListener('click', (e)=>{
-  if(e.target.classList.contains('choiceBtn')) return;
+document.getElementById('stage').addEventListener('click',function(e){
+  if(e.target.classList.contains('choiceBtn'))return;
+  const r=document.createElement('div');r.className='ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';
+  document.getElementById('stage').appendChild(r);setTimeout(()=>r.remove(),600);
   advance();
 });
-
 updateRelBar();
 </script>
 </body>
