@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Sannu & Mossu: Echoes of Destiny</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:#0b0e1a;font-family:'Georgia',serif;color:#eee;overflow:hidden;}
+  #stage{
+    position:relative;width:100vw;height:100vh;height:100dvh;
+    background:linear-gradient(180deg,#1a2238 0%,#0b0e1a 60%,#05060c 100%);
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  /* park scene elements */
+  .scene{position:absolute;inset:0;overflow:hidden;}
+  .sun{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle,#ffd9a0,#ff9f6b 60%,transparent 75%);filter:blur(2px);opacity:.8;}
+  .hill{position:absolute;bottom:0;width:100%;height:35%;background:#1f2a44;border-radius:50% 50% 0 0/100% 100% 0 0;}
+  .hill2{position:absolute;bottom:0;width:120%;left:-10%;height:25%;background:#16203a;border-radius:50% 50% 0 0/100% 100% 0 0;}
+  .tree{position:absolute;bottom:25%;width:0;height:0;}
+  .tree .trunk{width:8px;height:60px;background:#3a2c20;margin:0 auto;}
+  .tree .leaves{width:60px;height:60px;border-radius:50%;background:#2e4a33;position:absolute;top:-40px;left:-26px;box-shadow:0 0 20px #2e4a3380;}
+
+  /* characters - silhouettes with glow */
+  .char{
+    position:absolute;bottom:30%;width:110px;height:240px;
+    transition:transform .4s ease, opacity .4s ease;
+  }
+  .char svg{width:100%;height:100%;filter:drop-shadow(0 0 18px var(--glow));}
+  #sannu{left:28%;--glow:#7fd1ff;}
+  #mossu{right:28%;--glow:#ff7f7f;}
+  .char.dim{opacity:.35;filter:grayscale(60%);}
+  .char.hidden{opacity:0;pointer-events:none;}
+  .char.bounce{animation:bounce .6s ease;}
+  @keyframes bounce{0%{transform:translateY(0)}30%{transform:translateY(-12px)}60%{transform:translateY(0)}100%{transform:translateY(0)}}
+
+  /* dialogue box */
+  #dialogue{
+    position:absolute;bottom:0;left:0;width:100%;
+    background:linear-gradient(180deg,transparent,#05060cdd 25%);
+    padding:16px 16px 20px;
+    box-sizing:border-box;
+  }
+  #namebox{
+    display:inline-block;padding:6px 18px;border-radius:8px 8px 0 0;
+    font-weight:bold;letter-spacing:2px;font-size:13px;text-transform:uppercase;
+    margin-bottom:-2px;
+  }
+  #namebox.sannu{background:#7fd1ff;color:#06203a;}
+  #namebox.mossu{background:#ff7f7f;color:#3a0606;}
+  #namebox.narration{background:#888;color:#111;}
+  #textbox{
+    background:#05060cdd;border:1px solid #ffffff22;border-radius:0 8px 8px 8px;
+    padding:16px 18px;font-size:16px;line-height:1.5;min-height:70px;
+    max-height:32vh;overflow-y:auto;
+  }
+  #continueHint{
+    text-align:right;margin-top:6px;font-size:11px;opacity:.6;
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+
+  /* choices */
+  #choices{
+    position:absolute;bottom:0;left:0;width:100%;height:100%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+    background:#05060cdd;
+  }
+  .choiceBtn{
+    background:#10182bcc;border:1px solid #ffffff33;color:#fff;
+    font-family:inherit;font-size:16px;padding:14px 20px;border-radius:8px;
+    cursor:pointer;width:90%;max-width:400px;text-align:left;transition:.2s;
+  }
+  .choiceBtn:hover{background:#7fd1ff33;border-color:#7fd1ff;transform:translateX(6px);}
+  .hidden{display:none!important;}
+
+  /* relationship meter */
+  #relwrap{position:absolute;top:18px;right:24px;font-size:12px;letter-spacing:1px;text-align:right;}
+  #relbar{width:160px;height:8px;background:#222;border-radius:4px;overflow:hidden;margin-top:4px;border:1px solid #ffffff33;}
+  #relfill{height:100%;width:30%;background:linear-gradient(90deg,#ff7f7f,#7fd1ff);transition:width .6s;}
+
+  /* chapter title card */
+  #titlecard{
+    position:absolute;inset:0;background:#05060c;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;z-index:50;
+    transition:opacity 1.2s;
+  }
+  #titlecard h1{font-size:38px;letter-spacing:6px;color:#7fd1ff;text-shadow:0 0 14px #7fd1ff80;}
+  #titlecard h2{font-size:20px;letter-spacing:10px;color:#ff7f7f;font-weight:normal;}
+  #titlecard p{font-size:13px;opacity:.6;letter-spacing:2px;}
+  #titlecard.fadeout{opacity:0;pointer-events:none;}
+
+  /* fireflies / particles */
+  .firefly{position:absolute;width:4px;height:4px;border-radius:50%;background:#ffe9a0;
+    box-shadow:0 0 8px #ffe9a0; opacity:.7; animation:float 6s infinite ease-in-out;}
+  @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-30px) translateX(15px)}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="scene">
+    <div class="sun"></div>
+    <div class="hill2"></div>
+    <div class="hill"></div>
+    <div class="tree" style="left:8%"><div class="leaves"></div><div class="trunk"></div></div>
+    <div class="tree" style="left:78%"><div class="leaves"></div><div class="trunk"></div></div>
+    <div class="tree" style="left:50%;bottom:22%"><div class="leaves"></div><div class="trunk"></div></div>
+  </div>
+
+  <!-- Sannu silhouette -->
+  <div class="char hidden" id="sannu">
+    <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="210" rx="34" ry="8" fill="#000" opacity="0.3"/>
+      <!-- legs -->
+      <rect x="38" y="150" width="10" height="55" rx="4" fill="var(--glow)"/>
+      <rect x="52" y="150" width="10" height="55" rx="4" fill="var(--glow)"/>
+      <!-- dress/body -->
+      <path d="M30 90 L70 90 L78 155 L22 155 Z" fill="var(--glow)"/>
+      <!-- arms -->
+      <rect x="18" y="95" width="9" height="50" rx="4" fill="var(--glow)"/>
+      <rect x="73" y="95" width="9" height="50" rx="4" fill="var(--glow)"/>
+      <!-- head -->
+      <circle cx="50" cy="65" r="26" fill="var(--glow)"/>
+      <!-- hair -->
+      <path d="M24 60 Q20 30 50 28 Q80 30 76 60 Q78 75 70 80 L68 60 Q50 50 32 60 L30 80 Q22 75 24 60Z" fill="var(--glow)" opacity="0.85"/>
+      <!-- glasses -->
+      <rect x="30" y="62" width="16" height="10" rx="2" fill="#0b0e1a"/>
+      <rect x="54" y="62" width="16" height="10" rx="2" fill="#0b0e1a"/>
+      <rect x="46" y="65" width="8" height="3" fill="#0b0e1a"/>
+    </svg>
+  </div>
+
+  <!-- Mossu silhouette -->
+  <div class="char hidden" id="mossu">
+    <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="210" rx="36" ry="8" fill="#000" opacity="0.3"/>
+      <!-- legs -->
+      <rect x="36" y="145" width="12" height="60" rx="4" fill="var(--glow)"/>
+      <rect x="52" y="145" width="12" height="60" rx="4" fill="var(--glow)"/>
+      <!-- body -->
+      <path d="M28 85 L72 85 L76 150 L24 150 Z" fill="var(--glow)"/>
+      <!-- arms -->
+      <rect x="14" y="90" width="11" height="55" rx="4" fill="var(--glow)"/>
+      <rect x="75" y="90" width="11" height="55" rx="4" fill="var(--glow)"/>
+      <!-- bracelet -->
+      <rect x="14" y="120" width="11" height="6" fill="#fff" opacity="0.9"/>
+      <!-- head -->
+      <circle cx="50" cy="62" r="27" fill="var(--glow)"/>
+      <!-- spiky hair -->
+      <path d="M22 55 L28 30 L38 50 L48 25 L55 50 L65 28 L78 55 Q80 70 70 78 L70 58 Q50 48 30 58 L30 78 Q20 70 22 55Z" fill="var(--glow)" opacity="0.85"/>
+    </svg>
+  </div>
+
+  <div id="relwrap">
+    BOND<div id="relbar"><div id="relfill"></div></div>
+  </div>
+
+  <div id="dialogue">
+    <span id="namebox" class="narration">Narration</span>
+    <div id="textbox">Loading...</div>
+    <div id="continueHint">▶ click to continue</div>
+  </div>
+
+  <div id="choices" class="hidden"></div>
+
+  <div id="titlecard">
+    <h1>SANNU &amp; MOSSU</h1>
+    <h2>ECHOES OF DESTINY</h2>
+    <p>CHAPTER 1 — THE PROMISE PARK</p>
+    <p style="margin-top:30px;opacity:.4">click anywhere to begin</p>
+  </div>
+</div>
+
+<script>
+// ===================== AUDIO =====================
+const actx = new (window.AudioContext||window.webkitAudioContext)();
+function beep(freq,dur,type='sine',vol=0.12,slideTo=null){
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type=type; o.frequency.value=freq;
+  if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, actx.currentTime+dur);
+  g.gain.value=vol;
+  g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+dur);
+  o.connect(g); g.connect(actx.destination);
+  o.start(); o.stop(actx.currentTime+dur);
+}
+const sfx = {
+  click:()=>beep(600,0.05,'sine',0.05,800),
+  choice:()=>beep(440,0.12,'triangle',0.08,660),
+  bond:()=>{beep(523,0.2,'sine',0.1); setTimeout(()=>beep(659,0.25,'sine',0.1),120);},
+  enter:()=>beep(330,0.3,'triangle',0.06,440)
+};
+let musicTimer=null;
+function startMusic(){
+  // gentle ambient arpeggio, pentatonic
+  const notes=[392,440,523,587,659,587,523,440];
+  let i=0;
+  musicTimer=setInterval(()=>{
+    beep(notes[i%notes.length]/2,1.1,'sine',0.025);
+    i++;
+  },900);
+}
+
+// ===================== STORY DATA =====================
+// each node: speaker ('sannu'/'mossu'/'narration'), text, optional choices[], optional onEnter callback name
+const story = [
+  {speaker:'narration', text:"Sunlight spills through the trees of Promise Park. Two children sit on opposite ends of a quiet bench — strangers, for now."},
+  {speaker:'narration', text:"A small girl with glasses too big for her face stares at a butterfly resting on her knee.", show:'sannu'},
+  {speaker:'sannu', text:"...It's not flying away. Maybe it likes me."},
+  {speaker:'narration', text:"A boy with a worn bracelet on his wrist watches from a few steps away, curious.", show:'mossu'},
+  {speaker:'mossu', text:"Hey... is that butterfly hurt? Its wing looks bent."},
+  {speaker:'sannu', text:"I— I don't know. I was just looking at it."},
+  {speaker:'mossu', text:"Can I see? My grandpa taught me how to fix small wings. Sort of."},
+  {
+    speaker:'narration', text:"Sannu hesitates. This stranger seems kind, but...",
+    choices:[
+      {text:"Let him help with the butterfly", rel:+10, next:1},
+      {text:"Pull back, unsure of strangers", rel:-5, next:0}
+    ]
+  },
+  // branch 0: cautious
+  {speaker:'sannu', text:"I-I'd rather do it myself, thank you.", branch:0},
+  {speaker:'mossu', text:"Oh— okay. Sorry. I just thought... never mind.", branch:0},
+  {speaker:'narration', text:"He looks down, a little hurt, and sits back on his end of the bench. The butterfly flutters off on its own a moment later.", branch:0},
+  {speaker:'sannu', text:"...Wait. Thank you for asking, at least.", branch:0},
+  {speaker:'mossu', text:"No problem. I'm Mossu, by the way.", branch:0},
+  {speaker:'sannu', text:"Sannu.", branch:0},
+
+  // branch 1: trusting
+  {speaker:'sannu', text:"...Okay. Just be careful.", branch:1},
+  {speaker:'narration', text:"Mossu gently cups his hands around the butterfly. With surprising gentleness, he straightens its wing.", branch:1},
+  {speaker:'mossu', text:"There. Good as new, little guy.", branch:1},
+  {speaker:'narration', text:"The butterfly flutters into the air, circles them once, and disappears into the trees. Sannu watches with wide eyes.", branch:1},
+  {speaker:'sannu', text:"That was... amazing. How did you do that?", branch:1},
+  {speaker:'mossu', text:"Practice, I guess! I'm Mossu.", branch:1},
+  {speaker:'sannu', text:"I'm Sannu. Nice to meet you, Mossu.", branch:1, sfx:'bond'},
+
+  // merge point
+  {speaker:'narration', text:"For a while, neither says much. But something has shifted — a small thread now connects two strangers."},
+  {
+    speaker:'mossu', text:"So... do you come here a lot? To this park?",
+    choices:[
+      {text:"\"Every day after lessons. It's quiet here.\"", rel:+5, next:2},
+      {text:"\"First time, actually. I got lost.\"", rel:+5, next:2}
+    ]
+  },
+  {speaker:'sannu', text:"Maybe... maybe we could sit here again sometime? If you wanted to.", branch:2},
+  {speaker:'mossu', text:"Yeah. I'd like that. Same bench, same time tomorrow?", branch:2},
+  {speaker:'sannu', text:"...Promise?", branch:2},
+  {speaker:'mossu', text:"Promise.", branch:2, sfx:'bond'},
+  {speaker:'narration', text:"Neither of them knows it yet — but this small promise, made on an ordinary afternoon, will echo across the rest of their lives."},
+  {speaker:'narration', text:"— END OF CHAPTER 1 —", end:true}
+];
+
+// ===================== STATE =====================
+let idx=0, relationship=30, currentBranch=null, started=false;
+
+const textbox=document.getElementById('textbox');
+const namebox=document.getElementById('namebox');
+const choicesDiv=document.getElementById('choices');
+const dialogueDiv=document.getElementById('dialogue');
+const sannuEl=document.getElementById('sannu');
+const mossuEl=document.getElementById('mossu');
+const relfill=document.getElementById('relfill');
+const continueHint=document.getElementById('continueHint');
+
+function updateRelBar(){
+  relfill.style.width=Math.max(0,Math.min(100,relationship))+'%';
+}
+
+function showChar(who){
+  if(who==='sannu'){ sannuEl.classList.remove('hidden'); sannuEl.classList.add('bounce'); setTimeout(()=>sannuEl.classList.remove('bounce'),600); }
+  if(who==='mossu'){ mossuEl.classList.remove('hidden'); mossuEl.classList.add('bounce'); setTimeout(()=>mossuEl.classList.remove('bounce'),600); }
+}
+
+function highlightSpeaker(speaker){
+  [sannuEl,mossuEl].forEach(el=>el.classList.remove('dim'));
+  if(speaker==='sannu' && !mossuEl.classList.contains('hidden')) mossuEl.classList.add('dim');
+  if(speaker==='mossu' && !sannuEl.classList.contains('hidden')) sannuEl.classList.add('dim');
+}
+
+function setNamebox(speaker){
+  namebox.className='';
+  if(speaker==='sannu'){ namebox.textContent='Sannu'; namebox.classList.add('sannu'); }
+  else if(speaker==='mossu'){ namebox.textContent='Mossu'; namebox.classList.add('mossu'); }
+  else { namebox.textContent='Narration'; namebox.classList.add('narration'); }
+}
+
+function findNextIndex(from){
+  // skip nodes belonging to a different branch than currentBranch
+  let i=from;
+  while(i<story.length){
+    const node=story[i];
+    if(node.branch===undefined || node.branch===currentBranch) return i;
+    i++;
+  }
+  return i;
+}
+
+function renderNode(){
+  if(idx>=story.length){ return; }
+  const node=story[idx];
+
+  if(node.show) showChar(node.show);
+  highlightSpeaker(node.speaker);
+  setNamebox(node.speaker);
+  textbox.textContent=node.text;
+
+  if(node.sfx==='bond'){ sfx.bond(); relationship+=5; updateRelBar(); }
+
+  if(node.end){
+    continueHint.textContent='— click to continue to Chapter 2 —';
+    try{ localStorage.setItem('sm_bond', String(relationship)); }catch(e){}
+    return;
+  }
+
+  if(node.choices){
+    continueHint.classList.add('hidden');
+    choicesDiv.classList.remove('hidden');
+    choicesDiv.innerHTML='';
+    node.choices.forEach(choice=>{
+      const btn=document.createElement('button');
+      btn.className='choiceBtn';
+      btn.textContent=choice.text;
+      btn.onclick=()=>{
+        sfx.choice();
+        relationship+=choice.rel||0;
+        updateRelBar();
+        currentBranch = choice.next;
+        choicesDiv.classList.add('hidden');
+        continueHint.classList.remove('hidden');
+        idx = findNextIndex(idx+1);
+        renderNode();
+      };
+      choicesDiv.appendChild(btn);
+    });
+  } else {
+    continueHint.classList.remove('hidden');
+  }
+}
+
+function advance(){
+  if(!started){
+    started=true;
+    document.getElementById('titlecard').classList.add('fadeout');
+    startMusic();
+    sfx.enter();
+    renderNode();
+    return;
+  }
+  const node=story[idx];
+  if(node.end) {
+    // go to chapter 2
+    window.location.href = 'sannu_mossu_chapter2.html';
+    return;
+  }
+  if(node.choices) return; // must pick a choice
+  sfx.click();
+  idx = findNextIndex(idx+1);
+  renderNode();
+}
+
+document.getElementById('stage').addEventListener('click', (e)=>{
+  if(e.target.classList.contains('choiceBtn')) return;
+  advance();
+});
+
+updateRelBar();
+</script>
+</body>
+</html>
