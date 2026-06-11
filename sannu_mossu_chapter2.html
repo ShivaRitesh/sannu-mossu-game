@@ -479,10 +479,41 @@ const story=[
     {text:'✧  Just smile — keep it as a quiet promise',rel:+8,next:'smile'}
   ]},
   {speaker:'narration',text:"Sannu reaches out, and Mossu takes her hand without hesitation. Neither says anything else — they don't need to.",branch:'hand',sfx:'bond'},
+  {speaker:'mossu',text:"Your hand is cold.",branch:'hand'},
+  {speaker:'sannu',text:"Y-your hand is warm.",branch:'hand'},
+  {speaker:'mossu',text:"Then keep holding it.",branch:'hand',sfx:'bond'},
   {speaker:'narration',text:"Sannu just smiles, and Mossu smiles back. Some promises don't need words.",branch:'smile'},
+  {speaker:'mossu',text:"You know... you always do that.",branch:'smile'},
+  {speaker:'sannu',text:"Do what?",branch:'smile'},
+  {speaker:'mossu',text:"Smile like everything is going to be okay. I like that about you.",branch:'smile',sfx:'bond'},
   {speaker:'narration',text:"Above them, the lanterns drift gently in the night breeze — tiny points of light against the dark, like a sky full of wishes waiting to be made."},
+  {speaker:'narration',text:"Suddenly — BOOM. The sky erupts in colour. The town's fireworks display begins, painting the darkness in gold and crimson."},
+  {speaker:'sannu',text:"Oh—! I forgot about the fireworks!"},
+  {speaker:'mossu',text:"Don't look at the sky."},
+  {speaker:'sannu',text:"...What? Why not?"},
+  {speaker:'mossu',text:"Because you look better than the fireworks."},
+  {speaker:'narration',text:"Sannu goes completely red. She adjusts her glasses to hide her face. It doesn't work.",choices:[
+    {text:'✦  Turn toward him — let him see you blush',rel:+15,next:'blush'},
+    {text:'✧  "S-stop saying things like that!"',rel:+8,next:'flustered'}
+  ]},
+  {speaker:'narration',text:"She turns slowly, cheeks glowing warmer than any lantern. Mossu's eyes are soft — he isn't teasing. He means it.",branch:'blush',sfx:'bond'},
+  {speaker:'mossu',text:"There. Much better than fireworks.",branch:'blush'},
+  {speaker:'narration',text:"On impulse — barely thinking — Mossu leans over and presses a gentle kiss to her cheek. It lasts only a second.",branch:'blush'},
+  {speaker:'sannu',text:"M... Mossu—!",branch:'blush'},
+  {speaker:'mossu',text:"Sorry. I just... wanted to.",branch:'blush',sfx:'bond'},
+  {speaker:'sannu',text:"Don't apologise.",branch:'blush'},
+  {speaker:'narration',text:"She doesn't pull away. She just watches the fireworks with a quiet smile — the kind that stays long after the night ends.",branch:'blush'},
+  {speaker:'sannu',text:"Stop it! You're embarrassing me in public!",branch:'flustered'},
+  {speaker:'mossu',text:"Ha — nobody's watching. They're all staring at the fireworks.",branch:'flustered'},
+  {speaker:'sannu',text:"...Fine. But you can't just say things like that without warning.",branch:'flustered'},
+  {speaker:'mossu',text:"Noted. Next time I'll give you a three-second warning.",branch:'flustered'},
+  {speaker:'sannu',text:"There won't be a next time!",branch:'flustered'},
+  {speaker:'mossu',text:"...There will.",branch:'flustered',sfx:'bond'},
+  {speaker:'sannu',text:"...Maybe.",branch:'flustered'},
+  {speaker:'narration',text:"The fireworks fade. The lanterns sway. Neither of them moves to go home. Not yet. Not while the night still feels like this."},
   {speaker:'narration',text:"✦  — END OF CHAPTER 2 —  ✦",end:true}
 ];
+
 
 let idx=0,relationship=30,currentBranch=null,started=false;
 try{const s=localStorage.getItem('sm_bond');if(s!==null)relationship=parseInt(s,10);}catch(e){}
@@ -557,7 +588,7 @@ function renderNode(){
   setNamebox(node.speaker);
   typeText(node.text);
   if(node.sfx==='bond'){setTimeout(()=>{sfx.bond();relationship+=5;updateRelBar();},200);}
-  if(node.end){continueHint.textContent='✦ Chapter 2 Complete ✦';try{localStorage.setItem('sm_bond',String(relationship));}catch(e){}return;}
+  if(node.end){continueHint.textContent='✦ click to continue to Chapter 3 ✦';try{localStorage.setItem('sm_bond',String(relationship));}catch(e){}return;}
   if(node.minigame){continueHint.classList.add('hidden');setTimeout(startMinigame,600);return;}
   if(node.choices){
     continueHint.classList.add('hidden');
@@ -574,7 +605,7 @@ function renderNode(){
 function advance(){
   if(!started){started=true;document.getElementById('titlecard').classList.add('fadeout');startMusic();sfx.enter();setTimeout(renderNode,400);return;}
   const node=story[idx];
-  if(node.end)return;
+  if(node.end){window.location.href='sannu_mossu_chapter3.html';return;}
   if(node.choices||node.minigame)return;
   sfx.click();
   idx=findNextIndex(idx+1);
