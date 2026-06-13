@@ -15,9 +15,10 @@ html,body{height:100%;width:100%;background:var(--deep-bg);font-family:'Lato',sa
 /* ===== SCENES ===== */
 .scene{position:absolute;inset:0;overflow:hidden}
 .scene.ch1{background:linear-gradient(180deg,#0d1a0a,#1a2e10 20%,#2a4a1e 40%,#1c3a2a 65%,#0e2018 85%,#060e0a)}
-.scene.ch2{background:linear-gradient(180deg,#06020f,#0d0520 20%,#150a30 40%,#1a0c35 60%,#0e0820 80%,#080510)}
-.scene.ch3{background:linear-gradient(180deg,#020108,#08041a 20%,#100630 40%,#180a3a 55%,#0e0625 75%,#060310)}
-.scene.ch4{background:linear-gradient(180deg,#0a0000,#1a0508 15%,#2a0a0a 30%,#1e0808 50%,#120505 70%,#060202)}
+.scene.ch2{background:linear-gradient(180deg,#02010c,#050314 20%,#080520 40%,#0a0628 60%,#060418 80%,#03020c)}
+.scene.ch3{background:linear-gradient(180deg,#1c0d02,#2d1a0a 20%,#3e2715 40%,#2e1b0c 65%,#1c0d02 85%,#0b0400)}
+.scene.ch4{background:linear-gradient(180deg,#1c0d02,#2e141a 25%,#3a1525 50%,#260a18 75%,#15050e 100%)}
+.scene.ch5{background:linear-gradient(180deg,#0a0000,#1a0508 15%,#2a0a0a 30%,#1e0808 50%,#120505 70%,#060202)}
 
 /* ===== SHARED SCENE ELEMENTS ===== */
 .star{position:absolute;border-radius:50%;animation:twinkle var(--dur,3s) infinite ease-in-out}
@@ -543,51 +544,98 @@ function buildScene(ch){
     for(let i=0;i<40;i++){const s=mkStar();s.style.top=Math.random()*32+'%';scene.appendChild(s);}
   }
   else if(ch===2){
-    scene.innerHTML=`
-      <div class="moon"></div>
-      <div class="nebula" style="width:300px;height:150px;top:10%;left:20%;background:rgba(100,60,180,.07)"></div>
-      <div class="building" style="left:2%;width:80px;height:38%"><div class="win" style="left:12px;bottom:60%;--wb:7s"></div><div class="win" style="left:12px;bottom:45%;--wb:4s;animation-delay:1s"></div></div>
-      <div class="building" style="right:2%;width:90px;height:44%"><div class="win" style="right:12px;bottom:65%;--wb:6s;animation-delay:2s"></div><div class="win" style="right:12px;bottom:45%;--wb:4s;animation-delay:.8s"></div></div>
-      <div class="building" style="left:50%;transform:translateX(-50%);width:110px;height:50%"><div class="win" style="left:15px;bottom:68%;--wb:6s;animation-delay:.3s"></div><div class="win" style="left:55px;bottom:55%;--wb:5s;animation-delay:1s"></div></div>
-      <div class="ground-city"></div>
-      <div class="lantern-hang" style="left:22%;top:25%;--sw:3s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ff9d5c,#e65100);box-shadow:0 0 18px #ff9d5c"></div></div>
-      <div class="lantern-hang" style="left:37%;top:22%;--sw:3.5s;animation-delay:.5s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 16px #ffd97a"></div></div>
-      <div class="lantern-hang" style="left:52%;top:26%;--sw:2.8s;animation-delay:1s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 16px #f48fb1"></div></div>
-      <div class="lantern-hang" style="left:67%;top:23%;--sw:3.2s;animation-delay:1.5s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 18px #ffd97a"></div></div>
-      <div class="lantern-hang" style="left:80%;top:27%;--sw:3s;animation-delay:2s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#ff9d5c,#bf360c);box-shadow:0 0 14px #ff9d5c"></div></div>
-      <div class="petal" style="left:15%;top:-20px;--pd:10s;font-size:16px;--px:30px">🌸</div>
-      <div class="petal" style="left:50%;top:-20px;--pd:13s;font-size:12px;animation-delay:3s;--px:-20px">🌸</div>
-      <div class="petal" style="left:80%;top:-20px;--pd:9s;font-size:14px;animation-delay:5s;--px:20px">💮</div>
-    `;
-    for(let i=0;i<90;i++){const s=mkStar();s.style.top=Math.random()*55+'%';scene.appendChild(s);}
-    for(let i=0;i<12;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${18+Math.random()*64}%;bottom:${12+Math.random()*40}%;--fdur:${4+Math.random()*7}s;--fx:${(Math.random()-.5)*90}px;--fy:${-18-Math.random()*45}px;--fx2:${(Math.random()-.5)*70}px;--fy2:${(Math.random()-.5)*35}px;animation-delay:${Math.random()*7}s;`;scene.appendChild(f);}
-  }
-  else if(ch===3){
-    scene.innerHTML=`
-      <div class="moon" style="width:130px;height:130px"></div>
-      <div class="nebula" style="width:350px;height:180px;top:5%;left:10%;background:rgba(120,60,200,.07)"></div>
-      <div class="nebula" style="width:250px;height:130px;top:18%;right:5%;background:rgba(200,80,120,.05);animation-delay:4s"></div>
-      <div style="position:absolute;bottom:0;width:100%;height:30%;opacity:.4">
-        <div style="position:absolute;bottom:0;left:0;width:70px;height:55%;background:#08051a;border-radius:2px 2px 0 0"></div>
-        <div style="position:absolute;bottom:0;left:30%;width:90px;height:70%;background:#08051a;border-radius:2px 2px 0 0"></div>
-        <div style="position:absolute;bottom:0;right:0;width:75px;height:50%;background:#08051a;border-radius:2px 2px 0 0"></div>
+    // Movie date — warm cozy private theater hall with glowing screen
+    scene.innerHTML = `
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(200,220,255,0.1) 0%, transparent 65%);"></div>
+      <!-- Cinema Screen -->
+      <div style="position:absolute;top:15%;left:10%;width:80%;height:45%;background:linear-gradient(180deg,#e3f2fd,#90caf9);border-radius:4px;box-shadow:0 0 35px rgba(144,202,249,0.22);display:flex;align-items:center;justify-content:center;">
+        <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:6px;color:#1565c0;text-shadow:0 0 10px rgba(255,255,255,0.8);animation:hintPulse 3s ease-in-out infinite">NOW SHOWING</div>
       </div>
-      <div class="ground-city"></div>
-      <div class="lantern-hang" style="left:10%;top:20%;--sw:3.2s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ff9d5c,#e65100);box-shadow:0 0 20px #ff9d5c"></div></div>
-      <div class="lantern-hang" style="left:25%;top:17%;--sw:2.8s;animation-delay:.4s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 18px #f48fb1"></div></div>
-      <div class="lantern-hang" style="left:40%;top:21%;--sw:3.5s;animation-delay:.8s"><div style="width:18px;height:24px;border-radius:3px 3px 9px 9px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 22px #ffd97a"></div></div>
-      <div class="lantern-hang" style="left:55%;top:18%;--sw:3s;animation-delay:1.2s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ce93d8,#9c27b0);box-shadow:0 0 18px #ce93d8"></div></div>
-      <div class="lantern-hang" style="left:70%;top:22%;--sw:2.6s;animation-delay:.6s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 16px #f48fb1"></div></div>
-      <div class="bokeh" style="left:15%;top:55%;width:20px;height:20px;background:rgba(255,160,60,.4);--bd:5s;--bb:8px;--bo:.3"></div>
-      <div class="bokeh" style="left:60%;top:58%;width:18px;height:18px;background:rgba(200,120,255,.4);--bd:6s;--bb:7px;--bo:.28;animation-delay:1s"></div>
-      <div class="petal" style="left:5%;top:-20px;--pd:11s;font-size:16px;--px:30px">🌸</div>
-      <div class="petal" style="left:65%;top:-20px;--pd:9s;font-size:14px;animation-delay:4s;--px:40px">💮</div>
+      <!-- Theater Seat Silhouettes at the bottom -->
+      <div style="position:absolute;bottom:0;width:100%;height:22%;background:linear-gradient(180deg,#090310,#030106)"></div>
+      <div style="position:absolute;bottom:4%;left:12%;width:80px;height:55px;background:#1a0c30;border-radius:10px 10px 0 0;box-shadow:0 4px 8px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.03)"></div>
+      <div style="position:absolute;bottom:4%;right:12%;width:80px;height:55px;background:#1a0c30;border-radius:10px 10px 0 0;box-shadow:0 4px 8px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.03)"></div>
+      <!-- Soft red exit sign -->
+      <div style="position:absolute;top:8%;right:6%;font-size:8px;color:#ff1744;border:1px solid #ff1744;padding:2px 5px;border-radius:2px;letter-spacing:1px;box-shadow:0 0 8px rgba(255,23,68,0.3)">EXIT</div>
     `;
-    const cols=['#fff','#fff9c4','#f8bbd0','#e1bee7','#bbdefb'];
-    for(let i=0;i<110;i++){const s=mkStar();s.style.top=Math.random()*58+'%';s.style.background=cols[Math.floor(Math.random()*cols.length)];scene.appendChild(s);}
-    for(let i=0;i<16;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${10+Math.random()*80}%;bottom:${10+Math.random()*50}%;--fdur:${4+Math.random()*7}s;--fx:${(Math.random()-.5)*100}px;--fy:${-20-Math.random()*50}px;--fx2:${(Math.random()-.5)*80}px;--fy2:${(Math.random()-.5)*40}px;animation-delay:${Math.random()*8}s;`;scene.appendChild(f);}
+    // Add floating bokeh lights
+    for(let i=0;i<15;i++){
+      const b=document.createElement('div');b.className='bokeh';
+      b.style.cssText=`left:${15+Math.random()*70}%;top:${20+Math.random()*40}%;width:${8+Math.random()*12}px;height:${8+Math.random()*12}px;background:rgba(144,202,249,0.15);--bd:${4+Math.random()*4}s;--bb:4px;--bo:${Math.random()*0.15+0.05};animation-delay:${Math.random()*4}s;`;
+      scene.appendChild(b);
+    }
+    for(let i=0;i<30;i++){const s=mkStar();s.style.top=Math.random()*50+'%';s.style.opacity=0.3;scene.appendChild(s);}
   }
-  else if(ch===4){
+  else if(ch===3 || ch===4){
+    // Cozy mud house interior with bathtub, rose petals, hanging cycle, and round mirror
+    const bathGlow = ch===3 ? 'rgba(255,200,220,0.12)' : 'rgba(255,150,180,0.2)';
+    scene.innerHTML = `
+      <!-- Clay walls -->
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%, rgba(215,204,200,0.2) 0%, transparent 80%);"></div>
+      <!-- Wooden ceiling beams -->
+      <div style="position:absolute;top:0;left:0;width:100%;height:15%;background:#3e2723;opacity:0.95;display:flex;justify-content:space-around;padding:0 20px">
+        <div style="width:12px;height:100%;background:#271510"></div>
+        <div style="width:12px;height:100%;background:#271510"></div>
+        <div style="width:12px;height:100%;background:#271510"></div>
+        <div style="width:12px;height:100%;background:#271510"></div>
+      </div>
+      <!-- Hanging little decorative cycle -->
+      <div style="position:absolute;top:15%;left:22%;animation:swing 4s ease-in-out infinite;transform-origin:top center;display:flex;flex-direction:column;align-items:center">
+        <!-- Thin string -->
+        <div style="width:1px;height:45px;background:rgba(255,255,255,0.25)"></div>
+        <!-- Cycle SVG silhouette -->
+        <svg width="45" height="28" viewBox="0 0 100 60" fill="none" stroke="#f5c842" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.85;filter:drop-shadow(0 0 5px rgba(245,200,66,0.3))">
+          <circle cx="25" cy="42" r="15"/>
+          <circle cx="75" cy="42" r="15"/>
+          <polyline points="25,42 50,42 75,42"/>
+          <polyline points="50,42 50,15 35,15"/>
+          <polyline points="50,25 25,42"/>
+          <polyline points="50,25 75,42"/>
+          <line x1="75" y1="42" x2="75" y2="15"/>
+          <line x1="70" y1="15" x2="80" y2="15"/>
+        </svg>
+      </div>
+      <!-- Large round mirror on the wall -->
+      <div style="position:absolute;top:18%;left:50%;transform:translateX(-50%);width:110px;height:110px;border-radius:50%;border:3px solid #8d6e63;background:radial-gradient(circle at 35% 35%, rgba(255,255,255,0.15) 0%, rgba(200,160,255,0.05) 50%, rgba(8,4,18,0.85) 100%);box-shadow:0 8px 25px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center">
+        <!-- Soft reflection glow of couple/room -->
+        <div style="width:90px;height:90px;border-radius:50%;background:radial-gradient(circle, ${ch===3?'rgba(244,143,177,0.12)':'rgba(255,64,129,0.18)'} 0%, transparent 70%);filter:blur(3px)"></div>
+      </div>
+      <!-- Soft candle glowing near the mirror -->
+      <div style="position:absolute;top:32%;left:37%;display:flex;flex-direction:column;align-items:center">
+        <div style="width:4px;height:6px;background:#ff9800;border-radius:50% 50% 0 0;box-shadow:0 0 10px 3px #ffb74d;animation:sway 1.5s ease-in-out infinite"></div>
+        <div style="width:6px;height:12px;background:#ffe082;border-radius:1px"></div>
+      </div>
+      <div style="position:absolute;top:30%;right:37%;display:flex;flex-direction:column;align-items:center">
+        <div style="width:4px;height:6px;background:#ff9800;border-radius:50% 50% 0 0;box-shadow:0 0 10px 3px #ffb74d;animation:sway 1.8s ease-in-out infinite;animation-delay:0.3s"></div>
+        <div style="width:6px;height:14px;background:#ffe082;border-radius:1px"></div>
+      </div>
+      <!-- Wooden floor -->
+      <div style="position:absolute;bottom:0;width:100%;height:18%;background:linear-gradient(180deg,#3e2723,#1b0d0a)"></div>
+      <!-- Bathtub full of water & rose petals -->
+      <div style="position:absolute;bottom:4%;left:50%;transform:translateX(-50%);width:210px;height:55px;background:linear-gradient(180deg,#8d6e63,#4e342e);border:3px solid #5d4037;border-radius:0 0 45px 45px;box-shadow:0 12px 30px rgba(0,0,0,0.8), inset 0 3px 6px rgba(255,255,255,0.06);overflow:hidden">
+        <!-- Water surface -->
+        <div style="position:absolute;top:0;left:0;width:100%;height:14px;background:linear-gradient(180deg,#80deea,#26c6da);opacity:0.85;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)"></div>
+        <!-- Water glow reflection -->
+        <div style="position:absolute;inset:0;background:${bathGlow};filter:blur(4px);animation:moonGlow 4s ease-in-out infinite"></div>
+        <!-- Floating rose petals inside the tub -->
+        <div style="position:absolute;top:2px;left:15px;font-size:7px;opacity:0.85;animation:sway 3s ease-in-out infinite">🌸</div>
+        <div style="position:absolute;top:5px;left:45px;font-size:6px;opacity:0.9;animation:sway 2.5s ease-in-out infinite;animation-delay:0.5s">🌸</div>
+        <div style="position:absolute;top:1px;left:75px;font-size:7px;opacity:0.8;animation:sway 3.2s ease-in-out infinite;animation-delay:1.2s">🌸</div>
+        <div style="position:absolute;top:4px;left:105px;font-size:6px;opacity:0.9;animation:sway 2.8s ease-in-out infinite;animation-delay:0.2s">🌸</div>
+        <div style="position:absolute;top:2px;left:145px;font-size:7px;opacity:0.85;animation:sway 3.5s ease-in-out infinite;animation-delay:0.8s">🌸</div>
+        <div style="position:absolute;top:6px;left:175px;font-size:6px;opacity:0.9;animation:sway 2.6s ease-in-out infinite;animation-delay:1.5s">🌸</div>
+      </div>
+      <!-- Outer tub decoration (rim) -->
+      <div style="position:absolute;bottom:11%;left:50%;transform:translateX(-50%);width:216px;height:6px;background:#5d4037;border-radius:3px;box-shadow:0 3px 5px rgba(0,0,0,0.5)"></div>
+    `;
+    // Add warm floating candle embers / light bokeh inside the room
+    for(let i=0;i<12;i++){
+      const f=document.createElement('div');f.className='firefly';
+      f.style.cssText=`left:${10+Math.random()*80}%;bottom:${15+Math.random()*45}%;--fdur:${5+Math.random()*5}s;--fx:${(Math.random()-.5)*60}px;--fy:${-15-Math.random()*30}px;--fx2:${(Math.random()-.5)*45}px;--fy2:${(Math.random()-.5)*20}px;animation-delay:${Math.random()*5}s;background:#ffb74d;box-shadow:0 0 8px 2px #ff9800;`;
+      scene.appendChild(f);
+    }
+  }
+  else if(ch===5){
     // Storm / battle scene — dark red sky, embers, broken city
     scene.innerHTML=`
       <div style="position:absolute;top:5%;left:50%;transform:translateX(-50%);width:200px;height:50px;border-radius:50%;background:rgba(200,50,20,.12);filter:blur(18px)"></div>
@@ -649,7 +697,7 @@ const sfx={
 
 // ===================== MUSIC ENGINE =====================
 let revNode=null,mGain=null,dGain=null,mLoop=null;
-const N={A2:110,B2:123.47,C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.26,F5:698.46,G5:783.99,A5:880};
+const N={G2:98,A2:110,B2:123.47,C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.26,F5:698.46,G5:783.99,A5:880};
 function initAudio(){
   if(revNode)return;
   mGain=actx.createGain();mGain.gain.value=0.2;mGain.connect(actx.destination);
@@ -672,7 +720,7 @@ function pNote(freq,st,dur,vol=0.07,type='sine'){
 function stopMusic(){if(mLoop){clearTimeout(mLoop);mLoop=null;}}
 function startMusic(ch){
   initAudio();stopMusic();
-  setTimeout(()=>{if(ch===1)ch1Theme();else if(ch===2)ch2Theme();else if(ch===3)ch3Theme();else ch4Theme();},700);
+  setTimeout(()=>{if(ch===1)ch1Theme();else if(ch===2)ch2Theme();else if(ch===3||ch===4)ch3Theme();else ch4Theme();},700);
 }
 // Ch1: Park — C major bright (110 BPM)
 function ch1Theme(){
@@ -759,7 +807,7 @@ function addRomanceGlow(){document.getElementById('sannu').classList.add('romanc
 // ===================== CHAPTERS DATA =====================
 const chapters=[
   {
-    num:1,tag:'CH. 1 — THE PROMISE PARK',narr:'#a5d6a7',
+    num:1,tag:'CH. 1 — FIRST MEETING (28·03·09)',narr:'#a5d6a7',
     story:[
       {speaker:'narration',text:"Sunlight spills through the ancient oak trees of Promise Park. Cherry blossoms drift lazily on the warm breeze — and on a quiet bench, two strangers are about to change each other's lives forever."},
       {speaker:'narration',text:"A girl with glasses too big for her face stares intently at a butterfly that has landed on her knee. She barely breathes, afraid to startle it.",show:'sannu'},
@@ -787,154 +835,112 @@ const chapters=[
       {speaker:'sannu',text:"I'm Sannu. Nice to meet you, Mossu.",branch:1,sfx:'bond'},
       {speaker:'narration',text:"For a while, neither says much. Something invisible has shifted — a small thread now connects two strangers on a sunlit bench."},
       {speaker:'mossu',text:"So... do you come here a lot?",choices:[
-        {text:'✦  "Every day after lessons. It\'s quiet here."',rel:+5,next:2},
-        {text:'✧  "First time. I got a little lost."',rel:+5,next:2}
+        {text:'✦  "Every day after lessons. It\'s quiet here."',rel:0,next:2},
+        {text:'✧  "First time. I got a little lost."',rel:0,next:2}
       ]},
-      {speaker:'sannu',text:"Maybe... maybe we could sit here again sometime? If you wanted to.",branch:2},
-      {speaker:'mossu',text:"Yeah. Same bench, same time tomorrow?",branch:2},
-      {speaker:'sannu',text:"...Promise?",branch:2},
-      {speaker:'mossu',text:"Promise.",branch:2,sfx:'bond',onEnter:'promiseSong'},
-      {speaker:'narration',text:"Neither of them knows it yet — but this small promise, made on an ordinary golden afternoon, will echo across the rest of their lives."},
-      {speaker:'narration',text:"✦  — END OF CHAPTER 1 —  ✦",end:true}
+      {speaker:'mossu',text:"I think we were meant to meet today, Sannu.",branch:2},
+      {speaker:'sannu',text:"M-meant to? That's not very scientific...",branch:2},
+      {speaker:'narration',text:"Mossu smiles, his eyes soft. He leans in closer, setting his books aside.",branch:2,onEnter:'bringClose'},
+      {speaker:'sannu',text:"Mossu? What are you—",branch:2},
+      {speaker:'narration',text:"Before she can finish, he leans in and presses his lips to hers. A sweet, real first lip kiss that stops the wind.",branch:2,onEnter:'kissScene'},
+      {speaker:'sannu',text:"M... Mossu—! That was... my lips...",branch:2},
+      {speaker:'mossu',text:"I know. Promise me we'll never be apart, Sannu.",branch:2},
+      {speaker:'sannu',text:"...I promise. I will never leave you, Mossu.",branch:2,sfx:'bond',onEnter:'promiseSong'},
+      {speaker:'narration',text:"Neither of them knows it yet — but this small promise, made on an ordinary golden afternoon, will echo across the rest of their lives.",end:true}
     ]
   },
   {
-    num:2,tag:'CH. 2 — GROWING BONDS',narr:'#ffd97a',
+    num:2,tag:'CH. 2 — MOVIE MAGIC (23-24·05·25)',narr:'#ffd97a',
     story:[
-      {speaker:'narration',text:"A few weeks since Promise Park. The Festival of Lanterns approaches, and Sannu and Mossu agreed to meet at the town square to help set up."},
-      {speaker:'narration',text:"The square buzzes with preparation — strings of lanterns wait to be lit, stalls are being decorated.",show:'mossu'},
-      {speaker:'mossu',text:"Sannu! Over here — they need help lighting the lanterns before sunset."},
-      {speaker:'narration',text:"Sannu jogs over, adjusting her glasses, a notebook tucked under her arm.",show:'sannu'},
-      {speaker:'sannu',text:"I brought a diagram. Light them in the right order and the whole string glows evenly."},
-      {speaker:'mossu',text:"...Of course you made a diagram. Okay, Professor — lead the way!"},
-      {speaker:'narration',text:"Sannu pulls out a small device with colour-coded switches...",minigame:true},
-      {speaker:'narration',text:"The lanterns flicker to life one by one. A few townsfolk nearby clap softly.",branch:'mg'},
-      {speaker:'mossu',text:"Whoa... it actually worked. You're kind of amazing.",branch:'mg'},
-      {speaker:'sannu',text:"It's just basic circuitry. Nothing special.",branch:'mg',sfx:'bond'},
-      {speaker:'mossu',text:"Don't shrink what you just did. It was special.",branch:'mg'},
-      {speaker:'narration',text:"Sannu looks away, cheeks warm under the lantern light.",choices:[
-        {text:'✦  "...Thank you, Mossu." (smile softly)',rel:+10,next:'a'},
-        {text:'✧  "Stop teasing me!" (playful)',rel:+5,next:'b'}
-      ]},
-      {speaker:'sannu',text:"...Thank you, Mossu.",branch:'a'},
-      {speaker:'mossu',text:"See? Was that so hard?",branch:'a',sfx:'bond'},
-      {speaker:'sannu',text:"Stop teasing me! ...But thanks.",branch:'b'},
-      {speaker:'mossu',text:"Ha! There she is.",branch:'b'},
-      {speaker:'narration',text:"As the last lantern flickers on, the square fills with warm light. A street musician begins to play."},
-      {speaker:'mossu',text:"Hey, Sannu... when we're older — do you think we'll still be doing stuff like this together?"},
-      {speaker:'sannu',text:"I'd like that. Whatever happens... I want you in my future, Mossu.",choices:[
+      {speaker:'narration',text:"May 2025. Two days where the entire world shrinks to just the two of them. A cozy, dark theater room, the screen casting soft silver light on their faces."},
+      {speaker:'narration',text:"Sannu sits close, adjusting her glasses as the movie previews begin.",show:'sannu'},
+      {speaker:'sannu',text:"The theater is quiet today. It's nice."},
+      {speaker:'narration',text:"Mossu slides closer, his silver bracelet catching the reflection of the screen.",show:'mossu'},
+      {speaker:'mossu',text:"Yeah. But I'm not really looking at the screen.",choices:[
         {text:'✦  Reach out and hold his hand',rel:+15,next:'hand'},
-        {text:'✧  Just smile — keep it as a quiet promise',rel:+8,next:'smile'}
+        {text:'✧  "Pay attention to the movie!" (teasing)',rel:+5,next:'teas'}
       ]},
-      {speaker:'narration',text:"Sannu reaches out, and Mossu takes her hand without hesitation.",branch:'hand',sfx:'bond'},
+      {speaker:'narration',text:"Sannu reaches out, and Mossu wraps his warm fingers around hers tightly.",branch:'hand',sfx:'bond'},
       {speaker:'mossu',text:"Your hand is cold.",branch:'hand'},
       {speaker:'sannu',text:"Y-your hand is warm.",branch:'hand'},
-      {speaker:'mossu',text:"Then keep holding it.",branch:'hand',sfx:'bond'},
-      {speaker:'narration',text:"Sannu just smiles, and Mossu smiles back. Some promises don't need words.",branch:'smile'},
-      {speaker:'mossu',text:"You smile like everything is going to be okay. I like that about you.",branch:'smile',sfx:'bond'},
-      {speaker:'narration',text:"Suddenly — BOOM. The town's fireworks display begins, painting the darkness in gold and crimson."},
-      {speaker:'sannu',text:"Oh—! I forgot about the fireworks!"},
-      {speaker:'mossu',text:"Don't look at the sky."},
-      {speaker:'sannu',text:"...What? Why not?"},
-      {speaker:'mossu',text:"Because you look better than the fireworks."},
-      {speaker:'narration',text:"Sannu goes completely red. She adjusts her glasses. It doesn't work.",choices:[
-        {text:'♥  Turn toward him — let him see you blush',rel:+15,next:'blush'},
-        {text:'♡  "S-stop saying things like that!"',rel:+8,next:'flustered'}
+      {speaker:'mossu',text:"Then keep holding it. Always.",branch:'hand',sfx:'bond'},
+      {speaker:'sannu',text:"Stop teasing me! Pay attention to the screen.",branch:'teas'},
+      {speaker:'mossu',text:"Why? You look much better than any movie anyway.",branch:'teas',sfx:'bond'},
+      {speaker:'sannu',text:"M... Mossu—!",branch:'teas'},
+      {speaker:'narration',text:"As the film plays, they pull closer. The boundaries between them soften into pure closeness."},
+      {speaker:'narration',text:"Mossu leans in, his hand gently finding her waist. They feel each other intimately, surrounded by the theater's dark warmth.",onEnter:'bringClose'},
+      {speaker:'sannu',text:"We're supposed to be watching...",choices:[
+        {text:'♥  Lean in and kiss him passionately',rel:+20,next:'smooch'},
+        {text:'♡  Whisper "I love you" and let him hold you tight',rel:+12,next:'hold'}
       ]},
-      {speaker:'narration',text:"She turns slowly, cheeks glowing warmer than any lantern. Mossu's eyes are soft — he means it.",branch:'blush',sfx:'bond'},
-      {speaker:'mossu',text:"There. Much better than fireworks.",branch:'blush'},
-      {speaker:'narration',text:"On impulse — Mossu leans over and presses a gentle kiss to her cheek.",branch:'blush'},
-      {speaker:'sannu',text:"M... Mossu—!",branch:'blush'},
-      {speaker:'mossu',text:"Sorry. I just... wanted to.",branch:'blush',sfx:'bond'},
-      {speaker:'sannu',text:"Don't apologise.",branch:'blush'},
-      {speaker:'narration',text:"She doesn't pull away. She just watches the fireworks with a quiet smile.",branch:'blush'},
-      {speaker:'sannu',text:"Stop it! You're embarrassing me!",branch:'flustered'},
-      {speaker:'mossu',text:"Ha — nobody's watching. They're all looking at the fireworks.",branch:'flustered'},
-      {speaker:'mossu',text:"...There will be a next time.",branch:'flustered',sfx:'bond'},
-      {speaker:'sannu',text:"...Maybe.",branch:'flustered'},
-      {speaker:'narration',text:"The fireworks fade. The lanterns sway. Neither of them moves to go home. Not yet. Not while the night still feels like this."},
-      {speaker:'narration',text:"✦  — END OF CHAPTER 2 —  ✦",end:true}
+      {speaker:'narration',text:"Sannu turns and meets his lips. A deep, passionate smooch, full of love and years of shared memories.",branch:'smooch',onEnter:'kissScene'},
+      {speaker:'mossu',text:"Best movie date ever.",branch:'smooch',sfx:'bond'},
+      {speaker:'sannu',text:"Shh... they'll hear you.",branch:'smooch'},
+      {speaker:'narration',text:"She rests her head on his shoulder, his arm holding her close. Every kiss feels like home.",branch:'hold',sfx:'bond'},
+      {speaker:'mossu',text:"I could stay like this forever.",branch:'hold'},
+      {speaker:'narration',text:"The movie ends and the lights slowly rise, but neither of them moves to go home. Not yet. Not while the night still feels like this.",end:true}
     ]
   },
   {
-    num:3,tag:'CH. 3 — FESTIVAL OF DREAMS',narr:'#f48fb1',
+    num:3,tag:'CH. 3 — THE SANCTUARY (21·08·25)',narr:'#f48fb1',
     story:[
-      {speaker:'narration',text:"The Festival of Dreams — the grandest celebration in the region. Lanterns of a hundred colours, music in every alley, the sky painted with fireworks and stars."},
-      {speaker:'narration',text:"Sannu arrives first, notebook in hand. She watches the lights with quiet wonder.",show:'sannu'},
-      {speaker:'sannu',text:"Every year it's beautiful. Every year I forget how beautiful."},
-      {speaker:'narration',text:"Then she hears footsteps. Familiar ones.",show:'mossu'},
-      {speaker:'mossu',text:"Sorry I'm late. There was a — wait."},
-      {speaker:'sannu',text:"What?"},
-      {speaker:'mossu',text:"You did your hair differently."},
-      {speaker:'sannu',text:"I... it's the same as always."},
-      {speaker:'mossu',text:"No it's not. You look... really nice, Sannu."},
-      {speaker:'narration',text:"Sannu turns away before he can see her face go red. But he already saw.",sfx:'bond'},
-      {speaker:'narration',text:"They walk through the festival — past food stalls, fire breathers, children releasing paper lanterns.",choices:[
-        {text:'✦  "Mossu, look — they\'re releasing lanterns!"',rel:+8,next:'A'},
-        {text:'✧  Walk quietly beside him, shoulders touching',rel:+12,next:'A'}
+      {speaker:'narration',text:"August 2025. Honeymoon. Away from the city's noise, they find refuge in a warm mud-walled cottage. The air is thick with the scent of clay and drying timber."},
+      {speaker:'narration',text:"In the center of the room, a wooden bathtub is filled to the brim with warm water and fresh red rose petals.",show:'sannu'},
+      {speaker:'sannu',text:"It's so quiet here. Look, there's even a little cycle hanging from the ceiling beams as styling."},
+      {speaker:'narration',text:"Mossu stands by the round mirror on the wall, adjusting a candle flame. He turns, his wheat skin glowing warm.",show:'mossu'},
+      {speaker:'mossu',text:"It's perfect. No phones, no clocks. Just us."},
+      {speaker:'narration',text:"Sannu steps near the tub, looking at her reflection in the round mirror.",choices:[
+        {text:'✦  "Make a wish, Mossu."',rel:+10,next:'wish'},
+        {text:'✧  Step into the warm water with him',rel:+15,next:'bath'}
       ]},
-      {speaker:'narration',text:"They find a quiet spot near the river's edge. Lanterns float upward like a hundred small suns.",branch:'A'},
-      {speaker:'mossu',text:"Make a wish.",branch:'A'},
-      {speaker:'sannu',text:"I don't know what to wish for.",branch:'A'},
-      {speaker:'mossu',text:"Really? You who plans everything — nothing?",branch:'A'},
-      {speaker:'sannu',text:"...I think I already have what I want to wish for. Right here.",branch:'A',sfx:'bond'},
-      {speaker:'narration',text:"Mossu just looks at her. The silence holds something neither has put into words yet.",branch:'A'},
-      {speaker:'mossu',text:"Sannu."},
-      {speaker:'sannu',text:"...Yes?"},
-      {speaker:'mossu',text:"Can I ask you something? Promise not to overthink it."},
-      {speaker:'sannu',text:"Literally impossible for me. But... yes."},
-      {speaker:'mossu',text:"What are we?"},
-      {speaker:'narration',text:"The question lands between them like a lantern reaching the sky. Simple. Burning. Impossible to ignore.",choices:[
-        {text:'♥  "You\'re the most important person in my life."',rel:+20,next:'conf'},
-        {text:'♡  "What do you want us to be?"',rel:+12,next:'deflect'}
+      {speaker:'sannu',text:"Make a wish, Mossu.",branch:'wish'},
+      {speaker:'mossu',text:"I don't know what to wish for. I plan a lot, but this...",branch:'wish'},
+      {speaker:'sannu',text:"...I think I already have what I want to wish for. Right here.",branch:'wish',sfx:'bond'},
+      {speaker:'narration',text:"They step into the rose-scented bath together. The warm water envelopes them as they sit close, skin-to-skin.",branch:'bath'},
+      {speaker:'narration',text:"They hold each other in the water. The round mirror reflects the candlelight, the floating petals, and their silhouettes.",onEnter:'bringClose'},
+      {speaker:'mossu',text:"Sannu... I want to protect this. Whatever we're becoming, I want to protect it.",sfx:'bond'},
+      {speaker:'sannu',text:"So do I. Forgetting everything else... in this moment, there is only us.",choices:[
+        {text:'♥  Kiss him under the candlelight',rel:+20,next:'k3'},
+        {text:'♡  Hold him tight, breathing in the warmth',rel:+12,next:'h3'}
       ]},
-      {speaker:'sannu',text:"I think... you're the most important person in my life. And that terrifies me.",branch:'conf'},
-      {speaker:'mossu',text:"Why terrifying?",branch:'conf'},
-      {speaker:'sannu',text:"Because I don't know what happens if I lose you.",branch:'conf'},
-      {speaker:'mossu',text:"You won't.",branch:'conf',sfx:'bond'},
-      {speaker:'narration',text:"He reaches out and gently takes her glasses off — carefully sets them aside.",branch:'conf',onEnter:'bringClose'},
-      {speaker:'sannu',text:"H-hey, I need those—",branch:'conf'},
-      {speaker:'mossu',text:"I know. I just wanted to see your face clearly for a second.",branch:'conf'},
-      {speaker:'narration',text:"He's closer than she realised. The lantern light catches in his eyes.",branch:'conf',sfx:'bond'},
-      {speaker:'narration',text:"He leans in. Slowly. And then — softly — his lips meet hers. A first kiss, warm and perfect.",branch:'conf',onEnter:'kissScene'},
-      {speaker:'narration',text:"When they pull apart, Sannu's eyes are wide. Her face is every shade of red.",branch:'conf'},
-      {speaker:'mossu',text:"...So. I think that answers the question.",branch:'conf',sfx:'bond'},
-      {speaker:'sannu',text:"Give me my glasses back.",branch:'conf'},
-      {speaker:'sannu',text:"...Can we — um — can you do that again? Eventually.",branch:'conf',sfx:'bond'},
-      {speaker:'mossu',text:"Any time you want, Sannu.",branch:'conf'},
-      {speaker:'mossu',text:"I know what I want. I want to know what YOU want.",branch:'deflect'},
-      {speaker:'sannu',text:"That's not a fair answer.",branch:'deflect'},
-      {speaker:'narration',text:"Somewhere between this breath and the next, Sannu makes a decision.",branch:'deflect',onEnter:'bringClose'},
-      {speaker:'sannu',text:"I want to keep being your friend. And more than that. I don't have the exact words yet.",branch:'deflect'},
-      {speaker:'mossu',text:"That's enough. That's more than enough.",branch:'deflect',sfx:'bond'},
-      {speaker:'narration',text:"He leans close. Slowly. Giving her time to say no. She doesn't.",branch:'deflect',onEnter:'kissScene'},
-      {speaker:'narration',text:"His lips brush her cheek — light as a petal. It lasts only a second. But it changes everything.",branch:'deflect'},
-      {speaker:'sannu',text:"...Ask me again sometime. On my lips.",branch:'deflect',sfx:'bond'},
-      {speaker:'mossu',text:"I'll hold you to that.",branch:'deflect'},
-      {speaker:'narration',text:"They stay at the river's edge long after the lanterns fade. The festival crowd thins."},
-      {speaker:'mossu',text:"I want to protect this. Whatever we're becoming."},
-      {speaker:'sannu',text:"So do I. ...But the world doesn't always let things stay beautiful."},
-      {speaker:'narration',text:"A strange wind passes through the square. The festival lights flicker — one cold, wrong moment."},
-      {speaker:'narration',text:"Far at the edge of the city, on the roof of the highest tower, a masked figure watches in silence."},
-      {speaker:'narration',text:"\"So these are the ones the prophecy speaks of. Let them enjoy their little festival... while it lasts.\""},
-      {speaker:'mossu',text:"Hey. You okay?"},
-      {speaker:'sannu',text:"Yeah. Just... a strange feeling. Like something's watching."},
-      {speaker:'mossu',text:"Nothing's getting near you. I promise."},
-      {speaker:'sannu',text:"...I know you mean that. That's why I believe you."},
-      {speaker:'narration',text:"The last lantern rises silently into the sky. They watch until it disappears into the stars."},
-      {speaker:'narration',text:"✦  — END OF CHAPTER 3 —  ✦\n\nThe story continues...",end:true}
+      {speaker:'narration',text:"Mossu cups her face, gently removing her glasses. He kisses her softly amidst the floating rose petals.",branch:'k3',onEnter:'kissScene'},
+      {speaker:'sannu',text:"Let's stay like this...",branch:'k3'},
+      {speaker:'narration',text:"She holds him close, resting her chest against his. The cycle sways gently above them in the candlelight.",branch:'h3',sfx:'bond'},
+      {speaker:'narration',text:"They stay in the sanctuary long after the candles burn low. Loving each other, forgetting the world.",end:true}
     ]
   },
   {
-    num:4,tag:'CH. 4 — THE NIGHT ATTACK',narr:'#ff8a65',
+    num:4,tag:'CH. 4 — BREAKING THE SEAL (28·10·25)',narr:'#ba68c8',
     story:[
-      {speaker:'narration',text:"The night shatters.\n\nNot with a sound — but with the feeling that something wrong has just moved into the world. Three blocks from the festival, every streetlight dies at once."},
+      {speaker:'narration',text:"October 2025. Their second honeymoon. They return to the same cozy mud house with the clay walls, the hanging bicycle, and the round mirror."},
+      {speaker:'narration',text:"The room is warmer tonight. Sannu stands by the water, her short shoulder hair catching the fire's glow.",show:'sannu'},
+      {speaker:'sannu',text:"It feels different tonight, Mossu. Closer. Like... the wait is finally over."},
+      {speaker:'narration',text:"Mossu steps closer, his messy hair dark in the firelight. He reaches out, taking her hands.",show:'mossu'},
+      {speaker:'mossu',text:"It is. I want to give you everything tonight. All my love, all my warmth."},
+      {speaker:'narration',text:"She looks up at him. The seal is about to break, opening a flood of intimacy and romance.",choices:[
+        {text:'✦  "I want you, Mossu. Completely."',rel:+20,next:'seal'},
+        {text:'✧  Let him lift you into the warm water',rel:+15,next:'seal'}
+      ]},
+      {speaker:'narration',text:"He lifts her gently, carrying her into the water. Sannu wraps her arms tightly around his neck, pulling him down.",branch:'seal',onEnter:'bringClose'},
+      {speaker:'sannu',text:"Whatever happens... I want you in my future, Mossu.",branch:'seal'},
+      {speaker:'mossu',text:"I'm not going anywhere. Not ever.",branch:'seal',sfx:'bond'},
+      {speaker:'narration',text:"In the warm rose-petal bath, they love each other without restraint. The seal breaks, releasing an ocean of happiness, physical closeness, and romance.",branch:'seal'},
+      {speaker:'narration',text:"He holds her body close, their hearts beating as one. In the round mirror, they are silhouetted in gold.",branch:'seal',onEnter:'kissScene'},
+      {speaker:'sannu',text:"Mossu... you hold me so tight.",branch:'seal'},
+      {speaker:'mossu',text:"Because you're my whole world, Sannu. I love you.",branch:'seal',sfx:'bond'},
+      {speaker:'narration',text:"Everything they had been patiently, quietly waiting for came all at once. The world could wait.",end:true}
+    ]
+  },
+  {
+    num:5,tag:'CH. 5 — THE NIGHT ATTACK',narr:'#ff8a65',
+    story:[
+      {speaker:'narration',text:"The night shatters.\n\nNot with a sound — but with the feeling that something wrong has just moved into the world. In the town square, every light dies at once."},
       {speaker:'narration',text:"Then the sirens begin.",show:'sannu'},
       {speaker:'sannu',text:"Mossu— those lights—",show:'mossu'},
       {speaker:'mossu',text:"I see it. Don't move."},
-      {speaker:'narration',text:"A shockwave of dark energy ripples across the skyline. Buildings crack. Glass falls. The festival crowd breaks into screaming chaos.",sfx:'alert'},
+      {speaker:'narration',text:"A shockwave of dark energy ripples across the skyline. Buildings crack. Glass falls. The crowd breaks into screaming chaos.",sfx:'alert'},
       {speaker:'sannu',text:"What IS that?!"},
-      {speaker:'narration',text:"From the smoke steps a soldier in black armour — then another. Then twelve more. The Shadow Syndicate has arrived."},
+      {speaker:'narration',text:"From the smoke steps a soldier in black armour — then another. The Shadow Syndicate has arrived."},
       {speaker:'mossu',text:"Sannu. Listen. When I say run — you run. Don't look back."},
       {speaker:'sannu',text:"I'm not leaving you!"},
       {speaker:'mossu',text:"Sannu—"},
@@ -946,11 +952,11 @@ const chapters=[
         {text:'🏃  "We need to run — NOW!"',rel:+8,next:'run'}
       ]},
       {speaker:'mossu',text:"...I don't know. But I've been waiting for this.",branch:'fight'},
-      {speaker:'narration',text:"Mossu grabs a fallen festival pole. Something about the way he stands — like he was built for this.",branch:'fight'},
+      {speaker:'narration',text:"Mossu grabs a fallen pole. Something about the way he stands — like he was built for this.",branch:'fight'},
       {speaker:'sannu',text:"You've done this before. Haven't you.",branch:'fight'},
       {speaker:'mossu',text:"My bracelet... it's not just jewellery, Sannu. It's a seal.",branch:'fight',sfx:'bond'},
       {speaker:'mossu',text:"You're right. Grab my hand.",branch:'run'},
-      {speaker:'narration',text:"They run — through back alleys, across broken bridges, past people who have no idea what just changed forever.",branch:'run'},
+      {speaker:'narration',text:"They run — through back alleys, across broken bridges, escaping into the dark.",branch:'run'},
       {speaker:'narration',text:"They reach an abandoned clocktower at the edge of the old quarter — tall, silent, forgotten. Mossu pushes the door shut behind them."},
       {speaker:'mossu',text:"You're shaking."},
       {speaker:'sannu',text:"So are you. Your arm— Mossu, you're bleeding."},
@@ -961,9 +967,7 @@ const chapters=[
       {speaker:'sannu',text:"I know. I wanted to. ...How bad does it hurt?"},
       {speaker:'mossu',text:"Less now."},
       {speaker:'sannu',text:"Tell me about the bracelet."},
-      {speaker:'mossu',text:"My grandfather gave it to me. He said... our family has guarded something for five hundred years. A power the Syndicate wants."},
-      {speaker:'sannu',text:"And you never told me?"},
-      {speaker:'mossu',text:"I didn't know how. I was afraid you'd leave."},
+      {speaker:'mossu',text:"My family has guarded a power for five hundred years. A power the Syndicate wants. I was afraid you'd leave if you knew."},
       {speaker:'narration',text:"She looks at him for a long moment.",choices:[
         {text:'♥  "I wouldn\'t have. Not ever."',rel:+20,next:'stay'},
         {text:'♡  "You should have trusted me."',rel:+10,next:'trust'}
@@ -996,14 +1000,11 @@ const chapters=[
       {speaker:'narration',text:"He laughs — really laughs — for the first time all night. Sannu, despite everything, smiles back.",branch:'love',sfx:'bond'},
       {speaker:'mossu',text:"I love you too. Obviously.",branch:'love'},
       {speaker:'sannu',text:"Obviously? YOU had one job—",branch:'love'},
-      {speaker:'mossu',text:"I love you, Sansu. That's all I wanted to say.",branch:'truth',sfx:'bond'},
+      {speaker:'mossu',text:"I love you, Sannu. That's all I wanted to say.",branch:'truth',sfx:'bond'},
       {speaker:'sannu',text:"...I know.",branch:'truth'},
       {speaker:'mossu',text:"That's it? Just 'I know'?",branch:'truth'},
       {speaker:'sannu',text:"I love you too. I just wanted to be dramatic about it.",branch:'truth',sfx:'bond'},
-      {speaker:'narration',text:"Somewhere across the city, Lord Veyron retreats to his tower. Tonight's attack failed.\n\nBut he smiles."},
-      {speaker:'narration',text:"They are stronger than he expected. Which means he'll need to be far more... creative."},
-      {speaker:'narration',text:"And in a broken clocktower, two people who found each other on an ordinary park bench sit in the dark together — not afraid.\n\nReady."},
-      {speaker:'narration',text:"✦  — END OF CHAPTER 4 —  ✦\n\n⚔️ The battle for destiny begins...",end:true}
+      {speaker:'narration',text:"And in a broken clocktower, two people who found each other on an ordinary park bench sit in the dark together — not afraid.\n\nReady.",end:true}
     ]
   }
 ];
@@ -1118,7 +1119,7 @@ function renderNode(){
 }
 
 // ===================== CHAPTER TRANSITIONS =====================
-const CHAPTER_NAMES=['CHAPTER I — THE PROMISE PARK','CHAPTER II — GROWING BONDS','CHAPTER III — FESTIVAL OF DREAMS','CHAPTER IV — THE NIGHT ATTACK'];
+const CHAPTER_NAMES=['CHAPTER I — FIRST MEETING (28·03·09)','CHAPTER II — MOVIE MAGIC (23-24·05·25)','CHAPTER III — THE SANCTUARY (21·08·25)','CHAPTER IV — BREAKING THE SEAL (28·10·25)','CHAPTER V — THE NIGHT ATTACK'];
 function resetChars(){
   [sannuEl,mossuEl].forEach(el=>{
     el.classList.add('hidden');
