@@ -1011,6 +1011,7 @@ const chapters=[
 
 // ===================== STATE =====================
 let chapterIdx=0,idx=0,relationship=30,currentBranch=null,started=false,chapterStarted=false;
+let transitioning=false;
 try{const s=localStorage.getItem('sm_bond');if(s!==null)relationship=parseInt(s,10);}catch(e){}
 
 const textbox=document.getElementById('textbox'),nametext=document.getElementById('nametext'),namebox=document.getElementById('namebox');
@@ -1128,6 +1129,7 @@ function resetChars(){
   restoreGlasses();
 }
 function loadChapter(ci){
+  if(ci>=chapters.length) return;
   chapterIdx=ci;idx=0;currentBranch=null;chapterStarted=false;
   const ch=getCh();
   ccChapter.textContent=CHAPTER_NAMES[ci];
@@ -1142,11 +1144,16 @@ function startCurrentChapter(){
 function advance(){
   // 'started' is now always true (set on DOMContentLoaded)
   if(!chapterStarted){startCurrentChapter();return;}
+  if(transitioning)return;
   const story=getCh().story;const node=story[idx];
   if(node.end){
     if(chapterIdx<chapters.length-1){
+      transitioning=true;
       try{localStorage.setItem('sm_bond',String(relationship));}catch(e){}
-      setTimeout(()=>loadChapter(chapterIdx+1),300);
+      setTimeout(()=>{
+        loadChapter(chapterIdx+1);
+        transitioning=false;
+      },300);
     }
     return;
   }
