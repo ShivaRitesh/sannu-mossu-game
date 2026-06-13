@@ -140,6 +140,23 @@ html,body{height:100%;width:100%;background:var(--deep-bg);font-family:'Lato',sa
 #textbox::-webkit-scrollbar-thumb{background:rgba(244,143,177,.3);border-radius:2px}
 .ripple{position:absolute;border-radius:50%;width:20px;height:20px;background:rgba(244,143,177,.2);pointer-events:none;animation:rippleOut .6s ease-out forwards;transform:translate(-50%,-50%)}
 @keyframes rippleOut{to{width:90px;height:90px;opacity:0}}
+
+/* ===== MEMORY JOURNAL ===== */
+#memBtn{position:absolute;bottom:22px;left:18px;z-index:30;background:rgba(8,4,18,.7);border:1px solid rgba(244,143,177,.25);color:rgba(244,143,177,.65);font-size:15px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);transition:all .35s;letter-spacing:0}
+#memBtn:hover{background:rgba(244,143,177,.15);border-color:rgba(244,143,177,.6);color:rgba(244,143,177,.95);box-shadow:0 0 18px rgba(244,143,177,.3)}
+#memOverlay{position:absolute;inset:0;z-index:70;background:rgba(2,1,8,.96);opacity:0;pointer-events:none;transition:opacity .7s ease;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#memOverlay.show{opacity:1;pointer-events:all}
+.mem-book{width:min(520px,92vw);max-height:88vh;overflow-y:auto;padding:36px 32px;background:linear-gradient(145deg,rgba(12,6,24,.98),rgba(20,8,35,.98));border:1px solid rgba(244,143,177,.14);border-radius:18px;box-shadow:0 0 80px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.04)}
+.mem-book::-webkit-scrollbar{width:3px}.mem-book::-webkit-scrollbar-thumb{background:rgba(244,143,177,.2);border-radius:2px}
+.mem-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:8px;color:rgba(244,143,177,.55);text-align:center;margin-bottom:6px}
+.mem-rule{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(244,143,177,.25),transparent);margin:10px 0 28px}
+.mem-entry{margin-bottom:32px;position:relative;padding-left:18px}
+.mem-entry::before{content:'';position:absolute;left:0;top:6px;width:2px;height:calc(100% - 6px);background:linear-gradient(180deg,rgba(244,143,177,.4),transparent)}
+.mem-code{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:rgba(244,143,177,.45);margin-bottom:7px}
+.mem-text{font-family:'Lato',sans-serif;font-size:14px;line-height:1.8;color:rgba(255,255,255,.72);letter-spacing:.3px}
+.mem-whisper{font-style:italic;font-size:12px;color:rgba(200,160,255,.45);margin-top:5px;letter-spacing:.5px}
+.mem-close{display:block;margin:28px auto 0;background:none;border:1px solid rgba(244,143,177,.2);color:rgba(244,143,177,.5);font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;padding:10px 24px;border-radius:20px;cursor:pointer;transition:all .3s}
+.mem-close:hover{border-color:rgba(244,143,177,.5);color:rgba(244,143,177,.9);background:rgba(244,143,177,.08)}
 </style>
 </head>
 <body>
@@ -401,6 +418,48 @@ html,body{height:100%;width:100%;background:var(--deep-bg);font-family:'Lato',sa
     <div class="bond-label">❤ BOND</div>
     <div id="relbar"><div id="relfill"></div></div>
     <div class="bond-hearts" id="bondHearts">♡ ♡ ♡</div>
+  </div>
+
+  <!-- Memory Journal button -->
+  <button id="memBtn" title="Our Memories" onclick="document.getElementById('memOverlay').classList.add('show')">✦</button>
+
+  <!-- Memory Journal overlay -->
+  <div id="memOverlay">
+    <div class="mem-book">
+      <div class="mem-title">✦ &nbsp; O U R &nbsp; M E M O R I E S &nbsp; ✦</div>
+      <div class="mem-rule"></div>
+
+      <!-- Entry 1 -->
+      <div class="mem-entry">
+        <div class="mem-code">28 · 03 · 09</div>
+        <div class="mem-text">The first glance. The wrong bench at the right moment. She had glasses too big for her face and a butterfly that didn't fly away.</div>
+        <div class="mem-whisper">// the day something invisible started</div>
+      </div>
+
+      <!-- Entry 2 -->
+      <div class="mem-entry">
+        <div class="mem-code">23 — 24 · 05 · 25</div>
+        <div class="mem-text">Silver screen. Popcorn that went cold. The dark was perfect — not because of the movie, but because of what happened when the credits weren't the only thing running.</div>
+        <div class="mem-whisper">// two days. some moments don't end at midnight.</div>
+      </div>
+
+      <!-- Entry 3 -->
+      <div class="mem-entry">
+        <div class="mem-code">21 · 08 · 25</div>
+        <div class="mem-text">New room. New city. Morning light through curtains that weren't ours yet. The first morning of the rest of it — a page turning so softly you almost miss the sound.</div>
+        <div class="mem-whisper">// the beginning that felt like coming home</div>
+      </div>
+
+      <!-- Entry 4 -->
+      <div class="mem-entry">
+        <div class="mem-code">28 · 10 · 25</div>
+        <div class="mem-text">The seal broke. What had been held back — quietly, patiently — finally arrived. All warmth. All closeness. All the things that words have never quite been able to carry.</div>
+        <div class="mem-whisper">// what happens when nothing is held back anymore</div>
+      </div>
+
+      <div class="mem-rule"></div>
+      <button class="mem-close" onclick="document.getElementById('memOverlay').classList.remove('show')">CLOSE ✦</button>
+    </div>
   </div>
 
   <!-- Dialogue -->
@@ -1070,6 +1129,8 @@ document.getElementById('stage').addEventListener('click',function(e){
 });
 
 updateRelBar();
+// Close memory overlay on background click
+document.getElementById('memOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 </script>
 </body>
 </html>
