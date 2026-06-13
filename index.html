@@ -432,29 +432,29 @@ html,body{height:100%;width:100%;background:var(--deep-bg);font-family:'Lato',sa
       <!-- Entry 1 -->
       <div class="mem-entry">
         <div class="mem-code">28 · 03 · 09</div>
-        <div class="mem-text">The first glance. The wrong bench at the right moment. She had glasses too big for her face and a butterfly that didn't fly away.</div>
-        <div class="mem-whisper">// the day something invisible started</div>
+        <div class="mem-text">It wasn't supposed to happen that fast. But before the day had even decided what it was going to be — lips. The first real thing. And then the words that followed, whispered like they'd been rehearsed in another life: <em>I'm not going anywhere. Not ever.</em></div>
+        <div class="mem-whisper">// first meeting. first kiss. first promise that meant it.</div>
       </div>
 
       <!-- Entry 2 -->
       <div class="mem-entry">
         <div class="mem-code">23 — 24 · 05 · 25</div>
-        <div class="mem-text">Silver screen. Popcorn that went cold. The dark was perfect — not because of the movie, but because of what happened when the credits weren't the only thing running.</div>
-        <div class="mem-whisper">// two days. some moments don't end at midnight.</div>
+        <div class="mem-text">The movie was irrelevant. Two days the world shrank to just the two of them — every smooch a sentence, every kiss a conversation finished without words. They felt each other the way you feel something you've wanted so long you've forgotten what waiting felt like.</div>
+        <div class="mem-whisper">// warmth. closeness. love that didn't stop at the credits.</div>
       </div>
 
       <!-- Entry 3 -->
       <div class="mem-entry">
         <div class="mem-code">21 · 08 · 25</div>
-        <div class="mem-text">New room. New city. Morning light through curtains that weren't ours yet. The first morning of the rest of it — a page turning so softly you almost miss the sound.</div>
-        <div class="mem-whisper">// the beginning that felt like coming home</div>
+        <div class="mem-text">Mud walls that held the heat just right. A bathtub full of warm water and rose petals floating like they'd always been there. A tiny cycle hung above — an odd, perfect thing. The round mirror on the wall watched them forget the city, the calendar, everything outside that room. It was the first morning of a life chosen on purpose.</div>
+        <div class="mem-whisper">// roses in the water. them in each other. nothing else.</div>
       </div>
 
       <!-- Entry 4 -->
       <div class="mem-entry">
         <div class="mem-code">28 · 10 · 25</div>
-        <div class="mem-text">The seal broke. What had been held back — quietly, patiently — finally arrived. All warmth. All closeness. All the things that words have never quite been able to carry.</div>
-        <div class="mem-whisper">// what happens when nothing is held back anymore</div>
+        <div class="mem-text">Same mud walls. Same petals on the water. The little cycle still hung, swaying slightly. The round mirror still watched. But this time — the seal broke. Everything that had been patiently, quietly waiting came all at once: all the love, all the closeness, all the warmth that only two people who have truly chosen each other can make.</div>
+        <div class="mem-whisper">// they forgot the world. the world could wait.</div>
       </div>
 
       <div class="mem-rule"></div>
@@ -1101,7 +1101,7 @@ function startCurrentChapter(){
   sfx.enter();setTimeout(renderNode,400);
 }
 function advance(){
-  if(!started){started=true;loadChapter(0);return;}
+  // 'started' is now always true (set on DOMContentLoaded)
   if(!chapterStarted){startCurrentChapter();return;}
   const story=getCh().story;const node=story[idx];
   if(node.end){
@@ -1114,6 +1114,7 @@ function advance(){
   if(node.choices||node.minigame)return;
   sfx.click();idx=findNextIndex(idx+1);renderNode();
 }
+
 
 // ===================== INPUT =====================
 document.getElementById('stage').addEventListener('click',function(e){
@@ -1129,6 +1130,18 @@ document.getElementById('stage').addEventListener('click',function(e){
 });
 
 updateRelBar();
+// Auto-show the opening chapter card immediately — no waiting for first click
+window.addEventListener('DOMContentLoaded', function(){
+  // Build the first scene and show chapter card right away
+  started = true;
+  buildScene(chapters[0].num);
+  document.getElementById('chapterTag').textContent = chapters[0].tag;
+  document.getElementById('ccChapter').textContent = CHAPTER_NAMES[0];
+  addCardParticles();
+  document.getElementById('chapterCard').classList.add('show');
+  document.getElementById('textbox').textContent = '';
+  document.getElementById('continueHint').textContent = '▶ click to continue';
+});
 // Close memory overlay on background click
 document.getElementById('memOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
 </script>
