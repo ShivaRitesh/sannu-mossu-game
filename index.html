@@ -657,6 +657,57 @@ function buildScene(ch){
     for(let i=0;i<60;i++){const s=mkStar();s.style.top=Math.random()*45+'%';s.style.background=Math.random()>.5?'#ff8060':'#ffb090';s.style.setProperty('--op',String(Math.random()*.25+.05));scene.appendChild(s);}
     for(let i=0;i<30;i++){const e=document.createElement('div');e.className='ember';e.style.cssText=`left:${Math.random()*100}%;bottom:${5+Math.random()*40}%;width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;--ed:${3+Math.random()*6}s;--ex:${(Math.random()-.5)*80}px;--ey:${-40-Math.random()*80}px;--ex2:${(Math.random()-.5)*60}px;--ey2:${-80-Math.random()*120}px;animation-delay:${Math.random()*5}s;`;scene.appendChild(e);}
   }
+  else if(ch===6){
+    // Dreamscape scene — Ethereal purple/pink romantic glow, floating petals, glowing round mirror
+    scene.innerHTML=`
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%, rgba(244,143,177,0.15) 0%, transparent 80%);"></div>
+      <div style="position:absolute;top:12%;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;border:3px dashed #f48fb1;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, rgba(244,143,177,0.1) 60%, rgba(15,8,30,0.92) 100%);box-shadow:0 0 30px rgba(244,143,177,0.4);display:flex;align-items:center;justify-content:center;animation:spin 30s linear infinite"></div>
+      <div style="position:absolute;top:12%;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;pointer-events:none;display:flex;align-items:center;justify-content:center">
+        <div style="font-size:24px;color:#f48fb1;filter:drop-shadow(0 0 10px #f48fb1);animation:hintPulse 3s ease-in-out infinite">♥</div>
+      </div>
+      <!-- Wooden ceiling beams -->
+      <div style="position:absolute;top:0;left:0;width:100%;height:15%;background:#2e1f3c;opacity:0.9;display:flex;justify-content:space-around;padding:0 20px">
+        <div style="width:12px;height:100%;background:#1d1127"></div>
+        <div style="width:12px;height:100%;background:#1d1127"></div>
+        <div style="width:12px;height:100%;background:#1d1127"></div>
+        <div style="width:12px;height:100%;background:#1d1127"></div>
+      </div>
+      <!-- Hanging decorative cycle -->
+      <div style="position:absolute;top:15%;left:22%;animation:swing 5s ease-in-out infinite;transform-origin:top center;display:flex;flex-direction:column;align-items:center">
+        <div style="width:1px;height:45px;background:rgba(244,143,177,0.3)"></div>
+        <svg width="45" height="28" viewBox="0 0 100 60" fill="none" stroke="#f48fb1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.8;filter:drop-shadow(0 0 5px rgba(244,143,177,0.4))">
+          <circle cx="25" cy="42" r="15"/>
+          <circle cx="75" cy="42" r="15"/>
+          <polyline points="25,42 50,42 75,42"/>
+          <polyline points="50,42 50,15 35,15"/>
+          <polyline points="50,25 25,42"/>
+          <polyline points="50,25 75,42"/>
+          <line x1="75" y1="42" x2="75" y2="15"/>
+          <line x1="70" y1="15" x2="80" y2="15"/>
+        </svg>
+      </div>
+      <!-- Wooden floor -->
+      <div style="position:absolute;bottom:0;width:100%;height:18%;background:linear-gradient(180deg,#2e1f3c,#110718)"></div>
+      <!-- Bathtub filled with warm water & petals -->
+      <div style="position:absolute;bottom:4%;left:50%;transform:translateX(-50%);width:210px;height:55px;background:linear-gradient(180deg,#9c4d87,#5c2c54);border:3px solid #7c3c6e;border-radius:0 0 45px 45px;box-shadow:0 12px 30px rgba(0,0,0,0.8), inset 0 3px 6px rgba(255,255,255,0.06);overflow:hidden">
+        <div style="position:absolute;top:0;left:0;width:100%;height:14px;background:linear-gradient(180deg,#f48fb1,#ce93d8);opacity:0.8;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)"></div>
+        <div style="position:absolute;inset:0;background:rgba(244,143,177,0.18);filter:blur(4px);animation:moonGlow 4s ease-in-out infinite"></div>
+        <div style="position:absolute;top:2px;left:15px;font-size:7px;opacity:0.85;animation:sway 3s ease-in-out infinite">🌸</div>
+        <div style="position:absolute;top:5px;left:45px;font-size:6px;opacity:0.9;animation:sway 2.5s ease-in-out infinite;animation-delay:0.5s">🌸</div>
+        <div style="position:absolute;top:1px;left:75px;font-size:7px;opacity:0.8;animation:sway 3.2s ease-in-out infinite;animation-delay:1.2s">🌸</div>
+        <div style="position:absolute;top:4px;left:105px;font-size:6px;opacity:0.9;animation:sway 2.8s ease-in-out infinite;animation-delay:0.2s">🌸</div>
+        <div style="position:absolute;top:2px;left:145px;font-size:7px;opacity:0.85;animation:sway 3.5s ease-in-out infinite;animation-delay:0.8s">🌸</div>
+        <div style="position:absolute;top:6px;left:175px;font-size:6px;opacity:0.9;animation:sway 2.6s ease-in-out infinite;animation-delay:1.5s">🌸</div>
+      </div>
+      <div style="position:absolute;bottom:11%;left:50%;transform:translateX(-50%);width:216px;height:6px;background:#7c3c6e;border-radius:3px;box-shadow:0 3px 5px rgba(0,0,0,0.5)"></div>
+    `;
+    // Add glowing rose petals moving around the dreamscape
+    for(let i=0;i<18;i++){
+      const f=document.createElement('div');f.className='firefly';
+      f.style.cssText=`left:${10+Math.random()*80}%;bottom:${15+Math.random()*50}%;--fdur:${4+Math.random()*5}s;--fx:${(Math.random()-.5)*80}px;--fy:${-20-Math.random()*40}px;--fx2:${(Math.random()-.5)*60}px;--fy2:${(Math.random()-.5)*35}px;animation-delay:${Math.random()*5}s;background:#f48fb1;box-shadow:0 0 10px 2px #ce93d8;width:5px;height:5px;border-radius:50% 0 50% 50%;`;
+      scene.appendChild(f);
+    }
+  }
 }
 function mkStar(){
   const s=document.createElement('div');s.className='star';
@@ -720,7 +771,7 @@ function pNote(freq,st,dur,vol=0.07,type='sine'){
 function stopMusic(){if(mLoop){clearTimeout(mLoop);mLoop=null;}}
 function startMusic(ch){
   initAudio();stopMusic();
-  setTimeout(()=>{if(ch===1)ch1Theme();else if(ch===2)ch2Theme();else if(ch===3||ch===4)ch3Theme();else ch4Theme();},700);
+  setTimeout(()=>{if(ch===1)ch1Theme();else if(ch===2)ch2Theme();else if(ch===3||ch===4||ch===6)ch3Theme();else ch4Theme();},700);
 }
 // Ch1: Park — C major bright (110 BPM)
 function ch1Theme(){
@@ -1006,6 +1057,31 @@ const chapters=[
       {speaker:'sannu',text:"I love you too. I just wanted to be dramatic about it.",branch:'truth',sfx:'bond'},
       {speaker:'narration',text:"And in a broken clocktower, two people who found each other on an ordinary park bench sit in the dark together — not afraid.\n\nReady.",end:true}
     ]
+  },
+  {
+    num:6,tag:'CH. 6 — HEALING DREAMS (THE END)',narr:'#ce93d8',
+    story:[
+      {speaker:'narration',text:"As the embers of the burning city fade into the quiet night, Sannu and Mossu lie side-by-side inside the old clocktower, wrapped in a single warm blanket."},
+      {speaker:'narration',text:"Their fingers are tightly laced, breathing in sync. The danger outside slowly recedes as sleep takes them, pulling their minds into a shared, warm dreamscape.",show:'sannu'},
+      {speaker:'sannu',text:"Mossu... are you asleep?"},
+      {speaker:'mossu',text:"Not yet. I was just thinking... about the cottage. The mud house. The warmth we felt there.",show:'mossu'},
+      {speaker:'narration',text:"In their shared dream, the cold walls of the clocktower melt away. They find themselves standing together in their warm, candlelit sanctuary. The wooden bathtub is filled with rose petals, and the round mirror glows with a soft, pink light."},
+      {speaker:'narration',text:"Sannu steps closer, her short shoulder hair catching the warm reflection. She reaches out, gently stroking his messy hair, then sliding her fingers down his neck and chest.",onEnter:'bringClose'},
+      {speaker:'sannu',text:"In my dreams, there is no Syndicate, no fighting. Just us. I want to hold you... so close that you feel every bit of my warmth. I want to love you... in every way, forgetting everything else."},
+      {speaker:'mossu',text:"Sannu... your touch. It makes me forget all my worries. I want to give you so much comfort tonight... I want to wrap you in my warmth, so you forget all the pain and stress we've carried."},
+      {speaker:'narration',text:"He pulls her into his arms, lifting her gently. They step into the warm, rose-scented bath. Sannu wraps herself around him in a tight, protective embrace — cradling each other like a lotus in full bloom.",onEnter:'kissScene'},
+      {speaker:'sannu',text:"Hold me, Mossu. Seduce me, love me... don't let me go.",choices:[
+        {text:'♥  Kiss her with deep, passionate devotion',rel:+20,next:'dream_love'},
+        {text:'♡  Whisper sweet promises of a peaceful future',rel:+15,next:'dream_love'}
+      ]},
+      {speaker:'narration',text:"He presses his lips to hers. It is a slow, deeply intense kiss, full of long-awaited happiness, physical closeness, and pure passion.",branch:'dream_love',onEnter:'kissScene'},
+      {speaker:'mossu',text:"You are my peace, Sannu. Every breath I take, I want to fill you with happiness. I want to love you in every way possible.",branch:'dream_love'},
+      {speaker:'sannu',text:"And I want you, Mossu... all of you. My heart, my body... they belong to you. Let's lose ourselves in this moment, where there is only love.",branch:'dream_love',sfx:'bond'},
+      {speaker:'narration',text:"In the warm, candlelit sanctuary of their minds, they hold each other tight, their silhouettes reflected in the round mirror as they share a love that no storm can shatter.",branch:'dream_love',onEnter:'addRomanceGlow'},
+      {speaker:'mossu',text:"We will make this dream our reality. I promise you.",branch:'dream_love'},
+      {speaker:'sannu',text:"I know. And I will be right there beside you, holding you just like this.",branch:'dream_love'},
+      {speaker:'narration',text:"The dream slowly softens back into the quiet clocktower. But the warmth stays, sealed in their hearts as they sleep side-by-side, ready for whatever tomorrow brings.",end:true}
+    ]
   }
 ];
 
@@ -1120,7 +1196,7 @@ function renderNode(){
 }
 
 // ===================== CHAPTER TRANSITIONS =====================
-const CHAPTER_NAMES=['CHAPTER I — FIRST MEETING (28·03·09)','CHAPTER II — MOVIE MAGIC (23-24·05·25)','CHAPTER III — THE SANCTUARY (21·08·25)','CHAPTER IV — BREAKING THE SEAL (28·10·25)','CHAPTER V — THE NIGHT ATTACK'];
+const CHAPTER_NAMES=['CHAPTER I — FIRST MEETING (28·03·09)','CHAPTER II — MOVIE MAGIC (23-24·05·25)','CHAPTER III — THE SANCTUARY (21·08·25)','CHAPTER IV — BREAKING THE SEAL (28·10·25)','CHAPTER V — THE NIGHT ATTACK','CHAPTER VI — HEALING DREAMS'];
 function resetChars(){
   [sannuEl,mossuEl].forEach(el=>{
     el.classList.add('hidden');
