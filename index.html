@@ -4,314 +4,291 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Sannu &amp; Mossu: Echoes of Destiny</title>
-<meta name="description" content="A cinematic visual novel RPG — Sannu and Mossu: Echoes of Destiny. All chapters in one.">
+<meta name="description" content="A cinematic visual novel RPG — Sannu and Mossu: Echoes of Destiny. All 4 chapters in one.">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root { --gold:#f5c842; --deep-bg:#04020a; --sannu-color:#4fc3f7; --mossu-color:#ef5350; }
-html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lato',sans-serif; color:#eee; overflow:hidden; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#f5c842;--deep-bg:#04020a}
+html,body{height:100%;width:100%;background:var(--deep-bg);font-family:'Lato',sans-serif;color:#eee;overflow:hidden}
+#stage{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
 
-#stage { position:relative; width:100vw; height:100vh; height:100dvh; overflow:hidden; display:flex; align-items:flex-end; justify-content:center; }
+/* ===== SCENES ===== */
+.scene{position:absolute;inset:0;overflow:hidden}
+.scene.ch1{background:linear-gradient(180deg,#0d1a0a,#1a2e10 20%,#2a4a1e 40%,#1c3a2a 65%,#0e2018 85%,#060e0a)}
+.scene.ch2{background:linear-gradient(180deg,#06020f,#0d0520 20%,#150a30 40%,#1a0c35 60%,#0e0820 80%,#080510)}
+.scene.ch3{background:linear-gradient(180deg,#020108,#08041a 20%,#100630 40%,#180a3a 55%,#0e0625 75%,#060310)}
+.scene.ch4{background:linear-gradient(180deg,#0a0000,#1a0508 15%,#2a0a0a 30%,#1e0808 50%,#120505 70%,#060202)}
 
-/* ===== SCENE BACKGROUNDS ===== */
-.scene { position:absolute; inset:0; overflow:hidden; transition:opacity 1.4s ease; }
+/* ===== SHARED SCENE ELEMENTS ===== */
+.star{position:absolute;border-radius:50%;animation:twinkle var(--dur,3s) infinite ease-in-out}
+@keyframes twinkle{0%,100%{opacity:var(--op,.6);transform:scale(1)}50%{opacity:.08;transform:scale(.4)}}
+.firefly{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe082;box-shadow:0 0 10px 3px #ffd54f;animation:flyAround var(--fdur,6s) ease-in-out infinite;opacity:0}
+@keyframes flyAround{0%{opacity:0;transform:translate(0,0)}20%{opacity:.9}50%{opacity:.6;transform:translate(var(--fx,40px),var(--fy,-30px))}80%{opacity:.9}100%{opacity:0;transform:translate(var(--fx2,-20px),var(--fy2,10px))}}
+.petal{position:absolute;animation:petalFall var(--pd,9s) linear infinite}
+@keyframes petalFall{from{transform:translateY(-60px) rotate(0deg);opacity:.7}to{transform:translateY(110vh) rotate(720deg) translateX(var(--px,30px));opacity:0}}
+.bokeh{position:absolute;border-radius:50%;animation:bokehFloat var(--bd,6s) ease-in-out infinite;filter:blur(var(--bb,3px))}
+@keyframes bokehFloat{0%,100%{transform:translateY(0) scale(1);opacity:var(--bo,.3)}50%{transform:translateY(-20px) scale(1.1);opacity:calc(var(--bo,.3)*1.5)}}
+.sun{position:absolute;top:5%;left:50%;transform:translateX(-50%);width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#fffde7,#fff9c4 30%,#ffd54f 60%,#ff8f00 80%,transparent 95%);box-shadow:0 0 80px 30px rgba(255,210,50,.4),0 0 160px 60px rgba(255,160,0,.2);animation:sunPulse 4s ease-in-out infinite}
+@keyframes sunPulse{0%,100%{box-shadow:0 0 80px 30px rgba(255,210,50,.4)}50%{box-shadow:0 0 110px 40px rgba(255,210,50,.55)}}
+.moon{position:absolute;top:4%;left:50%;transform:translateX(-50%);width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fffde7,#fff9c4 45%,#ffd54f 75%,transparent 92%);box-shadow:0 0 60px 20px rgba(255,240,150,.35),0 0 120px 40px rgba(255,200,80,.2);animation:moonGlow 6s ease-in-out infinite}
+@keyframes moonGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.1)}}
+.hills-back{position:absolute;bottom:0;width:110%;height:48%;left:-5%;background:linear-gradient(180deg,#0d2010,#071408);border-radius:60% 60% 0 0/80% 80% 0 0}
+.hills-mid{position:absolute;bottom:0;width:110%;height:34%;left:-5%;background:linear-gradient(180deg,#142b16,#0a1a0a);border-radius:50% 50% 0 0/100% 100% 0 0}
+.ground-green{position:absolute;bottom:0;width:100%;height:10%;background:linear-gradient(180deg,#1a3a1e,#0a1a0c)}
+.building{position:absolute;bottom:0;border-radius:3px 3px 0 0;background:linear-gradient(180deg,#1a1030,#0d0820)}
+.win{position:absolute;width:8px;height:10px;border-radius:2px;background:#ffd97a;box-shadow:0 0 8px #ffd97a;animation:winBlink var(--wb,6s) ease-in-out infinite}
+@keyframes winBlink{0%,100%{opacity:.9}50%{opacity:.4}}
+.ground-city{position:absolute;bottom:0;width:100%;height:12%;background:linear-gradient(180deg,#120c22,#080510)}
+.tree-group{position:absolute;bottom:10%;display:flex;flex-direction:column;align-items:center}
+.flower{position:absolute;bottom:10%;animation:sway var(--dur2,2.5s) ease-in-out infinite;opacity:.85;font-size:var(--size,16px)}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.butterfly{position:absolute;animation:flutter var(--bd,4s) ease-in-out infinite;font-size:var(--bs,18px)}
+@keyframes flutter{0%{transform:translate(0,0) rotate(-5deg)}25%{transform:translate(20px,-15px) rotate(5deg)}50%{transform:translate(40px,0) rotate(-3deg)}75%{transform:translate(20px,10px) rotate(4deg)}100%{transform:translate(0,0) rotate(-5deg)}}
+.bench{position:absolute;bottom:17%;left:50%;transform:translateX(-50%);width:130px;height:50px}
+.bench-back{position:absolute;top:-18px;left:0;right:0;height:15px;background:linear-gradient(180deg,#6d4c41,#4e342e);border-radius:4px;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+.bench-seat{position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(180deg,#6d4c41,#4e342e);border-radius:4px;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+.bench-leg{position:absolute;bottom:0;width:10px;height:30px;background:#3e2723;border-radius:3px}
+.bench-leg.left{left:12px}.bench-leg.right{right:12px}
+.lantern-hang{position:absolute;animation:swing var(--sw,3s) ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.nebula{position:absolute;border-radius:50%;filter:blur(35px);animation:nebulaPulse 10s ease-in-out infinite}
+@keyframes nebulaPulse{0%,100%{opacity:.05}50%{opacity:.12}}
+/* Ch4 embers */
+.ember{position:absolute;border-radius:50%;background:#ff6030;box-shadow:0 0 8px 2px #ff4010;animation:emberFloat var(--ed,5s) ease-in-out infinite;opacity:0}
+@keyframes emberFloat{0%{opacity:0;transform:translate(0,0) scale(1)}20%{opacity:.9}50%{opacity:.7;transform:translate(var(--ex,20px),var(--ey,-60px)) scale(.6)}80%{opacity:.3}100%{opacity:0;transform:translate(var(--ex2,-10px),var(--ey2,-120px)) scale(.2)}}
 
-/* Ch1 — Daytime Park */
-.scene.ch1 { background:linear-gradient(180deg,#0d1a0a 0%,#1a2e10 20%,#2a4a1e 40%,#1c3a2a 65%,#0e2018 85%,#060e0a 100%); }
-/* Ch2 — Night Festival */
-.scene.ch2 { background:linear-gradient(180deg,#06020f 0%,#0d0520 20%,#150a30 40%,#1a0c35 60%,#0e0820 80%,#080510 100%); }
-/* Ch3 — Deep Night Romance */
-.scene.ch3 { background:linear-gradient(180deg,#020108 0%,#08041a 20%,#100630 40%,#180a3a 55%,#0e0625 75%,#060310 100%); }
+/* ===== KISS OVERLAY ===== */
+#kissFlash{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,220,.35),rgba(255,160,200,.08),transparent 70%);z-index:21;opacity:0;pointer-events:none;transition:opacity .6s}
+#kissFlash.active{opacity:1}
+#kissOverlay{position:absolute;inset:0;z-index:55;background:#000;opacity:0;pointer-events:none;transition:opacity 1.4s ease;overflow:hidden}
+#kissOverlay.show{opacity:1;pointer-events:all}
+#kissOverlay svg.kiss-art{width:100%;height:100%;display:block}
+.kiss-sparkle{position:absolute;font-size:var(--ks,18px);animation:ksAnim var(--kd,2s) ease-out forwards;pointer-events:none}
+@keyframes ksAnim{0%{opacity:0;transform:translate(0,0) scale(0)}30%{opacity:1;transform:translate(var(--kx,20px),var(--ky,-30px)) scale(1.4)}100%{opacity:0;transform:translate(var(--kx2,40px),var(--ky2,-100px)) scale(.4)}}
+.kiss-label{position:absolute;bottom:72px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:14px;letter-spacing:8px;color:rgba(255,200,220,.9);text-shadow:0 0 30px rgba(244,143,177,.7);animation:hintPulse 2.5s ease-in-out infinite;white-space:nowrap}
+.kiss-hint{position:absolute;bottom:45px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.3);animation:hintPulse 2s ease-in-out infinite;animation-delay:.5s;white-space:nowrap}
 
-/* Chapter transition fade */
-#stage.fading { opacity:0; transition:opacity .6s ease; }
-#stage { transition:opacity .6s ease; }
-
-/* ===== SHARED ELEMENTS ===== */
-.star { position:absolute; border-radius:50%; animation:twinkle var(--dur,3s) infinite ease-in-out; }
-@keyframes twinkle { 0%,100%{opacity:var(--op,.6);transform:scale(1);} 50%{opacity:.1;transform:scale(.5);} }
-
-.firefly { position:absolute; width:5px; height:5px; border-radius:50%; background:#ffe082; box-shadow:0 0 10px 3px #ffd54f; animation:flyAround var(--fdur,6s) ease-in-out infinite; opacity:0; }
-@keyframes flyAround { 0%{opacity:0;transform:translate(0,0);} 20%{opacity:.9;} 50%{opacity:.6;transform:translate(var(--fx,40px),var(--fy,-30px));} 80%{opacity:.9;} 100%{opacity:0;transform:translate(var(--fx2,-20px),var(--fy2,10px));} }
-
-.petal { position:absolute; animation:petalFall var(--pd,9s) linear infinite; }
-@keyframes petalFall { from{transform:translateY(-60px) rotate(0deg) translateX(0);opacity:.7;} to{transform:translateY(110vh) rotate(720deg) translateX(var(--px,30px));opacity:0;} }
-
-.bokeh { position:absolute; border-radius:50%; animation:bokehFloat var(--bd,6s) ease-in-out infinite; filter:blur(var(--bb,3px)); }
-@keyframes bokehFloat { 0%,100%{transform:translateY(0) scale(1);opacity:var(--bo,.3);} 50%{transform:translateY(-20px) scale(1.1);opacity:calc(var(--bo,.3)*1.5);} }
-
-/* Sun */
-.sun { position:absolute; top:5%; left:50%; transform:translateX(-50%); width:140px; height:140px; border-radius:50%; background:radial-gradient(circle,#fffde7,#fff9c4 30%,#ffd54f 60%,#ff8f00 80%,transparent 95%); box-shadow:0 0 80px 30px rgba(255,210,50,.4),0 0 160px 60px rgba(255,160,0,.2); animation:sunPulse 4s ease-in-out infinite; }
-@keyframes sunPulse { 0%,100%{box-shadow:0 0 80px 30px rgba(255,210,50,.4);} 50%{box-shadow:0 0 110px 40px rgba(255,210,50,.55);} }
-
-/* Moon */
-.moon { position:absolute; top:4%; left:50%; transform:translateX(-50%); width:110px; height:110px; border-radius:50%; background:radial-gradient(circle at 40% 40%,#fffde7,#fff9c4 45%,#ffd54f 75%,transparent 92%); box-shadow:0 0 60px 20px rgba(255,240,150,.35),0 0 120px 40px rgba(255,200,80,.2); animation:moonGlow 6s ease-in-out infinite; }
-@keyframes moonGlow { 0%,100%{filter:brightness(1);} 50%{filter:brightness(1.1);} }
-
-/* Hills (Ch1) */
-.hills-back { position:absolute; bottom:0; width:110%; height:48%; left:-5%; background:linear-gradient(180deg,#0d2010 0%,#071408 100%); border-radius:60% 60% 0 0/80% 80% 0 0; }
-.hills-mid { position:absolute; bottom:0; width:110%; height:34%; left:-5%; background:linear-gradient(180deg,#142b16 0%,#0a1a0a 100%); border-radius:50% 50% 0 0/100% 100% 0 0; }
-.hills-front { position:absolute; bottom:0; width:110%; height:22%; left:-5%; background:linear-gradient(180deg,#1c3820 0%,#0e1f12 100%); border-radius:30% 70% 0 0/50% 50% 0 0; }
-.ground-green { position:absolute; bottom:0; width:100%; height:10%; background:linear-gradient(180deg,#1a3a1e 0%,#0a1a0c 100%); }
-
-/* City (Ch2/3) */
-.building { position:absolute; bottom:0; border-radius:3px 3px 0 0; background:linear-gradient(180deg,#1a1030 0%,#0d0820 100%); }
-.win { position:absolute; width:8px; height:10px; border-radius:2px; background:#ffd97a; box-shadow:0 0 8px #ffd97a; animation:winBlink var(--wb,6s) ease-in-out infinite; }
-@keyframes winBlink { 0%,100%{opacity:.9;} 50%{opacity:.4;} }
-.ground-city { position:absolute; bottom:0; width:100%; height:12%; background:linear-gradient(180deg,#120c22 0%,#080510 100%); }
-
-/* Trees (Ch1) */
-.tree-group { position:absolute; bottom:10%; display:flex; flex-direction:column; align-items:center; }
-.tree-leaves { border-radius:50%; }
-.tree-trunk { background:linear-gradient(180deg,#3d2c1e,#2a1f14); border-radius:3px; }
-.ground-green { position:absolute; bottom:0; width:100%; height:10%; background:linear-gradient(180deg,#1a3a1e,#0a1a0c); }
-.flower { position:absolute; bottom:10%; animation:sway var(--dur2,2.5s) ease-in-out infinite; opacity:.85; font-size:var(--size,16px); }
-@keyframes sway { 0%,100%{transform:rotate(-5deg);} 50%{transform:rotate(5deg);} }
-.butterfly { position:absolute; animation:flutter var(--bd,4s) ease-in-out infinite; font-size:var(--bs,18px); }
-@keyframes flutter { 0%{transform:translate(0,0) rotate(-5deg);} 25%{transform:translate(20px,-15px) rotate(5deg);} 50%{transform:translate(40px,0) rotate(-3deg);} 75%{transform:translate(20px,10px) rotate(4deg);} 100%{transform:translate(0,0) rotate(-5deg);} }
-
-/* Bench */
-.bench { position:absolute; bottom:17%; left:50%; transform:translateX(-50%); width:130px; height:50px; }
-.bench-back { position:absolute; top:-18px; left:0; right:0; height:15px; background:linear-gradient(180deg,#6d4c41,#4e342e); border-radius:4px; box-shadow:0 3px 10px rgba(0,0,0,.5); }
-.bench-seat { position:absolute; top:0; left:0; right:0; height:14px; background:linear-gradient(180deg,#6d4c41,#4e342e); border-radius:4px; box-shadow:0 3px 10px rgba(0,0,0,.5); }
-.bench-leg { position:absolute; bottom:0; width:10px; height:30px; background:#3e2723; border-radius:3px; }
-.bench-leg.left { left:12px; } .bench-leg.right { right:12px; }
-
-/* Lanterns (Ch2/3) */
-.lantern-hang { position:absolute; animation:swing var(--sw,3s) ease-in-out infinite; }
-@keyframes swing { 0%,100%{transform:rotate(-5deg);} 50%{transform:rotate(5deg);} }
-
-/* Nebula */
-.nebula { position:absolute; border-radius:50%; filter:blur(35px); animation:nebulaPulse 10s ease-in-out infinite; }
-@keyframes nebulaPulse { 0%,100%{opacity:.05;} 50%{opacity:.12;} }
-
-/* Kiss flash */
-#kissFlash { position:absolute; inset:0; background:radial-gradient(ellipse at center,rgba(255,200,220,.35),rgba(255,160,200,.08),transparent 70%); z-index:21; opacity:0; pointer-events:none; transition:opacity .6s; }
-#kissFlash.active { opacity:1; }
-
-/* ===== KISS SCENE OVERLAY — cinematic fullscreen ===== */
-#kissOverlay { position:absolute; inset:0; z-index:55; background:#000; opacity:0; pointer-events:none; transition:opacity 1.4s ease; overflow:hidden; }
-#kissOverlay.show { opacity:1; pointer-events:all; }
-#kissOverlay svg.kiss-art { width:100%; height:100%; display:block; }
-.kiss-sparkle { position:absolute; font-size:var(--ks,18px); animation:ksAnim var(--kd,2s) ease-out forwards; pointer-events:none; }
-@keyframes ksAnim { 0%{opacity:0;transform:translate(0,0) scale(0);} 30%{opacity:1;transform:translate(var(--kx,20px),var(--ky,-30px)) scale(1.4);} 100%{opacity:0;transform:translate(var(--kx2,40px),var(--ky2,-100px)) scale(.4);} }
-.kiss-label { position:absolute; bottom:72px; left:50%; transform:translateX(-50%); font-family:'Cinzel',serif; font-size:14px; letter-spacing:8px; color:rgba(255,200,220,.9); text-shadow:0 0 30px rgba(244,143,177,.7),0 0 60px rgba(244,143,177,.3); animation:hintPulse 2.5s ease-in-out infinite; white-space:nowrap; }
-.kiss-hint { position:absolute; bottom:45px; left:50%; transform:translateX(-50%); font-size:11px; letter-spacing:3px; color:rgba(255,255,255,.3); animation:hintPulse 2s ease-in-out infinite; animation-delay:.5s; white-space:nowrap; }
-
-/* Heart floats */
-.heart-float { position:absolute; animation:heartRise var(--hd,2s) ease-out forwards; pointer-events:none; z-index:25; }
-@keyframes heartRise { 0%{transform:translateY(0) scale(0) rotate(-15deg);opacity:0;} 20%{opacity:1;transform:translateY(-20px) scale(1.2) rotate(10deg);} 80%{opacity:.8;transform:translateY(var(--hy,-120px)) scale(.8) rotate(-5deg);} 100%{opacity:0;transform:translateY(var(--hy2,-180px)) scale(.5);} }
+/* ===== HEARTS ===== */
+.heart-float{position:absolute;animation:heartRise var(--hd,2s) ease-out forwards;pointer-events:none;z-index:25}
+@keyframes heartRise{0%{transform:translateY(0) scale(0) rotate(-15deg);opacity:0}20%{opacity:1;transform:translateY(-20px) scale(1.2) rotate(10deg)}80%{opacity:.8;transform:translateY(var(--hy,-120px)) scale(.8) rotate(-5deg)}100%{opacity:0;transform:translateY(var(--hy2,-180px)) scale(.5)}}
 
 /* ===== CHARACTERS ===== */
-.char { position:absolute; bottom:14%; width:140px; height:300px; transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s ease,left .6s ease,right .6s ease; }
-.char svg { width:100%; height:100%; }
-#sannu { left:22%; }
-#mossu { right:22%; }
-#sannu.close { left:32%; }
-#mossu.close { right:32%; }
-.char.hidden { opacity:0; pointer-events:none; transform:translateY(35px); }
-.char.dim { opacity:.28; filter:saturate(.2) brightness(.5); }
-.char.bounce { animation:charBounce .8s cubic-bezier(.34,1.56,.64,1); }
-@keyframes charBounce { 0%{transform:translateY(45px);opacity:0;} 100%{transform:translateY(0);opacity:1;} }
-.char.speak { animation:charSpeak .35s ease; }
-@keyframes charSpeak { 0%{transform:translateY(0);} 35%{transform:translateY(-10px);} 65%{transform:translateY(0);} }
-.char.romance-glow { filter:drop-shadow(0 0 25px rgba(255,180,200,.6)); }
+.char{position:absolute;bottom:14%;width:140px;height:300px;transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s,left .6s,right .6s}
+.char svg{width:100%;height:100%}
+#sannu{left:22%}#mossu{right:22%}
+#sannu.close{left:32%}#mossu.close{right:32%}
+.char.hidden{opacity:0;pointer-events:none;transform:translateY(35px)}
+.char.dim{opacity:.28;filter:saturate(.2) brightness(.5)}
+.char.bounce{animation:charBounce .8s cubic-bezier(.34,1.56,.64,1)}
+@keyframes charBounce{0%{transform:translateY(45px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.char.speak{animation:charSpeak .35s ease}
+@keyframes charSpeak{0%{transform:translateY(0)}35%{transform:translateY(-10px)}65%{transform:translateY(0)}}
+.char.romance-glow{filter:drop-shadow(0 0 25px rgba(255,180,200,.6))}
 
 /* ===== HUD ===== */
-#relwrap { position:absolute; top:18px; right:18px; display:flex; flex-direction:column; align-items:flex-end; gap:5px; z-index:20; }
-.bond-label { font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px; color:#f5c842; text-shadow:0 0 10px rgba(245,200,66,.7); }
-#relbar { width:160px; height:6px; background:rgba(255,255,255,.08); border-radius:3px; border:1px solid rgba(255,255,255,.12); overflow:hidden; }
-#relfill { height:100%; background:linear-gradient(90deg,#ef5350,#f48fb1,#f5c842,#4fc3f7); border-radius:3px; transition:width .8s cubic-bezier(.34,1.56,.64,1); box-shadow:0 0 8px rgba(245,200,66,.5); }
-.bond-hearts { font-size:13px; color:#f48fb1; text-shadow:0 0 8px #f48fb1; animation:hb 2s ease-in-out infinite; }
-@keyframes hb { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
-#chapterTag { position:absolute; top:18px; left:18px; font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.12); padding:6px 14px; border-radius:20px; background:rgba(0,0,0,.4); backdrop-filter:blur(10px); z-index:20; }
+#relwrap{position:absolute;top:18px;right:18px;display:flex;flex-direction:column;align-items:flex-end;gap:5px;z-index:20}
+.bond-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:#f5c842;text-shadow:0 0 10px rgba(245,200,66,.7)}
+#relbar{width:160px;height:6px;background:rgba(255,255,255,.08);border-radius:3px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
+#relfill{height:100%;background:linear-gradient(90deg,#ef5350,#f48fb1,#f5c842,#4fc3f7);border-radius:3px;transition:width .8s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 8px rgba(245,200,66,.5)}
+.bond-hearts{font-size:13px;color:#f48fb1;text-shadow:0 0 8px #f48fb1;animation:hb 2s ease-in-out infinite}
+@keyframes hb{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+#chapterTag{position:absolute;top:18px;left:18px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.12);padding:6px 14px;border-radius:20px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);z-index:20}
 
 /* ===== DIALOGUE ===== */
-#dialogue { position:absolute; bottom:0; left:0; width:100%; padding:0 18px 18px; z-index:20; }
-.dialogue-inner { background:linear-gradient(135deg,rgba(8,4,18,.94),rgba(18,8,35,.96)); border:1px solid rgba(245,200,66,.18); border-radius:16px; backdrop-filter:blur(20px); overflow:hidden; box-shadow:0 -4px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04); position:relative; }
-.dialogue-inner::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--speaker-color,#f5c842),transparent); transition:background .4s ease; }
-#namebox { display:inline-flex; align-items:center; gap:8px; padding:10px 20px 0 20px; font-family:'Cinzel',serif; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--speaker-color,#f5c842); text-shadow:0 0 12px var(--speaker-color,rgba(245,200,66,.7)); }
-.name-dot { width:6px; height:6px; border-radius:50%; background:var(--speaker-color,#f5c842); box-shadow:0 0 6px var(--speaker-color,#f5c842); animation:dotPulse 1.5s ease-in-out infinite; }
-@keyframes dotPulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
-#textbox { padding:12px 20px 14px; font-size:15px; line-height:1.7; color:rgba(255,255,255,.9); min-height:70px; max-height:28vh; overflow-y:auto; letter-spacing:.3px; }
-#continueHint { text-align:right; padding:0 20px 14px; font-size:11px; letter-spacing:2px; color:rgba(255,255,255,.35); animation:hintPulse 2s ease-in-out infinite; }
-@keyframes hintPulse { 0%,100%{opacity:.3;} 50%{opacity:.9;} }
+#dialogue{position:absolute;bottom:0;left:0;width:100%;padding:0 18px 18px;z-index:20}
+.dialogue-inner{background:linear-gradient(135deg,rgba(8,4,18,.94),rgba(18,8,35,.96));border:1px solid rgba(245,200,66,.18);border-radius:16px;backdrop-filter:blur(20px);overflow:hidden;box-shadow:0 -4px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
+.dialogue-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--speaker-color,#f5c842),transparent);transition:background .4s}
+#namebox{display:inline-flex;align-items:center;gap:8px;padding:10px 20px 0;font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--speaker-color,#f5c842);text-shadow:0 0 12px var(--speaker-color,rgba(245,200,66,.7))}
+.name-dot{width:6px;height:6px;border-radius:50%;background:var(--speaker-color,#f5c842);box-shadow:0 0 6px var(--speaker-color,#f5c842);animation:dotPulse 1.5s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.3}}
+#textbox{padding:12px 20px 14px;font-size:15px;line-height:1.7;color:rgba(255,255,255,.9);min-height:70px;max-height:28vh;overflow-y:auto;letter-spacing:.3px}
+#continueHint{text-align:right;padding:0 20px 14px;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.35);animation:hintPulse 2s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{opacity:.3}50%{opacity:.9}}
 
 /* ===== CHOICES ===== */
-#choices { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:radial-gradient(ellipse at center,rgba(8,4,18,.97),rgba(3,1,8,.98)); z-index:30; padding:20px; }
-.choices-title { font-family:'Cinzel',serif; font-size:11px; letter-spacing:4px; color:rgba(244,143,177,.6); margin-bottom:8px; }
-.choiceBtn { background:linear-gradient(135deg,rgba(15,8,30,.92),rgba(28,12,45,.92)); border:1px solid rgba(244,143,177,.2); color:rgba(255,255,255,.85); font-family:'Lato',sans-serif; font-size:15px; padding:16px 24px; border-radius:12px; cursor:pointer; width:100%; max-width:450px; text-align:left; transition:all .3s cubic-bezier(.34,1.56,.64,1); position:relative; overflow:hidden; }
-.choiceBtn::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,#f48fb1,#f5c842); opacity:0; transition:opacity .3s; }
-.choiceBtn::after { content:'♥'; position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:12px; color:#f48fb1; opacity:0; transition:opacity .3s,right .3s; }
-.choiceBtn:hover { background:linear-gradient(135deg,rgba(40,15,55,.95),rgba(55,18,65,.95)); border-color:rgba(244,143,177,.5); transform:translateX(8px) scale(1.01); color:#fff; }
-.choiceBtn:hover::before { opacity:1; }
-.choiceBtn:hover::after { opacity:1; right:14px; }
+#choices{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at center,rgba(8,4,18,.97),rgba(3,1,8,.98));z-index:30;padding:20px}
+.choices-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;color:rgba(244,143,177,.6);margin-bottom:8px}
+.choiceBtn{background:linear-gradient(135deg,rgba(15,8,30,.92),rgba(28,12,45,.92));border:1px solid rgba(244,143,177,.2);color:rgba(255,255,255,.85);font-family:'Lato',sans-serif;font-size:15px;padding:16px 24px;border-radius:12px;cursor:pointer;width:100%;max-width:450px;text-align:left;transition:all .3s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.choiceBtn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#f48fb1,#f5c842);opacity:0;transition:opacity .3s}
+.choiceBtn:hover{background:linear-gradient(135deg,rgba(40,15,55,.95),rgba(55,18,65,.95));border-color:rgba(244,143,177,.5);transform:translateX(8px) scale(1.01);color:#fff}
+.choiceBtn:hover::before{opacity:1}
 
 /* ===== MINIGAME ===== */
-#minigame { position:absolute; inset:0; background:radial-gradient(ellipse at center,rgba(12,8,25,.97),rgba(5,3,12,.98)); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; z-index:40; }
-#minigame.hidden { display:none!important; }
-#minigame h3 { font-family:'Cinzel',serif; font-size:16px; letter-spacing:4px; color:#ffd97a; text-shadow:0 0 15px rgba(255,217,122,.5); }
-#minigame p { font-size:13px; color:rgba(255,255,255,.45); letter-spacing:2px; }
-#lanternRow { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
-.lanternBtn { width:56px; height:70px; border-radius:8px 8px 14px 14px; background:linear-gradient(180deg,#2a1c0a,#1a0f05); border:2px solid rgba(255,160,60,.3); cursor:pointer; transition:all .3s; position:relative; }
-.lanternBtn.lit { background:linear-gradient(180deg,#ffd97a,#ff9d5c); box-shadow:0 0 25px 8px rgba(255,200,80,.5); border-color:rgba(255,200,80,.8); }
-#mgScore { font-size:13px; color:rgba(255,217,122,.6); letter-spacing:2px; font-family:'Cinzel',serif; }
-.mg-ornament { width:80px; height:1px; background:linear-gradient(90deg,transparent,#f5c842,transparent); }
+#minigame{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(12,8,25,.97),rgba(5,3,12,.98));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:40}
+#minigame.hidden{display:none!important}
+#minigame h3{font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;color:#ffd97a;text-shadow:0 0 15px rgba(255,217,122,.5)}
+#minigame p{font-size:13px;color:rgba(255,255,255,.45);letter-spacing:2px}
+#lanternRow{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+.lanternBtn{width:56px;height:70px;border-radius:8px 8px 14px 14px;background:linear-gradient(180deg,#2a1c0a,#1a0f05);border:2px solid rgba(255,160,60,.3);cursor:pointer;transition:all .3s;position:relative}
+.lanternBtn.lit{background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 25px 8px rgba(255,200,80,.5);border-color:rgba(255,200,80,.8)}
+#mgScore{font-size:13px;color:rgba(255,217,122,.6);letter-spacing:2px;font-family:'Cinzel',serif}
+.mg-ornament{width:80px;height:1px;background:linear-gradient(90deg,transparent,#f5c842,transparent)}
 
-/* ===== CHAPTER TRANSITION CARD ===== */
-#chapterCard { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; z-index:60; opacity:0; pointer-events:none; transition:opacity .6s ease; background:radial-gradient(ellipse at center,#080418 0%,#020108 70%); }
-#chapterCard.show { opacity:1; pointer-events:all; }
-.cc-ornament { width:120px; height:1px; background:linear-gradient(90deg,transparent,#f5c842,transparent); margin:8px 0; }
-#ccTitle { font-family:'Cinzel',serif; font-size:40px; letter-spacing:8px; background:linear-gradient(135deg,#f48fb1,#f5c842,#f48fb1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 0 20px rgba(244,143,177,.5)); }
-#ccSub { font-family:'Cinzel',serif; font-size:12px; letter-spacing:12px; color:rgba(255,255,255,.4); font-weight:400; }
-#ccChapter { font-family:'Lato',sans-serif; font-size:14px; letter-spacing:4px; color:#f48fb1; font-weight:300; text-shadow:0 0 15px rgba(244,143,177,.6); }
-#ccHint { margin-top:30px; font-size:11px; letter-spacing:3px; color:rgba(255,255,255,.25); animation:hintPulse 2.5s ease-in-out infinite; }
-.cc-particle { position:absolute; border-radius:50%; animation:titleFloat var(--dur3,5s) ease-in-out infinite; }
-@keyframes titleFloat { 0%,100%{transform:translateY(0) translateX(0) scale(1);opacity:0;} 20%{opacity:.7;} 50%{transform:translateY(-80px) translateX(var(--tx,20px)) scale(1.5);opacity:.9;} 80%{opacity:.3;} }
+/* ===== CHAPTER CARD ===== */
+#chapterCard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:60;opacity:0;pointer-events:none;transition:opacity .6s ease;background:radial-gradient(ellipse at center,#080418,#020108 70%)}
+#chapterCard.show{opacity:1;pointer-events:all}
+.cc-ornament{width:120px;height:1px;background:linear-gradient(90deg,transparent,#f5c842,transparent);margin:8px 0}
+#ccTitle{font-family:'Cinzel',serif;font-size:40px;letter-spacing:8px;background:linear-gradient(135deg,#f48fb1,#f5c842,#f48fb1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(244,143,177,.5))}
+#ccSub{font-family:'Cinzel',serif;font-size:12px;letter-spacing:12px;color:rgba(255,255,255,.4);font-weight:400}
+#ccChapter{font-family:'Lato',sans-serif;font-size:14px;letter-spacing:4px;color:#f48fb1;font-weight:300;text-shadow:0 0 15px rgba(244,143,177,.6)}
+#ccHint{margin-top:30px;font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.25);animation:hintPulse 2.5s ease-in-out infinite}
+.cc-particle{position:absolute;border-radius:50%;animation:titleFloat var(--dur3,5s) ease-in-out infinite}
+@keyframes titleFloat{0%,100%{transform:translateY(0) translateX(0) scale(1);opacity:0}20%{opacity:.7}50%{transform:translateY(-80px) translateX(var(--tx,20px)) scale(1.5);opacity:.9}80%{opacity:.3}}
 
-.hidden { display:none!important; }
-#textbox::-webkit-scrollbar { width:4px; }
-#textbox::-webkit-scrollbar-thumb { background:rgba(244,143,177,.3); border-radius:2px; }
-.ripple { position:absolute; border-radius:50%; width:20px; height:20px; background:rgba(244,143,177,.2); pointer-events:none; animation:rippleOut .6s ease-out forwards; transform:translate(-50%,-50%); }
-@keyframes rippleOut { to{width:90px;height:90px;opacity:0;} }
+.hidden{display:none!important}
+#textbox::-webkit-scrollbar{width:4px}
+#textbox::-webkit-scrollbar-thumb{background:rgba(244,143,177,.3);border-radius:2px}
+.ripple{position:absolute;border-radius:50%;width:20px;height:20px;background:rgba(244,143,177,.2);pointer-events:none;animation:rippleOut .6s ease-out forwards;transform:translate(-50%,-50%)}
+@keyframes rippleOut{to{width:90px;height:90px;opacity:0}}
 </style>
 </head>
 <body>
 <div id="stage">
 
-  <!-- ===== SCENE (swapped per chapter) ===== -->
+  <!-- Scene layer -->
   <div class="scene ch1" id="scene"></div>
 
   <!-- Kiss flash -->
   <div id="kissFlash"></div>
 
-  <!-- Kiss scene overlay — cinematic tree scene -->
+  <!-- ===== CINEMATIC KISS OVERLAY — Sakura tree, movie style ===== -->
   <div id="kissOverlay">
-        </radialGradient>
-        <radialGradient id="sFaceK" cx="45%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#fde8d8"/>
-          <stop offset="100%" stop-color="#f5c8a8"/>
-        </radialGradient>
-        <radialGradient id="mFaceK" cx="55%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#deb887"/>
-          <stop offset="100%" stop-color="#c49858"/>
-        </radialGradient>
-        <radialGradient id="blushL" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ff8a80" stop-opacity=".55"/>
-          <stop offset="100%" stop-color="#ff8a80" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="blushR" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ff9d6e" stop-opacity=".45"/>
-          <stop offset="100%" stop-color="#ff9d6e" stop-opacity="0"/>
-        </radialGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
+    <svg class="kiss-art" viewBox="0 0 1000 580" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="kSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#01000c"/><stop offset="35%" stop-color="#05021a"/><stop offset="70%" stop-color="#0b0435"/><stop offset="100%" stop-color="#180848"/></linearGradient>
+        <linearGradient id="kGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#110830"/><stop offset="100%" stop-color="#060318"/></linearGradient>
+        <radialGradient id="kMoon" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffde7"/><stop offset="25%" stop-color="#fff9c4"/><stop offset="55%" stop-color="#ffd54f"/><stop offset="80%" stop-color="rgba(255,200,80,0.22)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+        <radialGradient id="kLove" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(255,190,215,0.65)"/><stop offset="45%" stop-color="rgba(255,160,200,0.28)"/><stop offset="100%" stop-color="rgba(255,150,200,0)"/></radialGradient>
+        <linearGradient id="kTrunk" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1a0e08"/><stop offset="45%" stop-color="#2e1a0e"/><stop offset="100%" stop-color="#1a0e08"/></linearGradient>
+        <linearGradient id="kBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,240,180,0.12)"/><stop offset="100%" stop-color="rgba(255,240,180,0)"/></linearGradient>
+        <filter id="kBlur"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="kSoft"><feGaussianBlur stdDeviation="2.5"/></filter>
+        <filter id="kGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
+      <!-- Sky -->
+      <rect width="1000" height="580" fill="url(#kSky)"/>
+      <!-- Stars -->
+      <circle cx="42" cy="28" r="1.1" fill="#fff" opacity=".82"/><circle cx="88" cy="15" r=".7" fill="#fff" opacity=".6"/><circle cx="156" cy="42" r="1.3" fill="#fffde7" opacity=".85"/><circle cx="220" cy="18" r=".9" fill="#fff" opacity=".7"/><circle cx="285" cy="35" r="1.0" fill="#fff" opacity=".75"/><circle cx="342" cy="12" r="1.2" fill="#fffde7" opacity=".9"/><circle cx="412" cy="28" r=".8" fill="#fff" opacity=".65"/><circle cx="468" cy="18" r="1.1" fill="#fff" opacity=".8"/><circle cx="530" cy="10" r=".7" fill="#fff" opacity=".7"/><circle cx="588" cy="32" r="1.4" fill="#fffde7" opacity=".85"/><circle cx="640" cy="18" r=".9" fill="#fff" opacity=".6"/><circle cx="705" cy="25" r="1.2" fill="#fff" opacity=".8"/><circle cx="752" cy="14" r=".8" fill="#fff" opacity=".75"/><circle cx="818" cy="30" r="1.1" fill="#fffde7" opacity=".85"/><circle cx="872" cy="12" r=".7" fill="#fff" opacity=".6"/><circle cx="920" cy="22" r="1.3" fill="#fff" opacity=".8"/><circle cx="965" cy="35" r="1.0" fill="#fff" opacity=".7"/><circle cx="30" cy="68" r=".8" fill="#fff" opacity=".6"/><circle cx="92" cy="82" r="1.2" fill="#fff" opacity=".75"/><circle cx="165" cy="55" r=".9" fill="#fffde7" opacity=".7"/><circle cx="240" cy="78" r="1.1" fill="#fff" opacity=".8"/><circle cx="310" cy="60" r=".7" fill="#fff" opacity=".65"/><circle cx="385" cy="90" r="1.0" fill="#fff" opacity=".75"/><circle cx="520" cy="80" r="1.3" fill="#fffde7" opacity=".8"/><circle cx="610" cy="55" r=".9" fill="#fff" opacity=".75"/><circle cx="680" cy="88" r="1.1" fill="#fff" opacity=".7"/><circle cx="745" cy="60" r=".8" fill="#fff" opacity=".8"/><circle cx="825" cy="78" r="1.2" fill="#fffde7" opacity=".75"/><circle cx="895" cy="55" r=".7" fill="#fff" opacity=".6"/><circle cx="948" cy="75" r="1.0" fill="#fff" opacity=".7"/><circle cx="15" cy="110" r="1.1" fill="#fff" opacity=".65"/><circle cx="78" cy="125" r=".8" fill="#fff" opacity=".6"/><circle cx="148" cy="108" r="1.2" fill="#fff" opacity=".75"/><circle cx="298" cy="118" r="1.0" fill="#fffde7" opacity=".7"/><circle cx="558" cy="120" r="1.3" fill="#fff" opacity=".7"/><circle cx="720" cy="112" r="1.1" fill="#fff" opacity=".75"/><circle cx="788" cy="128" r=".9" fill="#fffde7" opacity=".65"/><circle cx="855" cy="118" r="1.2" fill="#fff" opacity=".8"/><circle cx="978" cy="108" r="1.0" fill="#fff" opacity=".7"/>
+      <!-- Nebula hints -->
+      <ellipse cx="700" cy="110" rx="190" ry="85" fill="rgba(80,40,180,0.05)" filter="url(#kBlur)"/>
+      <ellipse cx="180" cy="75" rx="130" ry="65" fill="rgba(180,60,120,0.04)" filter="url(#kBlur)"/>
+      <!-- Moon -->
+      <circle cx="790" cy="88" r="130" fill="rgba(255,240,150,0.04)" filter="url(#kBlur)"/>
+      <circle cx="790" cy="88" r="88" fill="rgba(255,240,150,0.07)" filter="url(#kBlur)"/>
+      <circle cx="790" cy="88" r="62" fill="url(#kMoon)"/>
+      <circle cx="772" cy="78" r="9" fill="rgba(210,188,110,0.18)"/>
+      <circle cx="805" cy="98" r="6" fill="rgba(210,188,110,0.14)"/>
+      <!-- Moonbeam -->
+      <polygon points="750,88 830,88 610,580 490,580" fill="url(#kBeam)"/>
+      <!-- Far city -->
+      <rect x="0" y="468" width="140" height="112" fill="rgba(8,4,22,0.9)"/>
+      <rect x="8" y="445" width="75" height="135" fill="rgba(10,5,26,0.88)"/>
+      <rect x="855" y="455" width="145" height="125" fill="rgba(8,4,22,0.9)"/>
+      <rect x="900" y="432" width="80" height="148" fill="rgba(10,5,26,0.85)"/>
+      <!-- Ground -->
+      <rect x="0" y="538" width="1000" height="42" fill="url(#kGround)"/>
+      <ellipse cx="548" cy="545" rx="160" ry="10" fill="rgba(255,240,180,0.06)" filter="url(#kBlur)"/>
+      <text x="278" y="550" font-size="11" opacity=".45">🌸</text><text x="618" y="552" font-size="9" opacity=".4">🌺</text><text x="728" y="551" font-size="10" opacity=".42">🌸</text>
+      <!-- Tree trunk -->
+      <path d="M242,580 C236,520 242,458 248,398 C252,348 258,305 266,268 C270,245 276,225 283,208 C291,208 300,225 306,248 C313,270 318,306 321,356 C325,412 328,468 324,528 C318,562 312,580 312,580Z" fill="url(#kTrunk)"/>
+      <!-- Main right branch -->
+      <path d="M294,215 Q368,178 462,160 Q575,140 698,145 Q758,148 818,158" stroke="#1a0e08" stroke-width="26" fill="none" stroke-linecap="round"/>
+      <!-- Sub-branches up -->
+      <path d="M462,160 Q475,118 488,82 Q498,55 510,32" stroke="#1a0e08" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <path d="M578,142 Q592,102 605,65 Q615,38 622,15" stroke="#1a0e08" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <path d="M698,145 Q714,115 726,82 Q734,58 738,38" stroke="#1a0e08" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M818,158 Q842,138 858,115 Q868,100 875,82" stroke="#1a0e08" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M368,172 Q352,138 338,105 Q328,80 325,58" stroke="#1a0e08" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <!-- Left branches -->
+      <path d="M268,302 Q195,272 118,258 Q65,248 12,260" stroke="#1a0e08" stroke-width="20" fill="none" stroke-linecap="round"/>
+      <path d="M260,245 Q182,218 108,205 Q55,195 12,208" stroke="#1a0e08" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <path d="M118,258 Q98,228 82,198 Q70,175 66,152" stroke="#1a0e08" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <!-- Blossoms -->
+      <g opacity=".9"><circle cx="820" cy="156" r="24" fill="#ffb7c5"/><circle cx="840" cy="143" r="20" fill="#ffc8d5"/><circle cx="804" cy="144" r="22" fill="#ff9db5"/><circle cx="832" cy="132" r="17" fill="#ffe0e8"/><circle cx="845" cy="162" r="16" fill="#ffb7c5"/><circle cx="808" cy="168" r="14" fill="#ffc8d5"/><circle cx="828" cy="120" r="14" fill="#ffe0e8"/></g>
+      <g opacity=".87"><circle cx="510" cy="34" r="21" fill="#ffc8d5"/><circle cx="528" cy="22" r="17" fill="#ffe0e8"/><circle cx="494" cy="26" r="19" fill="#ffb7c5"/><circle cx="522" cy="48" r="15" fill="#ff9db5"/><circle cx="500" cy="14" r="13" fill="#ffc8d5"/></g>
+      <g opacity=".85"><circle cx="622" cy="17" r="22" fill="#ffb7c5"/><circle cx="642" cy="6" r="18" fill="#ffc8d5"/><circle cx="605" cy="9" r="20" fill="#ff9db5"/><circle cx="635" cy="30" r="15" fill="#ffe0e8"/></g>
+      <g opacity=".83"><circle cx="738" cy="40" r="19" fill="#ffc8d5"/><circle cx="754" cy="28" r="16" fill="#ffe0e8"/><circle cx="722" cy="32" r="18" fill="#ffb7c5"/><circle cx="746" cy="55" r="14" fill="#ff9db5"/></g>
+      <g opacity=".80"><circle cx="875" cy="84" r="18" fill="#ffb7c5"/><circle cx="890" cy="72" r="15" fill="#ffc8d5"/><circle cx="862" cy="76" r="17" fill="#ff9db5"/><circle cx="882" cy="98" r="13" fill="#ffe0e8"/></g>
+      <g opacity=".84"><circle cx="325" cy="60" r="18" fill="#ffc8d5"/><circle cx="340" cy="48" r="15" fill="#ffe0e8"/><circle cx="312" cy="52" r="17" fill="#ffb7c5"/><circle cx="336" cy="74" r="13" fill="#ff9db5"/></g>
+      <g opacity=".87"><circle cx="380" cy="168" r="20" fill="#ffb7c5"/><circle cx="398" cy="157" r="17" fill="#ffc8d5"/><circle cx="365" cy="160" r="19" fill="#ff9db5"/><circle cx="390" cy="152" r="15" fill="#ffe0e8"/><circle cx="402" cy="178" r="13" fill="#ffb7c5"/></g>
+      <g opacity=".86"><circle cx="528" cy="145" r="21" fill="#ffc8d5"/><circle cx="546" cy="134" r="18" fill="#ffe0e8"/><circle cx="512" cy="137" r="20" fill="#ffb7c5"/><circle cx="538" cy="158" r="15" fill="#ff9db5"/></g>
+      <g opacity=".84"><circle cx="668" cy="143" r="19" fill="#ffb7c5"/><circle cx="686" cy="132" r="16" fill="#ffc8d5"/><circle cx="652" cy="136" r="18" fill="#ff9db5"/></g>
+      <g opacity=".80"><circle cx="15" cy="260" r="20" fill="#ffb7c5"/><circle cx="28" cy="250" r="18" fill="#ff9db5"/><circle cx="18" cy="275" r="14" fill="#ffe0e8"/></g>
+      <g opacity=".82"><circle cx="120" cy="258" r="18" fill="#ffb7c5"/><circle cx="136" cy="248" r="15" fill="#ffc8d5"/><circle cx="106" cy="250" r="17" fill="#ff9db5"/></g>
+      <g opacity=".80"><circle cx="15" cy="208" r="19" fill="#ffc8d5"/><circle cx="28" cy="198" r="17" fill="#ffb7c5"/><circle cx="22" cy="222" r="13" fill="#ff9db5"/></g>
+      <g opacity=".88"><circle cx="286" cy="208" r="21" fill="#ffb7c5"/><circle cx="304" cy="197" r="17" fill="#ffc8d5"/><circle cx="270" cy="200" r="19" fill="#ff9db5"/><circle cx="296" cy="190" r="15" fill="#ffe0e8"/><circle cx="278" cy="222" r="14" fill="#ffb7c5"/></g>
+      <!-- Loose petals in scene -->
+      <ellipse cx="355" cy="328" rx="6" ry="3.5" fill="#ffb7c5" opacity=".55" transform="rotate(-35,355,328)"/>
+      <ellipse cx="592" cy="282" rx="5" ry="3" fill="#ffc8d5" opacity=".5" transform="rotate(18,592,282)"/>
+      <ellipse cx="628" cy="385" rx="5" ry="3" fill="#ffb7c5" opacity=".48" transform="rotate(28,628,385)"/>
+      <ellipse cx="715" cy="325" rx="4" ry="2.5" fill="#ffe0e8" opacity=".48" transform="rotate(12,715,325)"/>
+      <ellipse cx="302" cy="398" rx="5" ry="3" fill="#ffe0e8" opacity=".4" transform="rotate(32,302,398)"/>
+      <!-- Bokeh -->
+      <circle cx="145" cy="385" r="9" fill="rgba(255,200,100,0.28)" filter="url(#kBlur)"/>
+      <circle cx="840" cy="360" r="7" fill="rgba(200,150,255,0.28)" filter="url(#kBlur)"/>
+      <circle cx="55" cy="358" r="8" fill="rgba(255,210,80,0.28)" filter="url(#kBlur)"/>
+      <circle cx="372" cy="430" r="7" fill="rgba(255,160,200,0.22)" filter="url(#kBlur)"/>
 
-      <!-- Background glow -->
-      <ellipse cx="260" cy="190" rx="220" ry="140" fill="url(#bgGlow)"/>
-      <ellipse cx="260" cy="190" rx="160" ry="100" fill="rgba(244,143,177,0.07)"/>
-
-      <!-- ===== SANNU — left side, profile facing RIGHT ===== -->
-      <!-- Body / hoodie -->
-      <ellipse cx="140" cy="295" rx="70" ry="10" fill="#000" opacity=".25"/>
-      <!-- Torso -->
-      <rect x="85" y="178" width="95" height="90" rx="18" fill="#1e88e5"/>
-      <!-- Neck -->
-      <rect x="128" y="162" width="22" height="22" rx="10" fill="#fde8d8"/>
-      <!-- Head — profile facing right -->
-      <ellipse cx="148" cy="128" rx="42" ry="46" fill="url(#sFaceK)"/>
-      <!-- Ear -->
-      <ellipse cx="108" cy="130" rx="8" ry="10" fill="#f5c8a8"/>
-      <!-- Hair — dark, ponytail sweeps left -->
-      <path d="M108 98 Q106 62 148 56 Q185 60 188 98 Q190 118 186 130 L186 98 Q148 80 110 98 Z" fill="#1a1a2e"/>
-      <!-- Ponytail going back (left) -->
-      <path d="M110 100 Q80 90 55 108 Q40 120 50 140 Q65 125 90 118 Q105 110 110 100Z" fill="#1a1a2e"/>
-      <!-- Hair tie -->
-      <ellipse cx="68" cy="122" rx="9" ry="6" fill="#ef5350"/>
-      <!-- Eye (right eye, profile so one visible) -->
-      <ellipse cx="168" cy="122" rx="10" ry="9" fill="#fff"/>
-      <circle cx="170" cy="123" r="6.5" fill="#4e342e"/>
-      <circle cx="169" cy="122" r="3" fill="#000"/>
-      <circle cx="172" cy="120" r="2.2" fill="#fff" opacity=".92"/>
-      <!-- Eyebrow -->
-      <path d="M158 110 Q167 106 176 109" stroke="#1a1a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <!-- Glasses frame (side view) -->
-      <rect x="158" y="115" width="22" height="15" rx="6" fill="none" stroke="#1565c0" stroke-width="2.5"/>
-      <line x1="158" y1="122" x2="148" y2="122" stroke="#1565c0" stroke-width="2"/>
-      <!-- Nose tip (profile) -->
-      <path d="M186 138 Q192 142 188 148" stroke="#e0a888" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-      <!-- Mouth — lips puckered toward Mossu (right) -->
-      <path d="M186 158 Q195 155 200 160" stroke="#c47a6a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M186 158 Q195 162 200 160" stroke="#c47a6a" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <ellipse cx="198" cy="159" rx="5" ry="3.5" fill="#d4847a" opacity=".7"/>
-      <!-- Blush on cheek -->
-      <ellipse cx="178" cy="148" rx="16" ry="10" fill="url(#blushL)"/>
-      <!-- Arm extended slightly -->
-      <rect x="168" y="195" width="18" height="55" rx="9" fill="#1e88e5"/>
-      <ellipse cx="177" cy="253" rx="11" ry="9" fill="#fde8d8"/>
-
-      <!-- ===== KISS POINT — lips meeting in middle ===== -->
-      <!-- Soft glowing kiss dot between their lips -->
-      <ellipse cx="260" cy="160" rx="18" ry="10" fill="rgba(255,180,200,.35)" filter="url(#glow)"/>
-      <ellipse cx="260" cy="160" rx="10" ry="6" fill="rgba(255,160,190,.5)" filter="url(#glow)"/>
-      <!-- Tiny hearts at kiss point -->
-      <text x="248" y="143" font-size="13" fill="#f48fb1" opacity=".9" filter="url(#glow)">💋</text>
-
-      <!-- ===== MOSSU — right side, profile facing LEFT ===== -->
-      <!-- Shadow -->
-      <ellipse cx="380" cy="295" rx="70" ry="10" fill="#000" opacity=".25"/>
-      <!-- Torso — red shirt -->
-      <rect x="340" y="178" width="95" height="90" rx="18" fill="#e53935"/>
-      <!-- Neck -->
-      <rect x="370" y="162" width="22" height="22" rx="10" fill="#d4a96a"/>
-      <!-- Head — profile facing left -->
-      <ellipse cx="372" cy="128" rx="42" ry="46" fill="url(#mFaceK)"/>
-      <!-- Ear (right side, profile left) -->
-      <ellipse cx="412" cy="130" rx="8" ry="10" fill="#c49858"/>
-      <!-- Messy hair -->
-      <path d="M412 98 Q414 62 372 56 Q335 60 332 98 Q330 118 334 130 L334 98 Q372 80 410 98 Z" fill="#2c1810"/>
-      <!-- Extra messy tufts -->
-      <path d="M335 80 Q328 60 345 55 Q338 72 335 80Z" fill="#2c1810"/>
-      <path d="M355 62 Q358 42 372 50 Q362 60 355 62Z" fill="#3a2010"/>
-      <path d="M390 62 Q388 42 372 50 Q382 60 390 62Z" fill="#3a2010"/>
-      <path d="M408 78 Q416 58 400 55 Q406 70 408 78Z" fill="#2c1810"/>
-      <!-- Tuft on top -->
-      <path d="M360 60 Q365 44 372 58Z" fill="#2c1810"/>
-      <!-- Eye (left eye, profile) -->
-      <ellipse cx="352" cy="122" rx="10" ry="9" fill="#fff"/>
-      <circle cx="350" cy="123" r="6.5" fill="#3d2b1f"/>
-      <circle cx="351" cy="122" r="3" fill="#000"/>
-      <circle cx="348" cy="120" r="2.2" fill="#fff" opacity=".9"/>
-      <!-- Eyebrow (strong) -->
-      <path d="M344 110 Q353 106 362 109" stroke="#2c1810" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-      <!-- Nose tip (profile left) -->
-      <path d="M334 138 Q328 142 332 148" stroke="#b8834e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-      <!-- Mouth — puckered toward Sannu (left) -->
-      <path d="M334 158 Q325 155 320 160" stroke="#a0693a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M334 158 Q325 162 320 160" stroke="#a0693a" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <ellipse cx="322" cy="159" rx="5" ry="3.5" fill="#c08060" opacity=".65"/>
-      <!-- Blush -->
-      <ellipse cx="342" cy="148" rx="16" ry="10" fill="url(#blushR)"/>
-      <!-- Silver bracelet on wrist -->
-      <rect x="334" y="240" width="24" height="8" rx="4" fill="#bdbdbd"/>
-      <rect x="335" y="241" width="22" height="6" rx="3" fill="#e0e0e0"/>
-      <circle cx="346" cy="244" r="3" fill="#90caf9"/>
-      <!-- Arm -->
-      <rect x="334" y="195" width="18" height="55" rx="9" fill="#d4a96a"/>
-      <ellipse cx="343" cy="253" rx="11" ry="9" fill="#d4a96a"/>
-
-      <!-- Floating hearts around them -->
-      <text x="205" y="88" font-size="20" fill="#f48fb1" opacity=".85" filter="url(#glow)">💕</text>
-      <text x="285" y="72" font-size="16" fill="#f5c842" opacity=".9" filter="url(#glow)">✨</text>
-      <text x="310" y="90" font-size="18" fill="#f48fb1" opacity=".8" filter="url(#glow)">💖</text>
-      <text x="170" y="75" font-size="14" fill="#ce93d8" opacity=".85" filter="url(#glow)">🌸</text>
-      <text x="340" y="78" font-size="14" fill="#ffd97a" opacity=".8" filter="url(#glow)">💫</text>
-      <text x="228" y="58" font-size="12" fill="#f48fb1" opacity=".7" filter="url(#glow)">💗</text>
+      <!-- ===== THE COUPLE — backs to viewer, faces hidden toward each other ===== -->
+      <ellipse cx="476" cy="570" rx="95" ry="9" fill="rgba(0,0,0,0.55)"/>
+      <!-- MOSSU left, taller, back view -->
+      <rect x="404" y="546" width="28" height="19" rx="9" fill="#111"/>
+      <ellipse cx="418" cy="565" rx="19" ry="8" fill="#080808"/>
+      <rect x="434" y="549" width="24" height="16" rx="8" fill="#111"/>
+      <ellipse cx="446" cy="565" rx="16" ry="7" fill="#080808"/>
+      <rect x="405" y="442" width="25" height="108" rx="12" fill="#1565c0"/>
+      <rect x="434" y="445" width="24" height="105" rx="12" fill="#1a6fca"/>
+      <rect x="400" y="434" width="62" height="10" rx="4" fill="#2a1808"/>
+      <rect x="393" y="338" width="76" height="102" rx="16" fill="#e53935"/>
+      <path d="M412,338 Q432,329 452,338" fill="#c62828"/>
+      <rect x="380" y="344" width="18" height="82" rx="9" fill="#d4a96a"/>
+      <ellipse cx="389" cy="428" rx="12" ry="10" fill="#c8a060"/>
+      <path d="M464,348 Q480,356 488,375 Q494,395 490,425 Q486,442 478,448" stroke="#d4a96a" stroke-width="18" fill="none" stroke-linecap="round"/>
+      <ellipse cx="477" cy="450" rx="12" ry="10" fill="#c8a060"/>
+      <ellipse cx="432" cy="333" rx="15" ry="11" fill="#d4a96a"/>
+      <ellipse cx="432" cy="292" rx="35" ry="39" fill="#c8a060"/>
+      <ellipse cx="432" cy="275" rx="35" ry="25" fill="#2c1810"/>
+      <path d="M416,258 Q405,238 413,226 Q421,232 418,248Z" fill="#2c1810"/>
+      <path d="M432,254 Q428,232 436,220 Q442,227 440,244Z" fill="#3a2010"/>
+      <path d="M448,257 Q458,238 452,225 Q445,228 442,244Z" fill="#2c1810"/>
+      <path d="M412,270 Q397,260 392,246 Q399,240 408,252Z" fill="#2c1810"/>
+      <path d="M452,268 Q467,258 470,244 Q463,238 456,252Z" fill="#2c1810"/>
+      <ellipse cx="464" cy="296" rx="9" ry="16" fill="#c8a060" opacity=".5"/>
+      <!-- SANNU right, shorter, back view, ponytail visible -->
+      <rect x="468" y="548" width="23" height="17" rx="8" fill="#e8eaf0"/>
+      <ellipse cx="479" cy="565" rx="15" ry="7" fill="#cfd4e0"/>
+      <rect x="496" y="550" width="22" height="15" rx="7" fill="#e8eaf0"/>
+      <ellipse cx="507" cy="565" rx="14" ry="6" fill="#cfd4e0"/>
+      <rect x="469" y="448" width="21" height="104" rx="10" fill="#fde8d8"/>
+      <rect x="496" y="451" width="20" height="101" rx="10" fill="#f5d8c8"/>
+      <rect x="458" y="355" width="74" height="100" rx="15" fill="#1e88e5"/>
+      <path d="M476,355 Q495,346 514,355" fill="#1565c0"/>
+      <rect x="526" y="360" width="17" height="80" rx="8" fill="#1e88e5"/>
+      <ellipse cx="534" cy="442" rx="11" ry="9" fill="#fde8d8"/>
+      <path d="M460,362 Q448,372 443,390 Q439,408 443,432" stroke="#1e88e5" stroke-width="17" fill="none" stroke-linecap="round"/>
+      <ellipse cx="443" cy="433" rx="11" ry="9" fill="#fde8d8"/>
+      <ellipse cx="495" cy="350" rx="13" ry="10" fill="#fde8d8"/>
+      <ellipse cx="492" cy="308" rx="31" ry="35" fill="#fde8d8"/>
+      <ellipse cx="492" cy="291" rx="31" ry="21" fill="#1a1a2e"/>
+      <ellipse cx="468" cy="308" rx="11" ry="22" fill="#1a1a2e" opacity=".78"/>
+      <!-- Sannu's iconic ponytail sweeping right -->
+      <path d="M508,286 Q525,266 542,252 Q558,240 568,246 Q572,256 565,268 Q554,280 538,288 Q524,295 512,292 Q505,290 508,286Z" fill="#1a1a2e"/>
+      <path d="M566,246 Q582,235 590,246 Q588,258 574,264 Q567,264 565,256Z" fill="#1a1a2e"/>
+      <ellipse cx="518" cy="281" rx="9" ry="6" fill="#ef5350"/>
+      <ellipse cx="518" cy="281" rx="5.5" ry="3.8" fill="#e53935"/>
+      <ellipse cx="465" cy="312" rx="7" ry="9" fill="#f5c8a8" opacity=".6"/>
+      <!-- Romantic glow where their faces meet -->
+      <ellipse cx="462" cy="300" rx="62" ry="48" fill="url(#kLove)" filter="url(#kBlur)"/>
+      <ellipse cx="462" cy="300" rx="36" ry="26" fill="rgba(255,185,215,0.42)" filter="url(#kSoft)"/>
+      <ellipse cx="462" cy="300" rx="14" ry="10" fill="rgba(255,210,228,0.60)"/>
+      <!-- Hearts above -->
+      <text x="432" y="255" font-size="17" fill="#f48fb1" opacity=".82" filter="url(#kGlow)">💕</text>
+      <text x="462" y="238" font-size="14" fill="#ffd97a" opacity=".78" filter="url(#kGlow)">✨</text>
+      <text x="492" y="252" font-size="15" fill="#f48fb1" opacity=".72" filter="url(#kGlow)">💗</text>
+      <text x="410" y="272" font-size="11" fill="#ce93d8" opacity=".65">🌸</text>
+      <text x="514" y="268" font-size="11" fill="#f48fb1" opacity=".62">💖</text>
     </svg>
-    <div class="kiss-label">✦ &nbsp; FIRST KISS &nbsp; ✦</div>
+    <div class="kiss-label">✦ &nbsp; A MOMENT UNDER THE STARS &nbsp; ✦</div>
     <div class="kiss-hint">click anywhere to continue</div>
   </div>
 
@@ -328,22 +305,13 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <ellipse cx="65" cy="292" rx="42" ry="7" fill="#000" opacity="0.22"/>
       <rect x="41" y="272" width="20" height="13" rx="6" fill="#eceff1"/>
       <rect x="69" y="272" width="20" height="13" rx="6" fill="#eceff1"/>
-      <rect x="41" y="278" width="20" height="5" fill="#cfd8dc" opacity="0.7"/>
-      <rect x="69" y="278" width="20" height="5" fill="#cfd8dc" opacity="0.7"/>
       <rect x="44" y="205" width="15" height="70" rx="7" fill="#fde8d8"/>
       <rect x="71" y="205" width="15" height="70" rx="7" fill="#fde8d8"/>
-      <path d="M25 195 Q65 208 105 195 L100 185 Q65 196 30 185 Z" fill="#1565c0"/>
       <rect x="25" y="130" width="80" height="70" rx="12" fill="url(#sB)"/>
-      <rect x="63" y="130" width="4" height="70" fill="#1565c0" opacity="0.5"/>
       <rect x="30" y="178" width="22" height="18" rx="5" fill="#1565c0" opacity="0.75"/>
       <rect x="78" y="178" width="22" height="18" rx="5" fill="#1565c0" opacity="0.75"/>
-      <line x1="33" y1="148" x2="48" y2="148" stroke="#4fc3f7" stroke-width="1" opacity="0.55"/>
-      <line x1="48" y1="148" x2="48" y2="158" stroke="#4fc3f7" stroke-width="1" opacity="0.55"/>
-      <circle cx="48" cy="158" r="2.5" fill="#4fc3f7" opacity="0.65"/>
       <rect x="8" y="133" width="19" height="65" rx="9" fill="#1e88e5"/>
       <rect x="103" y="133" width="19" height="65" rx="9" fill="#1e88e5"/>
-      <rect x="8" y="185" width="19" height="18" rx="9" fill="#fde8d8"/>
-      <rect x="103" y="185" width="19" height="18" rx="9" fill="#fde8d8"/>
       <ellipse cx="17" cy="205" rx="10" ry="9" fill="#fde8d8"/>
       <ellipse cx="113" cy="205" rx="10" ry="9" fill="#fde8d8"/>
       <rect x="58" y="112" width="14" height="22" rx="7" fill="#fde8d8"/>
@@ -351,7 +319,6 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <ellipse cx="31" cy="88" rx="6" ry="8" fill="#f5c8a8"/>
       <ellipse cx="99" cy="88" rx="6" ry="8" fill="#f5c8a8"/>
       <path d="M32 76 Q28 42 65 36 Q102 42 98 76 Q100 94 96 102 L96 76 Q65 62 34 76 L34 102 Q30 94 32 76Z" fill="#1a1a2e"/>
-      <ellipse cx="65" cy="40" rx="9" ry="7" fill="#1a1a2e"/>
       <path d="M58 32 Q52 12 60 2 Q65 8 70 32" fill="#1a1a2e"/>
       <path d="M62 28 Q58 14 63 4 Q66 10 68 28" fill="#2a2a3e"/>
       <rect x="59" y="35" width="12" height="6" rx="3" fill="#ef5350"/>
@@ -368,12 +335,7 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <path d="M72 73 Q80 70 88 74" stroke="#1a1a2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
       <rect x="39" y="79" width="20" height="14" rx="6" fill="none" stroke="#1565c0" stroke-width="2.8"/>
       <rect x="71" y="79" width="20" height="14" rx="6" fill="none" stroke="#1565c0" stroke-width="2.8"/>
-      <rect x="40" y="80" width="18" height="12" rx="5" fill="#4fc3f7" opacity="0.06"/>
-      <rect x="72" y="80" width="18" height="12" rx="5" fill="#4fc3f7" opacity="0.06"/>
       <line x1="59" y1="85" x2="71" y2="85" stroke="#1565c0" stroke-width="2.2"/>
-      <line x1="39" y1="85" x2="31" y2="83" stroke="#1565c0" stroke-width="1.8"/>
-      <line x1="91" y1="85" x2="99" y2="83" stroke="#1565c0" stroke-width="1.8"/>
-      <path d="M42 82 Q45 80 48 81" stroke="#4fc3f7" stroke-width="1.2" fill="none" opacity="0.8"/>
       <path d="M62 93 Q65 97 68 93" stroke="#e0a888" stroke-width="1.3" fill="none"/>
       <path d="M56 103 Q65 110 74 103" stroke="#c47a6a" stroke-width="2" fill="none" stroke-linecap="round"/>
       <ellipse cx="40" cy="96" rx="10" ry="6" fill="url(#sBlush)"/>
@@ -393,22 +355,13 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <ellipse cx="65" cy="292" rx="44" ry="7" fill="#000" opacity="0.22"/>
       <rect x="38" y="271" width="22" height="15" rx="7" fill="#212121"/>
       <rect x="70" y="271" width="22" height="15" rx="7" fill="#212121"/>
-      <rect x="39" y="277" width="20" height="5" rx="2" fill="#fff" opacity="0.35"/>
-      <rect x="71" y="277" width="20" height="5" rx="2" fill="#fff" opacity="0.35"/>
       <rect x="38" y="195" width="21" height="78" rx="9" fill="#1565c0"/>
       <rect x="71" y="195" width="21" height="78" rx="9" fill="#1565c0"/>
-      <line x1="48" y1="200" x2="48" y2="270" stroke="#0d47a1" stroke-width="1" opacity="0.45"/>
-      <line x1="82" y1="200" x2="82" y2="270" stroke="#0d47a1" stroke-width="1" opacity="0.45"/>
       <rect x="28" y="190" width="74" height="9" rx="4" fill="#3e2723"/>
-      <rect x="60" y="191" width="10" height="7" rx="1.5" fill="#c0a060"/>
       <rect x="26" y="126" width="78" height="70" rx="12" fill="#e53935"/>
       <path d="M51 126 Q65 142 79 126" fill="#c62828"/>
-      <line x1="45" y1="155" x2="45" y2="192" stroke="#c62828" stroke-width="1" opacity="0.35"/>
-      <line x1="85" y1="155" x2="85" y2="192" stroke="#c62828" stroke-width="1" opacity="0.35"/>
       <rect x="6" y="128" width="22" height="68" rx="11" fill="#d4a96a"/>
       <rect x="102" y="128" width="22" height="68" rx="11" fill="#d4a96a"/>
-      <rect x="6" y="126" width="22" height="18" rx="10" fill="#e53935"/>
-      <rect x="102" y="126" width="22" height="18" rx="10" fill="#e53935"/>
       <ellipse cx="17" cy="200" rx="12" ry="10" fill="#d4a96a"/>
       <ellipse cx="113" cy="200" rx="12" ry="10" fill="#d4a96a"/>
       <rect x="5" y="184" width="24" height="9" rx="4.5" fill="#bdbdbd"/>
@@ -416,7 +369,6 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <circle cx="17" cy="188" r="3.5" fill="#90caf9"/>
       <circle cx="17" cy="188" r="2" fill="#64b5f6"/>
       <circle cx="15.5" cy="186.5" r="1" fill="#fff" opacity="0.8"/>
-      <ellipse cx="17" cy="188" rx="14" ry="7" fill="#90caf9" opacity="0.15"/>
       <rect x="55" y="108" width="20" height="22" rx="9" fill="#d4a96a"/>
       <ellipse cx="65" cy="82" rx="37" ry="39" fill="url(#mF)"/>
       <ellipse cx="28" cy="84" rx="7" ry="9" fill="#c49858"/>
@@ -428,7 +380,6 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <path d="M98 58 Q102 36 86 34 Q92 52 98 58Z" fill="#2c1810"/>
       <path d="M48 58 Q54 46 60 56 Q56 64 48 58Z" fill="#2c1810"/>
       <path d="M72 56 Q78 44 84 55 Q80 63 72 56Z" fill="#2c1810"/>
-      <path d="M60 54 Q65 42 70 54 Q67 62 60 54Z" fill="#3a2010"/>
       <ellipse cx="50" cy="81" rx="9" ry="8.5" fill="#fff"/>
       <ellipse cx="80" cy="81" rx="9" ry="8.5" fill="#fff"/>
       <circle cx="50" cy="82" r="6" fill="#3d2b1f"/>
@@ -441,8 +392,6 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
       <path d="M70 70 Q80 66 90 71" stroke="#2c1810" stroke-width="2.8" fill="none" stroke-linecap="round"/>
       <path d="M61 90 Q65 95 69 90" stroke="#b8834e" stroke-width="1.5" fill="none"/>
       <path d="M54 100 Q65 109 76 100" stroke="#a0693a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-      <ellipse cx="37" cy="94" rx="9" ry="5" fill="#e8a060" opacity="0.22"/>
-      <ellipse cx="93" cy="94" rx="9" ry="5" fill="#e8a060" opacity="0.22"/>
     </svg>
   </div>
 
@@ -478,7 +427,7 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
     <div class="mg-ornament"></div>
   </div>
 
-  <!-- Chapter transition card -->
+  <!-- Chapter card -->
   <div id="chapterCard">
     <div class="cc-ornament"></div>
     <div id="ccTitle">SANNU &amp; MOSSU</div>
@@ -488,7 +437,7 @@ html,body { height:100%; width:100%; background:var(--deep-bg); font-family:'Lat
     <div id="ccHint">✦ click anywhere to begin ✦</div>
   </div>
 
-</div><!-- end stage -->
+</div><!-- #stage -->
 
 <script>
 // ===================== SCENE BUILDER =====================
@@ -496,102 +445,105 @@ function buildScene(ch){
   const scene=document.getElementById('scene');
   scene.innerHTML='';
   scene.className='scene ch'+ch;
-  const stage=document.getElementById('stage');
 
   if(ch===1){
-    // Daytime park
     scene.innerHTML=`
       <div class="sun"></div>
-      <div style="position:absolute;width:180px;height:55px;top:22%;left:-5%;border-radius:50px;background:rgba(255,255,240,.06);filter:blur(10px);animation:drift 38s linear infinite;">
-      </div>
-      <div style="position:absolute;width:130px;height:38px;top:28%;left:28%;border-radius:50px;background:rgba(255,255,240,.05);filter:blur(10px);animation:drift 52s linear infinite;animation-delay:-18s;"></div>
-      <div class="hills-back"></div>
-      <div class="hills-mid"></div>
-      <div class="hills-front"></div>
-      <div class="ground-green"></div>
-      <div class="tree-group" style="left:3%"><div class="tree-leaves" style="width:75px;height:75px;background:radial-gradient(circle,#2e7d32,#1b5e20);box-shadow:0 0 22px rgba(46,125,50,.4);"></div><div class="tree-trunk" style="width:11px;height:55px;"></div></div>
-      <div class="tree-group" style="left:10%"><div class="tree-leaves" style="width:52px;height:52px;background:radial-gradient(circle,#388e3c,#1b5e20);box-shadow:0 0 18px rgba(46,125,50,.3);"></div><div class="tree-trunk" style="width:8px;height:38px;"></div></div>
-      <div class="tree-group" style="right:3%"><div class="tree-leaves" style="width:82px;height:82px;background:radial-gradient(circle,#2e7d32,#1b5e20);box-shadow:0 0 25px rgba(46,125,50,.4);"></div><div class="tree-trunk" style="width:11px;height:58px;"></div></div>
-      <div class="tree-group" style="right:12%"><div class="tree-leaves" style="width:58px;height:58px;background:radial-gradient(circle,#388e3c,#1b5e20);box-shadow:0 0 18px rgba(46,125,50,.3);"></div><div class="tree-trunk" style="width:9px;height:42px;"></div></div>
-      <div class="flower" style="left:28%;--size:18px;--dur2:2.2s;">🌸</div>
-      <div class="flower" style="left:36%;--size:15px;--dur2:3s;animation-delay:.5s;">🌼</div>
-      <div class="flower" style="left:57%;--size:17px;--dur2:2.8s;animation-delay:1s;">🌸</div>
-      <div class="flower" style="left:64%;--size:13px;--dur2:2s;animation-delay:.3s;">🌻</div>
-      <div class="flower" style="left:18%;--size:14px;--dur2:3.2s;animation-delay:.8s;">🌼</div>
-      <div class="butterfly" style="left:42%;bottom:36%;--bd:5s;--bs:18px;animation-delay:1s;">🦋</div>
-      <div class="butterfly" style="left:56%;bottom:44%;--bd:7s;--bs:14px;animation-delay:3s;">🦋</div>
+      <div class="hills-back"></div><div class="hills-mid"></div><div class="ground-green"></div>
+      <div class="tree-group" style="left:3%"><div class="tree-leaves" style="width:75px;height:75px;border-radius:50%;background:radial-gradient(circle,#2e7d32,#1b5e20);box-shadow:0 0 22px rgba(46,125,50,.4)"></div><div style="width:11px;height:55px;background:linear-gradient(180deg,#3d2c1e,#2a1f14);border-radius:3px"></div></div>
+      <div class="tree-group" style="right:3%"><div class="tree-leaves" style="width:82px;height:82px;border-radius:50%;background:radial-gradient(circle,#2e7d32,#1b5e20);box-shadow:0 0 25px rgba(46,125,50,.4)"></div><div style="width:11px;height:58px;background:linear-gradient(180deg,#3d2c1e,#2a1f14);border-radius:3px"></div></div>
+      <div class="flower" style="left:28%;--size:18px;--dur2:2.2s">🌸</div>
+      <div class="flower" style="left:36%;--size:15px;--dur2:3s;animation-delay:.5s">🌼</div>
+      <div class="flower" style="left:57%;--size:17px;--dur2:2.8s;animation-delay:1s">🌸</div>
+      <div class="flower" style="left:64%;--size:13px;--dur2:2s;animation-delay:.3s">🌻</div>
+      <div class="butterfly" style="left:42%;bottom:36%;--bd:5s;--bs:18px;animation-delay:1s">🦋</div>
+      <div class="butterfly" style="left:56%;bottom:44%;--bd:7s;--bs:14px;animation-delay:3s">🦋</div>
       <div class="bench"><div class="bench-back"></div><div class="bench-seat"></div><div class="bench-leg left"></div><div class="bench-leg right"></div></div>
     `;
-    for(let i=0;i<14;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${20+Math.random()*60}%;bottom:${12+Math.random()*45}%;--fdur:${4+Math.random()*6}s;--fx:${(Math.random()-.5)*80}px;--fy:${-20-Math.random()*40}px;--fx2:${(Math.random()-.5)*60}px;--fy2:${(Math.random()-.5)*30}px;animation-delay:${Math.random()*6}s;`;scene.appendChild(f);}
-    for(let i=0;i<50;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*1.5+.3;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*30}%;left:${Math.random()*100}%;--dur:${Math.random()*4+2}s;--op:${Math.random()*.2+.05};animation-delay:${Math.random()*5}s;background:#fff;`;scene.appendChild(s);}
+    for(let i=0;i<15;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${20+Math.random()*60}%;bottom:${12+Math.random()*45}%;--fdur:${4+Math.random()*6}s;--fx:${(Math.random()-.5)*80}px;--fy:${-20-Math.random()*40}px;--fx2:${(Math.random()-.5)*60}px;--fy2:${(Math.random()-.5)*30}px;animation-delay:${Math.random()*6}s;`;scene.appendChild(f);}
+    for(let i=0;i<40;i++){const s=mkStar();s.style.top=Math.random()*32+'%';scene.appendChild(s);}
   }
   else if(ch===2){
     scene.innerHTML=`
-      <div class="moon"><div style="position:absolute;width:12px;height:12px;border-radius:50%;background:rgba(200,180,100,.15);top:20%;left:60%;"></div><div style="position:absolute;width:8px;height:8px;border-radius:50%;background:rgba(200,180,100,.12);top:50%;left:30%;"></div></div>
-      <div class="nebula" style="width:300px;height:150px;top:10%;left:20%;background:rgba(100,60,180,.07);"></div>
-      <div class="nebula" style="width:200px;height:100px;top:25%;right:10%;background:rgba(60,100,180,.05);animation-delay:3s;"></div>
-      <div class="building" style="left:2%;width:80px;height:38%;"><div class="win" style="left:12px;bottom:60%;--wb:7s;"></div><div class="win" style="left:12px;bottom:45%;--wb:4s;animation-delay:1s;"></div><div class="win" style="left:40px;bottom:55%;--wb:9s;animation-delay:2s;"></div></div>
-      <div class="building" style="left:15%;width:60px;height:27%;"><div class="win" style="left:10px;bottom:50%;--wb:6s;animation-delay:1.5s;"></div><div class="win" style="left:35px;bottom:40%;--wb:5s;animation-delay:3s;"></div></div>
-      <div class="building" style="right:2%;width:90px;height:44%;"><div class="win" style="right:12px;bottom:65%;--wb:6s;animation-delay:2s;"></div><div class="win" style="right:12px;bottom:48%;--wb:4s;animation-delay:.8s;"></div><div class="win" style="right:12px;bottom:30%;--wb:8s;animation-delay:1.2s;"></div></div>
-      <div class="building" style="right:18%;width:55px;height:26%;"><div class="win" style="left:8px;bottom:45%;--wb:5s;animation-delay:1s;"></div></div>
-      <div class="building" style="left:50%;transform:translateX(-50%);width:110px;height:50%;"><div class="win" style="left:15px;bottom:68%;--wb:6s;animation-delay:.3s;"></div><div class="win" style="left:15px;bottom:52%;--wb:4s;animation-delay:1.8s;"></div><div class="win" style="left:55px;bottom:60%;--wb:5s;animation-delay:1s;"></div><div class="win" style="left:80px;bottom:44%;--wb:9s;animation-delay:.6s;"></div></div>
+      <div class="moon"></div>
+      <div class="nebula" style="width:300px;height:150px;top:10%;left:20%;background:rgba(100,60,180,.07)"></div>
+      <div class="building" style="left:2%;width:80px;height:38%"><div class="win" style="left:12px;bottom:60%;--wb:7s"></div><div class="win" style="left:12px;bottom:45%;--wb:4s;animation-delay:1s"></div></div>
+      <div class="building" style="right:2%;width:90px;height:44%"><div class="win" style="right:12px;bottom:65%;--wb:6s;animation-delay:2s"></div><div class="win" style="right:12px;bottom:45%;--wb:4s;animation-delay:.8s"></div></div>
+      <div class="building" style="left:50%;transform:translateX(-50%);width:110px;height:50%"><div class="win" style="left:15px;bottom:68%;--wb:6s;animation-delay:.3s"></div><div class="win" style="left:55px;bottom:55%;--wb:5s;animation-delay:1s"></div></div>
       <div class="ground-city"></div>
-      <div class="lantern-hang" style="left:22%;top:25%;--sw:3s;"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ff9d5c,#e65100);box-shadow:0 0 18px #ff9d5c,0 0 35px rgba(255,120,30,.3);"></div></div>
-      <div class="lantern-hang" style="left:37%;top:22%;--sw:3.5s;animation-delay:.5s;"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 16px #ffd97a;"></div></div>
-      <div class="lantern-hang" style="left:52%;top:26%;--sw:2.8s;animation-delay:1s;"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 16px #f48fb1;"></div></div>
-      <div class="lantern-hang" style="left:67%;top:23%;--sw:3.2s;animation-delay:1.5s;"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 18px #ffd97a;"></div></div>
-      <div class="lantern-hang" style="left:80%;top:27%;--sw:3s;animation-delay:2s;"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#ff9d5c,#bf360c);box-shadow:0 0 14px #ff9d5c;"></div></div>
-      <div class="petal" style="left:15%;top:-20px;--pd:10s;font-size:16px;animation-delay:0s;--px:30px;">🌸</div>
-      <div class="petal" style="left:50%;top:-20px;--pd:13s;font-size:12px;animation-delay:3s;--px:-20px;">🌸</div>
-      <div class="petal" style="left:80%;top:-20px;--pd:9s;font-size:14px;animation-delay:5s;--px:20px;">💮</div>
+      <div class="lantern-hang" style="left:22%;top:25%;--sw:3s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ff9d5c,#e65100);box-shadow:0 0 18px #ff9d5c"></div></div>
+      <div class="lantern-hang" style="left:37%;top:22%;--sw:3.5s;animation-delay:.5s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 16px #ffd97a"></div></div>
+      <div class="lantern-hang" style="left:52%;top:26%;--sw:2.8s;animation-delay:1s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 16px #f48fb1"></div></div>
+      <div class="lantern-hang" style="left:67%;top:23%;--sw:3.2s;animation-delay:1.5s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 18px #ffd97a"></div></div>
+      <div class="lantern-hang" style="left:80%;top:27%;--sw:3s;animation-delay:2s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#ff9d5c,#bf360c);box-shadow:0 0 14px #ff9d5c"></div></div>
+      <div class="petal" style="left:15%;top:-20px;--pd:10s;font-size:16px;--px:30px">🌸</div>
+      <div class="petal" style="left:50%;top:-20px;--pd:13s;font-size:12px;animation-delay:3s;--px:-20px">🌸</div>
+      <div class="petal" style="left:80%;top:-20px;--pd:9s;font-size:14px;animation-delay:5s;--px:20px">💮</div>
     `;
-    for(let i=0;i<90;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.2+.4;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--dur:${Math.random()*4+2}s;--op:${Math.random()*.5+.15};animation-delay:${Math.random()*5}s;background:#fff;`;scene.appendChild(s);}
+    for(let i=0;i<90;i++){const s=mkStar();s.style.top=Math.random()*55+'%';scene.appendChild(s);}
     for(let i=0;i<12;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${18+Math.random()*64}%;bottom:${12+Math.random()*40}%;--fdur:${4+Math.random()*7}s;--fx:${(Math.random()-.5)*90}px;--fy:${-18-Math.random()*45}px;--fx2:${(Math.random()-.5)*70}px;--fy2:${(Math.random()-.5)*35}px;animation-delay:${Math.random()*7}s;`;scene.appendChild(f);}
   }
   else if(ch===3){
     scene.innerHTML=`
-      <div class="moon" style="width:130px;height:130px;box-shadow:0 0 80px 25px rgba(255,240,150,.4),0 0 160px 50px rgba(255,200,80,.2);"></div>
-      <div class="nebula" style="width:350px;height:180px;top:5%;left:10%;background:rgba(120,60,200,.07);"></div>
-      <div class="nebula" style="width:250px;height:130px;top:18%;right:5%;background:rgba(200,80,120,.05);animation-delay:4s;"></div>
-      <div style="position:absolute;bottom:0;width:100%;height:30%;opacity:.4;">
-        <div class="city-sil" style="position:absolute;bottom:0;left:0;width:70px;height:55%;background:#08051a;border-radius:2px 2px 0 0;"></div>
-        <div class="city-sil" style="position:absolute;bottom:0;left:12%;width:50px;height:35%;background:#08051a;border-radius:2px 2px 0 0;"></div>
-        <div class="city-sil" style="position:absolute;bottom:0;left:30%;width:90px;height:70%;background:#08051a;border-radius:2px 2px 0 0;"></div>
-        <div class="city-sil" style="position:absolute;bottom:0;right:20%;width:80px;height:60%;background:#08051a;border-radius:2px 2px 0 0;"></div>
-        <div class="city-sil" style="position:absolute;bottom:0;right:0;width:75px;height:50%;background:#08051a;border-radius:2px 2px 0 0;"></div>
+      <div class="moon" style="width:130px;height:130px"></div>
+      <div class="nebula" style="width:350px;height:180px;top:5%;left:10%;background:rgba(120,60,200,.07)"></div>
+      <div class="nebula" style="width:250px;height:130px;top:18%;right:5%;background:rgba(200,80,120,.05);animation-delay:4s"></div>
+      <div style="position:absolute;bottom:0;width:100%;height:30%;opacity:.4">
+        <div style="position:absolute;bottom:0;left:0;width:70px;height:55%;background:#08051a;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:0;left:30%;width:90px;height:70%;background:#08051a;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:0;right:0;width:75px;height:50%;background:#08051a;border-radius:2px 2px 0 0"></div>
       </div>
       <div class="ground-city"></div>
-      <div class="lantern-hang" style="left:10%;top:20%;--sw:3.2s;"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ff9d5c,#e65100);box-shadow:0 0 20px #ff9d5c,0 0 40px rgba(255,120,30,.35);"></div></div>
-      <div class="lantern-hang" style="left:25%;top:17%;--sw:2.8s;animation-delay:.4s;"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 18px #f48fb1,0 0 35px rgba(244,143,177,.35);"></div></div>
-      <div class="lantern-hang" style="left:40%;top:21%;--sw:3.5s;animation-delay:.8s;"><div style="width:18px;height:24px;border-radius:3px 3px 9px 9px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 22px #ffd97a;"></div></div>
-      <div class="lantern-hang" style="left:55%;top:18%;--sw:3s;animation-delay:1.2s;"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ce93d8,#9c27b0);box-shadow:0 0 18px #ce93d8;"></div></div>
-      <div class="lantern-hang" style="left:70%;top:22%;--sw:2.6s;animation-delay:.6s;"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 16px #f48fb1;"></div></div>
-      <div class="lantern-hang" style="left:84%;top:19%;--sw:3.3s;animation-delay:1s;"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 20px #ffd97a;"></div></div>
-      <div class="bokeh" style="left:15%;top:55%;width:20px;height:20px;background:rgba(255,160,60,.4);--bd:5s;--bb:8px;--bo:.3;"></div>
-      <div class="bokeh" style="left:38%;top:50%;width:14px;height:14px;background:rgba(244,143,177,.5);--bd:7s;--bb:6px;--bo:.35;animation-delay:2s;"></div>
-      <div class="bokeh" style="left:60%;top:58%;width:18px;height:18px;background:rgba(200,120,255,.4);--bd:6s;--bb:7px;--bo:.28;animation-delay:1s;"></div>
-      <div class="bokeh" style="left:80%;top:52%;width:12px;height:12px;background:rgba(255,220,80,.5);--bd:8s;--bb:5px;--bo:.32;animation-delay:3s;"></div>
-      <div class="petal" style="left:5%;top:-20px;--pd:11s;font-size:16px;--px:30px;">🌸</div>
-      <div class="petal" style="left:35%;top:-20px;--pd:14s;font-size:12px;animation-delay:2s;--px:-20px;">🌸</div>
-      <div class="petal" style="left:65%;top:-20px;--pd:9s;font-size:14px;animation-delay:4s;--px:40px;">💮</div>
-      <div class="petal" style="left:85%;top:-20px;--pd:12s;font-size:11px;animation-delay:6s;--px:-25px;">🌸</div>
+      <div class="lantern-hang" style="left:10%;top:20%;--sw:3.2s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ff9d5c,#e65100);box-shadow:0 0 20px #ff9d5c"></div></div>
+      <div class="lantern-hang" style="left:25%;top:17%;--sw:2.8s;animation-delay:.4s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 18px #f48fb1"></div></div>
+      <div class="lantern-hang" style="left:40%;top:21%;--sw:3.5s;animation-delay:.8s"><div style="width:18px;height:24px;border-radius:3px 3px 9px 9px;background:linear-gradient(180deg,#ffd97a,#ff9d5c);box-shadow:0 0 22px #ffd97a"></div></div>
+      <div class="lantern-hang" style="left:55%;top:18%;--sw:3s;animation-delay:1.2s"><div style="width:16px;height:22px;border-radius:3px 3px 8px 8px;background:linear-gradient(180deg,#ce93d8,#9c27b0);box-shadow:0 0 18px #ce93d8"></div></div>
+      <div class="lantern-hang" style="left:70%;top:22%;--sw:2.6s;animation-delay:.6s"><div style="width:14px;height:20px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#f48fb1,#e91e63);box-shadow:0 0 16px #f48fb1"></div></div>
+      <div class="bokeh" style="left:15%;top:55%;width:20px;height:20px;background:rgba(255,160,60,.4);--bd:5s;--bb:8px;--bo:.3"></div>
+      <div class="bokeh" style="left:60%;top:58%;width:18px;height:18px;background:rgba(200,120,255,.4);--bd:6s;--bb:7px;--bo:.28;animation-delay:1s"></div>
+      <div class="petal" style="left:5%;top:-20px;--pd:11s;font-size:16px;--px:30px">🌸</div>
+      <div class="petal" style="left:65%;top:-20px;--pd:9s;font-size:14px;animation-delay:4s;--px:40px">💮</div>
     `;
-    const colors=['#fff','#fff9c4','#f8bbd0','#e1bee7','#bbdefb'];
-    for(let i=0;i<110;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+.4;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*58}%;left:${Math.random()*100}%;--dur:${Math.random()*5+2}s;--op:${Math.random()*.55+.15};animation-delay:${Math.random()*6}s;background:${colors[Math.floor(Math.random()*colors.length)]};`;scene.appendChild(s);}
-    for(let i=0;i<16;i++){const f=document.createElement('div');f.className='firefly';f.style.background=Math.random()>.5?'#ffe082':'#f48fb1';f.style.boxShadow=`0 0 10px 3px ${Math.random()>.5?'#ffd54f':'#e91e63'}`;f.style.cssText+=`position:absolute;left:${10+Math.random()*80}%;bottom:${10+Math.random()*50}%;width:5px;height:5px;border-radius:50%;--fdur:${4+Math.random()*7}s;--fx:${(Math.random()-.5)*100}px;--fy:${-20-Math.random()*50}px;--fx2:${(Math.random()-.5)*80}px;--fy2:${(Math.random()-.5)*40}px;animation:flyAround ${4+Math.random()*7}s ease-in-out infinite;animation-delay:${Math.random()*8}s;opacity:0;`;scene.appendChild(f);}
+    const cols=['#fff','#fff9c4','#f8bbd0','#e1bee7','#bbdefb'];
+    for(let i=0;i<110;i++){const s=mkStar();s.style.top=Math.random()*58+'%';s.style.background=cols[Math.floor(Math.random()*cols.length)];scene.appendChild(s);}
+    for(let i=0;i<16;i++){const f=document.createElement('div');f.className='firefly';f.style.cssText=`left:${10+Math.random()*80}%;bottom:${10+Math.random()*50}%;--fdur:${4+Math.random()*7}s;--fx:${(Math.random()-.5)*100}px;--fy:${-20-Math.random()*50}px;--fx2:${(Math.random()-.5)*80}px;--fy2:${(Math.random()-.5)*40}px;animation-delay:${Math.random()*8}s;`;scene.appendChild(f);}
+  }
+  else if(ch===4){
+    // Storm / battle scene — dark red sky, embers, broken city
+    scene.innerHTML=`
+      <div style="position:absolute;top:5%;left:50%;transform:translateX(-50%);width:200px;height:50px;border-radius:50%;background:rgba(200,50,20,.12);filter:blur(18px)"></div>
+      <div style="position:absolute;top:2%;left:30%;width:300px;height:80px;border-radius:50%;background:rgba(160,30,10,.1);filter:blur(25px)"></div>
+      <div class="nebula" style="width:400px;height:200px;top:0%;left:0%;background:rgba(180,30,10,.06)"></div>
+      <div class="nebula" style="width:300px;height:150px;top:10%;right:0%;background:rgba(200,60,10,.06);animation-delay:3s"></div>
+      <div style="position:absolute;bottom:0;width:100%;height:45%;opacity:.85">
+        <div style="position:absolute;bottom:0;left:0;width:110px;height:80%;background:#0a0202;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:0;left:8%;width:60px;height:55%;background:#0c0303;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:0;left:25%;width:150px;height:95%;background:#080202;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:0;right:20%;width:120px;height:85%;background:#0a0202;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:0;right:0;width:100px;height:70%;background:#0c0303;border-radius:2px 2px 0 0"></div>
+        <div style="position:absolute;bottom:65%;left:8%;width:40px;height:18px;background:rgba(255,100,20,.35);filter:blur(4px);border-radius:50%"></div>
+        <div style="position:absolute;bottom:72%;left:29%;width:55px;height:22px;background:rgba(255,120,30,.3);filter:blur(5px);border-radius:50%"></div>
+        <div style="position:absolute;bottom:68%;right:22%;width:48px;height:20px;background:rgba(255,90,20,.32);filter:blur(4px);border-radius:50%"></div>
+      </div>
+      <div style="position:absolute;bottom:0;width:100%;height:12%;background:linear-gradient(180deg,#1a0505,#080202)"></div>
+    `;
+    for(let i=0;i<60;i++){const s=mkStar();s.style.top=Math.random()*45+'%';s.style.background=Math.random()>.5?'#ff8060':'#ffb090';s.style.setProperty('--op',String(Math.random()*.25+.05));scene.appendChild(s);}
+    for(let i=0;i<30;i++){const e=document.createElement('div');e.className='ember';e.style.cssText=`left:${Math.random()*100}%;bottom:${5+Math.random()*40}%;width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;--ed:${3+Math.random()*6}s;--ex:${(Math.random()-.5)*80}px;--ey:${-40-Math.random()*80}px;--ex2:${(Math.random()-.5)*60}px;--ey2:${-80-Math.random()*120}px;animation-delay:${Math.random()*5}s;`;scene.appendChild(e);}
   }
 }
+function mkStar(){
+  const s=document.createElement('div');s.className='star';
+  const sz=Math.random()*2+.4;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;--dur:${Math.random()*4+2}s;--op:${Math.random()*.5+.15};animation-delay:${Math.random()*5}s;background:#fff;`;
+  return s;
+}
 
-// Add chapter card particles
+// Chapter card particles
 function addCardParticles(){
   const cc=document.getElementById('chapterCard');
   cc.querySelectorAll('.cc-particle').forEach(p=>p.remove());
   const pcols=['#f5c842','#f48fb1','#ce93d8','#80deea','#ffcc80'];
-  for(let i=0;i<22;i++){
-    const p=document.createElement('div');p.className='cc-particle';
-    p.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*70}%;width:3px;height:3px;background:${pcols[Math.floor(Math.random()*pcols.length)]};--dur3:${4+Math.random()*5}s;--tx:${(Math.random()-.5)*60}px;animation-delay:${Math.random()*5}s;`;
-    cc.appendChild(p);
-  }
+  for(let i=0;i<22;i++){const p=document.createElement('div');p.className='cc-particle';p.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*70}%;width:3px;height:3px;background:${pcols[Math.floor(Math.random()*pcols.length)]};--dur3:${4+Math.random()*5}s;--tx:${(Math.random()-.5)*60}px;animation-delay:${Math.random()*5}s;`;cc.appendChild(p);}
 }
 
 // ===================== AUDIO =====================
@@ -605,95 +557,86 @@ function beep(freq,dur,type='sine',vol=0.1,slideTo=null){
 }
 const sfx={
   click:()=>beep(600,.06,'sine',.04,900),
-  choice:()=>{beep(440,.1,'triangle',.06,540);setTimeout(()=>beep(660,.1,'triangle',.04,760),80);},
-  bond:()=>{beep(523,.2,'sine',.08);setTimeout(()=>beep(659,.25,'sine',.08),130);setTimeout(()=>beep(784,.3,'sine',.06),280);},
+  choice:()=>{beep(440,.1,'triangle',.06,540);setTimeout(()=>beep(660,.1,'triangle',.04,760),80)},
+  bond:()=>{beep(523,.2,'sine',.08);setTimeout(()=>beep(659,.25,'sine',.08),130);setTimeout(()=>beep(784,.3,'sine',.06),280)},
   enter:()=>beep(330,.4,'triangle',.05,528),
   whoosh:()=>beep(200,.35,'sawtooth',.025,80),
   lantern:()=>beep(740,.15,'triangle',.1,990),
-  win:()=>{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.25,'sine',.08),i*120));},
-  kiss:()=>{beep(784,.4,'sine',.08);setTimeout(()=>beep(988,.5,'sine',.07),200);setTimeout(()=>beep(1175,.6,'sine',.06),450);setTimeout(()=>beep(1568,.8,'sine',.05),750);},
-  romance:()=>{[523,659,784,880,988].forEach((f,i)=>setTimeout(()=>beep(f,.3,'sine',.06),i*200));},
-  chapterJingle:()=>{[392,523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,.4,'sine',.07),i*180));}
+  win:()=>{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.25,'sine',.08),i*120))},
+  kiss:()=>{beep(784,.4,'sine',.08);setTimeout(()=>beep(988,.5,'sine',.07),200);setTimeout(()=>beep(1175,.6,'sine',.06),450);setTimeout(()=>beep(1568,.8,'sine',.05),750)},
+  romance:()=>{[523,659,784,880,988].forEach((f,i)=>setTimeout(()=>beep(f,.3,'sine',.06),i*200))},
+  alert:()=>{beep(440,.1,'sawtooth',.06,220);setTimeout(()=>beep(330,.15,'sawtooth',.05,165),120)}
 };
-// ===================== MUSIC ENGINE (ROMANTIC) =====================
-let reverbNode=null,masterGain=null,dryGain=null,musicLoop=null;
-const N={A2:110,B2:123.47,C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.26,F5:698.46,G5:783.99,A5:880,C6:1046.5};
+
+// ===================== MUSIC ENGINE =====================
+let revNode=null,mGain=null,dGain=null,mLoop=null;
+const N={A2:110,B2:123.47,C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.26,F5:698.46,G5:783.99,A5:880};
 function initAudio(){
-  if(reverbNode)return;
-  masterGain=actx.createGain(); masterGain.gain.value=0.2; masterGain.connect(actx.destination);
-  dryGain=actx.createGain(); dryGain.gain.value=0.6; dryGain.connect(masterGain);
+  if(revNode)return;
+  mGain=actx.createGain();mGain.gain.value=0.2;mGain.connect(actx.destination);
+  dGain=actx.createGain();dGain.gain.value=0.6;dGain.connect(mGain);
   const conv=actx.createConvolver();
-  const sr=actx.sampleRate; const len=Math.floor(sr*2.8);
-  const buf=actx.createBuffer(2,len,sr);
+  const sr=actx.sampleRate,len=Math.floor(sr*2.8),buf=actx.createBuffer(2,len,sr);
   for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.7);}
   conv.buffer=buf;
-  const wetGain=actx.createGain(); wetGain.gain.value=0.45;
-  conv.connect(wetGain); wetGain.connect(masterGain); reverbNode=conv;
+  const wg=actx.createGain();wg.gain.value=0.45;conv.connect(wg);wg.connect(mGain);revNode=conv;
 }
-function pNote(freq,startTime,dur,vol=0.07,type='sine'){
+function pNote(freq,st,dur,vol=0.07,type='sine'){
   initAudio();
   const o=actx.createOscillator(),g=actx.createGain();
-  o.type=type; o.frequency.value=freq;
-  const atk=Math.min(0.09,dur*0.12); const rel=Math.min(0.45,dur*0.38);
-  g.gain.setValueAtTime(0.0001,startTime);
-  g.gain.linearRampToValueAtTime(vol,startTime+atk);
-  g.gain.setValueAtTime(vol*0.72,startTime+dur-rel);
-  g.gain.exponentialRampToValueAtTime(0.0001,startTime+dur+0.05);
-  o.connect(g); g.connect(reverbNode); g.connect(dryGain);
-  o.start(startTime); o.stop(startTime+dur+0.2);
+  o.type=type;o.frequency.value=freq;
+  const atk=Math.min(0.09,dur*.12),rel=Math.min(0.45,dur*.38);
+  g.gain.setValueAtTime(0.0001,st);g.gain.linearRampToValueAtTime(vol,st+atk);
+  g.gain.setValueAtTime(vol*.72,st+dur-rel);g.gain.exponentialRampToValueAtTime(0.0001,st+dur+.05);
+  o.connect(g);g.connect(revNode);g.connect(dGain);o.start(st);o.stop(st+dur+.2);
 }
-function stopMusic(){if(musicLoop){clearTimeout(musicLoop);musicLoop=null;}}
+function stopMusic(){if(mLoop){clearTimeout(mLoop);mLoop=null;}}
 function startMusic(ch){
-  initAudio(); stopMusic();
-  if(masterGain) masterGain.gain.setValueAtTime(0.2,actx.currentTime);
-  setTimeout(()=>{if(ch===1)playParkTheme();else if(ch===2)playFestivalTheme();else playRomanceTheme();},800);
+  initAudio();stopMusic();
+  setTimeout(()=>{if(ch===1)ch1Theme();else if(ch===2)ch2Theme();else if(ch===3)ch3Theme();else ch4Theme();},700);
 }
-// CHAPTER 1: Park theme — C major, bright, hopeful (110 BPM)
-function playParkTheme(){
+// Ch1: Park — C major bright (110 BPM)
+function ch1Theme(){
   const s=60/110,n=actx.currentTime;
-  const mel=[[N.E5,0,1],[N.D5,1,.5],[N.C5,1.5,.5],[N.D5,2,1],[N.E5,3,1],[N.E5,4,1.5],[N.D5,5.5,.5],[N.E5,6,1],[N.G5,7,1],[N.A5,8,2],[N.G5,10,1],[N.E5,11,1],[N.D5,12,1],[N.C5,13,.5],[N.D5,13.5,.5],[N.E5,14,1],[N.C5,15,1],[N.G4,16,1],[N.A4,17,.5],[N.B4,17.5,.5],[N.C5,18,1.5],[N.E5,19.5,.5],[N.D5,20,1],[N.C5,21,3]];
-  const bas=[[N.C3,0,2],[N.G3,2,2],[N.A3,4,2],[N.E3,6,2],[N.F3,8,2],[N.C3,10,2],[N.G3,12,2],[N.C3,14,2],[N.C3,16,2],[N.F3,18,2],[N.G3,20,2],[N.C3,22,2]];
-  const pad=[[N.C4,0,4,.028],[N.E4,0,4,.022],[N.G4,0,4,.02],[N.F4,4,4,.025],[N.A4,4,4,.02],[N.C5,4,4,.018],[N.C4,8,4,.025],[N.E4,8,4,.02],[N.G4,8,4,.018],[N.G3,12,4,.022],[N.B4,12,4,.018],[N.D5,16,4,.022],[N.F4,16,4,.02],[N.A4,20,4,.02],[N.G4,20,4,.018]];
-  mel.forEach(([f,b,d,v=.062])=>pNote(f,n+b*s,d*s,v));
-  bas.forEach(([f,b,d,v=.042])=>pNote(f,n+b*s,d*s,v,'triangle'));
-  pad.forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
-  musicLoop=setTimeout(playParkTheme,(24*s-0.1)*1000);
+  [[N.E5,0,1],[N.D5,1,.5],[N.C5,1.5,.5],[N.D5,2,1],[N.E5,3,1],[N.E5,4,1.5],[N.D5,5.5,.5],[N.E5,6,1],[N.G5,7,1],[N.A5,8,2],[N.G5,10,1],[N.E5,11,1],[N.D5,12,1],[N.C5,13,.5],[N.D5,13.5,.5],[N.E5,14,1],[N.C5,15,1],[N.G4,16,1],[N.A4,17,.5],[N.B4,17.5,.5],[N.C5,18,1.5],[N.E5,20,1],[N.D5,21,1],[N.C5,22,3]].forEach(([f,b,d,v=.062])=>pNote(f,n+b*s,d*s,v));
+  [[N.C3,0,2],[N.G3,2,2],[N.A3,4,2],[N.E3,6,2],[N.F3,8,2],[N.C3,10,2],[N.G3,12,2],[N.C3,14,2],[N.C3,16,2],[N.F3,18,2],[N.G3,20,2],[N.C3,22,2]].forEach(([f,b,d,v=.042])=>pNote(f,n+b*s,d*s,v,'triangle'));
+  [[N.C4,0,4,.028],[N.E4,0,4,.022],[N.G4,0,4,.02],[N.F4,4,4,.025],[N.A4,4,4,.02],[N.C4,8,4,.025],[N.E4,8,4,.02],[N.G3,12,4,.022],[N.D5,16,4,.022],[N.F4,16,4,.02]].forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
+  mLoop=setTimeout(ch1Theme,(25*s-.1)*1000);
 }
-// CHAPTER 2: Festival theme — F major, warm, lively (118 BPM)
-function playFestivalTheme(){
+// Ch2: Festival — F major warm (118 BPM)
+function ch2Theme(){
   const s=60/118,n=actx.currentTime;
-  const mel=[[N.F5,0,.5],[N.G5,.5,.5],[N.A5,1,1],[N.G5,2,.5],[N.F5,2.5,.5],[N.G5,3,1],[N.A5,4,1.5],[N.G5,5.5,.5],[N.F5,6,1],[N.C5,7,1],[N.D5,8,2],[N.F5,10,.5],[N.G5,10.5,.5],[N.A5,11,.5],[N.G5,11.5,.5],[N.F5,12,1],[N.E5,13,.5],[N.F5,13.5,.5],[N.G5,14,2],[N.C5,16,1],[N.D5,17,1],[N.F5,18,2],[N.C5,20,2]];
-  const bas=[[N.F3,0,2],[N.C3,2,2],[N.F3,4,2],[N.C3,6,2],[N.B2,8,2],[N.C3,10,2],[N.F3,12,2],[N.C3,14,2],[N.F3,16,2],[N.G3,18,2],[N.C3,20,2]];
-  const pad=[[N.F4,0,4,.026],[N.A4,0,4,.02],[N.C5,0,4,.018],[N.C4,4,4,.024],[N.E4,4,4,.018],[N.G4,4,4,.016],[N.B3,8,4,.022],[N.D4,8,4,.018],[N.C4,12,4,.022],[N.G4,12,4,.018],[N.F4,16,2,.022],[N.G4,18,2,.02]];
-  mel.forEach(([f,b,d,v=.06])=>pNote(f,n+b*s,d*s,v));
-  bas.forEach(([f,b,d,v=.04])=>pNote(f,n+b*s,d*s,v,'triangle'));
-  pad.forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
-  musicLoop=setTimeout(playFestivalTheme,(22*s-0.1)*1000);
+  [[N.F5,0,.5],[N.G5,.5,.5],[N.A5,1,1],[N.G5,2,.5],[N.F5,2.5,.5],[N.G5,3,1],[N.A5,4,1.5],[N.G5,5.5,.5],[N.F5,6,1],[N.C5,7,1],[N.D5,8,2],[N.F5,10,.5],[N.G5,10.5,.5],[N.A5,11,.5],[N.G5,11.5,.5],[N.F5,12,1],[N.G5,14,2],[N.C5,16,1],[N.D5,17,1],[N.F5,18,2],[N.C5,20,2]].forEach(([f,b,d,v=.06])=>pNote(f,n+b*s,d*s,v));
+  [[N.F3,0,2],[N.C3,2,2],[N.F3,4,2],[N.C3,6,2],[N.B2,8,2],[N.C3,10,2],[N.F3,12,2],[N.C3,14,2],[N.F3,16,2],[N.G3,18,2],[N.C3,20,2]].forEach(([f,b,d,v=.04])=>pNote(f,n+b*s,d*s,v,'triangle'));
+  [[N.F4,0,4,.026],[N.A4,0,4,.02],[N.C5,0,4,.018],[N.C4,4,4,.024],[N.B3,8,4,.022],[N.C4,12,4,.022],[N.F4,16,2,.022],[N.G4,18,2,.02]].forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
+  mLoop=setTimeout(ch2Theme,(22*s-.1)*1000);
 }
-// CHAPTER 3: Romance theme — Am, slow, deeply emotional (68 BPM)
-function playRomanceTheme(){
+// Ch3: Romance — Am slow (68 BPM)
+function ch3Theme(){
   const s=60/68,n=actx.currentTime;
-  const mel=[[N.A4,0,1.5],[N.G4,1.5,.5],[N.E4,2,1],[N.G4,3,1],[N.A4,4,2],[N.G4,6,1],[N.E4,7,1],[N.D4,8,1.5],[N.E4,9.5,.5],[N.G4,10,1],[N.A4,11,1],[N.E4,12,3],[N.D4,15,1],[N.C4,16,1.5],[N.D4,17.5,.5],[N.E4,18,1],[N.G4,19,1],[N.A4,20,2],[N.G4,22,1.5],[N.E4,23.5,.5],[N.D4,24,2],[N.E4,26,1],[N.A3,27,1],[N.A3,28,4]];
-  const bas=[[N.A2,0,4],[N.E3,4,4],[N.D3,8,4],[N.A2,12,4],[N.C3,16,4],[N.G2,20,4],[N.D3,24,4],[N.A2,28,4]];
-  const pad=[[N.A3,0,4,.024],[N.E4,0,4,.018],[N.E3,4,4,.022],[N.B3,4,4,.016],[N.D3,8,4,.022],[N.A3,8,4,.018],[N.A2,12,4,.022],[N.E3,12,4,.016],[N.C3,16,4,.022],[N.G3,16,4,.016],[N.G2,20,4,.022],[N.D3,20,4,.016],[N.D3,24,4,.022],[N.A3,24,4,.018],[N.A2,28,4,.024],[N.E3,28,4,.018]];
-  mel.forEach(([f,b,d,v=.068])=>pNote(f,n+b*s,d*s,v));
-  bas.forEach(([f,b,d,v=.048])=>pNote(f,n+b*s,d*s,v,'triangle'));
-  pad.forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
-  musicLoop=setTimeout(playRomanceTheme,(32*s-0.1)*1000);
+  [[N.A4,0,1.5],[N.G4,1.5,.5],[N.E4,2,1],[N.G4,3,1],[N.A4,4,2],[N.G4,6,1],[N.E4,7,1],[N.D4,8,1.5],[N.E4,9.5,.5],[N.G4,10,1],[N.A4,11,1],[N.E4,12,3],[N.D4,15,1],[N.C4,16,1.5],[N.D4,17.5,.5],[N.E4,18,1],[N.G4,19,1],[N.A4,20,2],[N.G4,22,1.5],[N.E4,23.5,.5],[N.D4,24,2],[N.E4,26,1],[N.A3,27,1],[N.A3,28,4]].forEach(([f,b,d,v=.068])=>pNote(f,n+b*s,d*s,v));
+  [[N.A2,0,4],[N.E3,4,4],[N.D3,8,4],[N.A2,12,4],[N.C3,16,4],[N.G2,20,4],[N.D3,24,4],[N.A2,28,4]].forEach(([f,b,d,v=.048])=>pNote(f,n+b*s,d*s,v,'triangle'));
+  [[N.A3,0,4,.024],[N.E4,0,4,.018],[N.E3,4,4,.022],[N.D3,8,4,.022],[N.A3,8,4,.018],[N.C3,16,4,.022],[N.G3,16,4,.016],[N.A2,28,4,.024],[N.E3,28,4,.018]].forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
+  mLoop=setTimeout(ch3Theme,(32*s-.1)*1000);
 }
-// KISS THEME — very slow, soaring, A minor (55 BPM)
-function playKissTheme(){
+// Ch4: Battle/Tense — Dm dramatic (125 BPM)
+function ch4Theme(){
+  const s=60/125,n=actx.currentTime;
+  [[N.D4,0,.5],[N.E4,.5,.5],[N.F4,1,1],[N.E4,2,.5],[N.D4,2.5,.5],[N.C4,3,1],[N.D4,4,.5],[N.A3,.5,.5],[N.D4,5,1.5],[N.F4,6.5,.5],[N.G4,7,.5],[N.A4,7.5,.5],[N.G4,8,1],[N.F4,9,1],[N.E4,10,1],[N.D4,11,1],[N.A4,12,.5],[N.G4,12.5,.5],[N.F4,13,1],[N.E4,14,1],[N.D4,15,2]].forEach(([f,b,d,v=.07])=>pNote(f,n+b*s,d*s,v));
+  [[N.D3,0,2],[N.A2,2,2],[N.F3,4,2],[N.C3,6,2],[N.D3,8,2],[N.A2,10,2],[N.G2,12,2],[N.D3,14,2]].forEach(([f,b,d,v=.055])=>pNote(f,n+b*s,d*s,v,'triangle'));
+  [[N.D3,0,4,.025],[N.F3,0,4,.02],[N.A3,4,4,.022],[N.C4,8,4,.022],[N.F3,8,4,.018],[N.D3,12,4,.025]].forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v,'sawtooth'));
+  mLoop=setTimeout(ch4Theme,(17*s-.1)*1000);
+}
+// Kiss theme — Am soaring (55 BPM)
+function kissTheme(){
   initAudio();
   const s=60/55,n=actx.currentTime;
-  const mel=[[N.E5,0,2],[N.D5,2,1.5],[N.C5,3.5,.5],[N.D5,4,2],[N.E5,6,1],[N.A5,7,3],[N.G5,10,2],[N.E5,12,1.5],[N.D5,13.5,2.5],[N.C5,16,5]];
-  const bas=[[N.A2,0,4],[N.E3,4,4],[N.D3,8,4],[N.C3,12,4],[N.A2,16,4]];
-  const pad=[[N.A3,0,4,.028],[N.C4,0,4,.022],[N.E4,0,4,.018],[N.E3,4,4,.025],[N.G3,4,4,.02],[N.B3,4,4,.016],[N.D3,8,4,.025],[N.F3,8,4,.02],[N.A3,8,4,.016],[N.C3,12,8,.025],[N.E3,12,8,.02],[N.G3,12,8,.016]];
-  mel.forEach(([f,b,d,v=.075])=>pNote(f,n+b*s,d*s,v));
-  bas.forEach(([f,b,d,v=.05])=>pNote(f,n+b*s,d*s,v,'triangle'));
-  pad.forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
+  [[N.E5,0,2],[N.D5,2,1.5],[N.C5,3.5,.5],[N.D5,4,2],[N.E5,6,1],[N.A5,7,3],[N.G5,10,2],[N.E5,12,1.5],[N.D5,13.5,2.5],[N.C5,16,5]].forEach(([f,b,d,v=.075])=>pNote(f,n+b*s,d*s,v));
+  [[N.A2,0,4],[N.E3,4,4],[N.D3,8,4],[N.C3,12,4],[N.A2,16,4]].forEach(([f,b,d,v=.05])=>pNote(f,n+b*s,d*s,v,'triangle'));
+  [[N.A3,0,4,.028],[N.C4,0,4,.022],[N.E4,0,4,.018],[N.E3,4,4,.025],[N.G3,4,4,.02],[N.D3,8,4,.025],[N.A3,8,4,.016],[N.C3,12,8,.025],[N.G3,12,8,.016]].forEach(([f,b,d,v])=>pNote(f,n+b*s,d*s,v));
 }
 
-// Heart particles
+// ===================== OVERLAYS =====================
 function spawnHearts(n=6){
   const stage=document.getElementById('stage');
   const emojis=['💕','💗','💖','💝','💞','🌸','✨','💫'];
@@ -711,21 +654,16 @@ function spawnHearts(n=6){
 function kissFlashFx(){const fl=document.getElementById('kissFlash');fl.classList.add('active');setTimeout(()=>fl.classList.remove('active'),800);}
 function showKissOverlay(){
   const ov=document.getElementById('kissOverlay');
-  // Stop chapter music and play the kiss theme
-  stopMusic();
-  setTimeout(()=>playKissTheme(),400);
-  // Spawn floating sakura petals over the cinematic scene
+  stopMusic();setTimeout(()=>kissTheme(),400);
   const petals=['🌸','🌸','💮','🌺','💕','💗','✨','🌸'];
   for(let i=0;i<22;i++){
     setTimeout(()=>{
-      const sp=document.createElement('div'); sp.className='kiss-sparkle';
-      const em=petals[Math.floor(Math.random()*petals.length)];
-      sp.textContent=em;
-      const x=5+Math.random()*90; const y=2+Math.random()*75;
-      const kx=(Math.random()-.5)*100; const ky=30+Math.random()*140;
+      const sp=document.createElement('div');sp.className='kiss-sparkle';
+      sp.textContent=petals[Math.floor(Math.random()*petals.length)];
+      const x=5+Math.random()*90,y=2+Math.random()*75;
+      const kx=(Math.random()-.5)*100,ky=30+Math.random()*140;
       sp.style.cssText=`left:${x}%;top:${y}%;--ks:${12+Math.random()*12}px;--kd:${2+Math.random()*2.5}s;--kx:${kx}px;--ky:${ky}px;--kx2:${kx*1.2}px;--ky2:${ky*1.3}px;animation-delay:${Math.random()*1.5}s;`;
-      ov.appendChild(sp);
-      setTimeout(()=>sp.remove(),5000);
+      ov.appendChild(sp);setTimeout(()=>sp.remove(),5000);
     },i*90);
   }
   setTimeout(()=>ov.classList.add('show'),80);
@@ -733,46 +671,48 @@ function showKissOverlay(){
 function hideKissOverlay(){
   const ov=document.getElementById('kissOverlay');
   ov.classList.remove('show');
+  // resume chapter music after overlay closes
+  setTimeout(()=>startMusic(chapters[chapterIdx].num),600);
 }
 function bringClose(){document.getElementById('sannu').classList.add('close');document.getElementById('mossu').classList.add('close');}
 function addRomanceGlow(){document.getElementById('sannu').classList.add('romance-glow');document.getElementById('mossu').classList.add('romance-glow');}
 
-// ===================== ALL CHAPTERS DATA =====================
+// ===================== CHAPTERS DATA =====================
 const chapters=[
   {
-    num:1, tag:'CH. 1 — THE PROMISE PARK', narr:'#a5d6a7',
+    num:1,tag:'CH. 1 — THE PROMISE PARK',narr:'#a5d6a7',
     story:[
-      {speaker:'narration',text:"Sunlight spills through the ancient oak trees of Promise Park. Cherry blossoms drift lazily on the warm breeze — and on a quiet wooden bench, two strangers are about to change each other's lives forever."},
-      {speaker:'narration',text:"A small girl with glasses too big for her face stares intently at a butterfly that has landed on her knee. She barely breathes, afraid to startle it.",show:'sannu'},
+      {speaker:'narration',text:"Sunlight spills through the ancient oak trees of Promise Park. Cherry blossoms drift lazily on the warm breeze — and on a quiet bench, two strangers are about to change each other's lives forever."},
+      {speaker:'narration',text:"A girl with glasses too big for her face stares intently at a butterfly that has landed on her knee. She barely breathes, afraid to startle it.",show:'sannu'},
       {speaker:'sannu',text:"...It's not flying away. Maybe it likes me."},
-      {speaker:'narration',text:"A few steps away, a boy with a worn silver bracelet on his left wrist watches with quiet curiosity. He tilts his head, noticing something she hasn't.",show:'mossu'},
+      {speaker:'narration',text:"A boy with a worn silver bracelet watches with quiet curiosity.",show:'mossu'},
       {speaker:'mossu',text:"Hey... is that butterfly hurt? Its wing looks a little bent."},
       {speaker:'sannu',text:"I— I don't know. I was just looking at it."},
       {speaker:'mossu',text:"Can I see? My grandpa taught me how to fix small wings. Sort of."},
-      {speaker:'narration',text:"Sannu hesitates. This stranger seems kind — but she's always been more comfortable with books than with people.",choices:[
-        {text:'✦  Let him help with the butterfly',rel:+10,next:1},
-        {text:'✧  Pull back — "I\'d rather do it myself."',rel:-5,next:0}
+      {speaker:'narration',text:"Sannu hesitates. This stranger seems kind — but she's always been more comfortable with books than people.",choices:[
+        {text:'✦  Let him help the butterfly',rel:+10,next:1},
+        {text:'✧  "I\'d rather do it myself."',rel:-5,next:0}
       ]},
       {speaker:'sannu',text:"I'd rather do it myself, thank you.",branch:0},
-      {speaker:'mossu',text:"Oh— okay. Sorry. I just thought... never mind.",branch:0},
-      {speaker:'narration',text:"He looks down, a little hurt, and quietly sits back on his end of the bench. The butterfly flutters off on its own a moment later.",branch:0},
+      {speaker:'mossu',text:"Oh— okay. Sorry.",branch:0},
+      {speaker:'narration',text:"He sits back quietly. The butterfly flutters off on its own.",branch:0},
       {speaker:'sannu',text:"...Wait. Thank you for asking, at least.",branch:0},
-      {speaker:'mossu',text:"No problem. I'm Mossu, by the way.",branch:0},
+      {speaker:'mossu',text:"No problem. I'm Mossu.",branch:0},
       {speaker:'sannu',text:"Sannu.",branch:0},
       {speaker:'sannu',text:"...Okay. Just be careful.",branch:1},
-      {speaker:'narration',text:"Mossu gently cups his hands around the butterfly. With surprising gentleness, he carefully straightens its delicate wing.",branch:1},
+      {speaker:'narration',text:"Mossu gently cups his hands. With surprising tenderness, he straightens the butterfly's delicate wing.",branch:1},
       {speaker:'mossu',text:"There. Good as new, little guy.",branch:1},
-      {speaker:'narration',text:"The butterfly flutters into the air, circles them once, and disappears into the sunlit trees. Sannu watches with wide eyes.",branch:1},
+      {speaker:'narration',text:"The butterfly circles them once, then disappears into the sunlit trees. Sannu watches with wide eyes.",branch:1},
       {speaker:'sannu',text:"That was... amazing. How did you do that?",branch:1},
       {speaker:'mossu',text:"Practice, I guess! I'm Mossu.",branch:1},
       {speaker:'sannu',text:"I'm Sannu. Nice to meet you, Mossu.",branch:1,sfx:'bond'},
-      {speaker:'narration',text:"For a while, neither says much. But something invisible has shifted — a small thread now connects two strangers on a sunlit bench."},
-      {speaker:'mossu',text:"So... do you come here a lot? To this park?",choices:[
+      {speaker:'narration',text:"For a while, neither says much. Something invisible has shifted — a small thread now connects two strangers on a sunlit bench."},
+      {speaker:'mossu',text:"So... do you come here a lot?",choices:[
         {text:'✦  "Every day after lessons. It\'s quiet here."',rel:+5,next:2},
-        {text:'✧  "First time, actually. I got a little lost."',rel:+5,next:2}
+        {text:'✧  "First time. I got a little lost."',rel:+5,next:2}
       ]},
       {speaker:'sannu',text:"Maybe... maybe we could sit here again sometime? If you wanted to.",branch:2},
-      {speaker:'mossu',text:"Yeah. I'd really like that. Same bench, same time tomorrow?",branch:2},
+      {speaker:'mossu',text:"Yeah. Same bench, same time tomorrow?",branch:2},
       {speaker:'sannu',text:"...Promise?",branch:2},
       {speaker:'mossu',text:"Promise.",branch:2,sfx:'bond'},
       {speaker:'narration',text:"Neither of them knows it yet — but this small promise, made on an ordinary golden afternoon, will echo across the rest of their lives."},
@@ -780,28 +720,28 @@ const chapters=[
     ]
   },
   {
-    num:2, tag:'CH. 2 — GROWING BONDS', narr:'#ffd97a',
+    num:2,tag:'CH. 2 — GROWING BONDS',narr:'#ffd97a',
     story:[
-      {speaker:'narration',text:"A few weeks have passed since Promise Park. Word has spread of the upcoming Festival of Lanterns, and Sannu and Mossu agreed to meet at the town square to help set up."},
-      {speaker:'narration',text:"The square buzzes with preparation — strings of lanterns wait to be lit, stalls are being decorated, and a warm golden glow is beginning to fill the cobblestone streets.",show:'mossu'},
-      {speaker:'mossu',text:"Sannu! Over here — they need help lighting the lanterns before the sun sets completely."},
-      {speaker:'narration',text:"Sannu jogs over, adjusting her glasses, a small notebook tucked under her arm.",show:'sannu'},
-      {speaker:'sannu',text:"I brought a diagram. If we light them in the right order, the whole string glows evenly instead of in clumps."},
+      {speaker:'narration',text:"A few weeks since Promise Park. The Festival of Lanterns approaches, and Sannu and Mossu agreed to meet at the town square to help set up."},
+      {speaker:'narration',text:"The square buzzes with preparation — strings of lanterns wait to be lit, stalls are being decorated.",show:'mossu'},
+      {speaker:'mossu',text:"Sannu! Over here — they need help lighting the lanterns before sunset."},
+      {speaker:'narration',text:"Sannu jogs over, adjusting her glasses, a notebook tucked under her arm.",show:'sannu'},
+      {speaker:'sannu',text:"I brought a diagram. Light them in the right order and the whole string glows evenly."},
       {speaker:'mossu',text:"...Of course you made a diagram. Okay, Professor — lead the way!"},
-      {speaker:'narration',text:"Sannu pulls out a small circuit device with color-coded switches. A lantern puzzle appears.",minigame:true},
-      {speaker:'narration',text:"The lanterns flicker to life one by one, casting a warm golden glow across the square. A few townsfolk nearby clap softly.",branch:'mg'},
-      {speaker:'mossu',text:"Whoa... it actually worked. You're kind of amazing, you know that?",branch:'mg'},
-      {speaker:'sannu',text:"I— it's just basic circuitry. Nothing special.",branch:'mg',sfx:'bond'},
-      {speaker:'mossu',text:"Don't do that. Don't shrink what you just did. It was special.",branch:'mg'},
+      {speaker:'narration',text:"Sannu pulls out a small device with colour-coded switches...",minigame:true},
+      {speaker:'narration',text:"The lanterns flicker to life one by one. A few townsfolk nearby clap softly.",branch:'mg'},
+      {speaker:'mossu',text:"Whoa... it actually worked. You're kind of amazing.",branch:'mg'},
+      {speaker:'sannu',text:"It's just basic circuitry. Nothing special.",branch:'mg',sfx:'bond'},
+      {speaker:'mossu',text:"Don't shrink what you just did. It was special.",branch:'mg'},
       {speaker:'narration',text:"Sannu looks away, cheeks warm under the lantern light.",choices:[
         {text:'✦  "...Thank you, Mossu." (smile softly)',rel:+10,next:'a'},
-        {text:'✧  "Stop teasing me!" (playful deflect)',rel:+5,next:'b'}
+        {text:'✧  "Stop teasing me!" (playful)',rel:+5,next:'b'}
       ]},
       {speaker:'sannu',text:"...Thank you, Mossu.",branch:'a'},
       {speaker:'mossu',text:"See? Was that so hard?",branch:'a',sfx:'bond'},
-      {speaker:'sannu',text:"Stop teasing me! ...But thanks. I guess.",branch:'b'},
+      {speaker:'sannu',text:"Stop teasing me! ...But thanks.",branch:'b'},
       {speaker:'mossu',text:"Ha! There she is.",branch:'b'},
-      {speaker:'narration',text:"As the last lantern flickers on, the square fills with warm light. Somewhere nearby, a street musician begins to play."},
+      {speaker:'narration',text:"As the last lantern flickers on, the square fills with warm light. A street musician begins to play."},
       {speaker:'mossu',text:"Hey, Sannu... when we're older — do you think we'll still be doing stuff like this together?"},
       {speaker:'sannu',text:"I'd like that. Whatever happens... I want you in my future, Mossu.",choices:[
         {text:'✦  Reach out and hold his hand',rel:+15,next:'hand'},
@@ -812,27 +752,25 @@ const chapters=[
       {speaker:'sannu',text:"Y-your hand is warm.",branch:'hand'},
       {speaker:'mossu',text:"Then keep holding it.",branch:'hand',sfx:'bond'},
       {speaker:'narration',text:"Sannu just smiles, and Mossu smiles back. Some promises don't need words.",branch:'smile'},
-      {speaker:'mossu',text:"You know... you smile like everything is going to be okay. I like that about you.",branch:'smile',sfx:'bond'},
-      {speaker:'narration',text:"Suddenly — BOOM. The sky erupts in colour. The town's fireworks display begins, painting the darkness in gold and crimson."},
+      {speaker:'mossu',text:"You smile like everything is going to be okay. I like that about you.",branch:'smile',sfx:'bond'},
+      {speaker:'narration',text:"Suddenly — BOOM. The town's fireworks display begins, painting the darkness in gold and crimson."},
       {speaker:'sannu',text:"Oh—! I forgot about the fireworks!"},
       {speaker:'mossu',text:"Don't look at the sky."},
       {speaker:'sannu',text:"...What? Why not?"},
       {speaker:'mossu',text:"Because you look better than the fireworks."},
-      {speaker:'narration',text:"Sannu goes completely red. She adjusts her glasses to hide her face. It doesn't work.",choices:[
+      {speaker:'narration',text:"Sannu goes completely red. She adjusts her glasses. It doesn't work.",choices:[
         {text:'♥  Turn toward him — let him see you blush',rel:+15,next:'blush'},
         {text:'♡  "S-stop saying things like that!"',rel:+8,next:'flustered'}
       ]},
       {speaker:'narration',text:"She turns slowly, cheeks glowing warmer than any lantern. Mossu's eyes are soft — he means it.",branch:'blush',sfx:'bond'},
       {speaker:'mossu',text:"There. Much better than fireworks.",branch:'blush'},
-      {speaker:'narration',text:"On impulse — Mossu leans over and presses a gentle kiss to her cheek. It lasts only a second.",branch:'blush'},
+      {speaker:'narration',text:"On impulse — Mossu leans over and presses a gentle kiss to her cheek.",branch:'blush'},
       {speaker:'sannu',text:"M... Mossu—!",branch:'blush'},
       {speaker:'mossu',text:"Sorry. I just... wanted to.",branch:'blush',sfx:'bond'},
       {speaker:'sannu',text:"Don't apologise.",branch:'blush'},
-      {speaker:'narration',text:"She doesn't pull away. She just watches the fireworks with a quiet smile — the kind that stays long after the night ends.",branch:'blush'},
-      {speaker:'sannu',text:"Stop it! You're embarrassing me in public!",branch:'flustered'},
-      {speaker:'mossu',text:"Ha — nobody's watching. They're all staring at the fireworks.",branch:'flustered'},
-      {speaker:'sannu',text:"...Fine. But you can't just say things like that without warning.",branch:'flustered'},
-      {speaker:'mossu',text:"Noted. Next time I'll give you a three-second warning.",branch:'flustered'},
+      {speaker:'narration',text:"She doesn't pull away. She just watches the fireworks with a quiet smile.",branch:'blush'},
+      {speaker:'sannu',text:"Stop it! You're embarrassing me!",branch:'flustered'},
+      {speaker:'mossu',text:"Ha — nobody's watching. They're all looking at the fireworks.",branch:'flustered'},
       {speaker:'mossu',text:"...There will be a next time.",branch:'flustered',sfx:'bond'},
       {speaker:'sannu',text:"...Maybe.",branch:'flustered'},
       {speaker:'narration',text:"The fireworks fade. The lanterns sway. Neither of them moves to go home. Not yet. Not while the night still feels like this."},
@@ -840,10 +778,10 @@ const chapters=[
     ]
   },
   {
-    num:3, tag:'CH. 3 — FESTIVAL OF DREAMS', narr:'#f48fb1',
+    num:3,tag:'CH. 3 — FESTIVAL OF DREAMS',narr:'#f48fb1',
     story:[
-      {speaker:'narration',text:"The Festival of Dreams — the grandest celebration in the entire region. Every year the city transforms: lanterns of a hundred colours, music drifting through every alley, and the sky painted with fireworks and stars."},
-      {speaker:'narration',text:"Sannu arrives first, notebook in hand as always. She stands at the entrance of the festival square, watching the lights with quiet wonder.",show:'sannu'},
+      {speaker:'narration',text:"The Festival of Dreams — the grandest celebration in the region. Lanterns of a hundred colours, music in every alley, the sky painted with fireworks and stars."},
+      {speaker:'narration',text:"Sannu arrives first, notebook in hand. She watches the lights with quiet wonder.",show:'sannu'},
       {speaker:'sannu',text:"Every year it's beautiful. Every year I forget how beautiful."},
       {speaker:'narration',text:"Then she hears footsteps. Familiar ones.",show:'mossu'},
       {speaker:'mossu',text:"Sorry I'm late. There was a — wait."},
@@ -852,20 +790,20 @@ const chapters=[
       {speaker:'sannu',text:"I... it's the same as always."},
       {speaker:'mossu',text:"No it's not. You look... really nice, Sannu."},
       {speaker:'narration',text:"Sannu turns away before he can see her face go red. But he already saw.",sfx:'bond'},
-      {speaker:'narration',text:"They walk through the festival together — past food stalls, performers breathing fire, and children releasing paper lanterns.",choices:[
+      {speaker:'narration',text:"They walk through the festival — past food stalls, fire breathers, children releasing paper lanterns.",choices:[
         {text:'✦  "Mossu, look — they\'re releasing lanterns!"',rel:+8,next:'A'},
         {text:'✧  Walk quietly beside him, shoulders touching',rel:+12,next:'A'}
       ]},
-      {speaker:'narration',text:"They find a quiet spot near the river's edge, away from the crowd, where lanterns float upward like a hundred small suns.",branch:'A'},
+      {speaker:'narration',text:"They find a quiet spot near the river's edge. Lanterns float upward like a hundred small suns.",branch:'A'},
       {speaker:'mossu',text:"Make a wish.",branch:'A'},
       {speaker:'sannu',text:"I don't know what to wish for.",branch:'A'},
       {speaker:'mossu',text:"Really? You who plans everything — nothing?",branch:'A'},
       {speaker:'sannu',text:"...I think I already have what I want to wish for. Right here.",branch:'A',sfx:'bond'},
-      {speaker:'narration',text:"Mossu doesn't say anything. He just looks at her. And the silence holds something neither of them has put into words yet.",branch:'A'},
+      {speaker:'narration',text:"Mossu just looks at her. The silence holds something neither has put into words yet.",branch:'A'},
       {speaker:'mossu',text:"Sannu."},
       {speaker:'sannu',text:"...Yes?"},
-      {speaker:'mossu',text:"Can I ask you something? And can you promise not to overthink it?"},
-      {speaker:'sannu',text:"That is literally impossible for me. But... yes. Ask."},
+      {speaker:'mossu',text:"Can I ask you something? Promise not to overthink it."},
+      {speaker:'sannu',text:"Literally impossible for me. But... yes."},
       {speaker:'mossu',text:"What are we?"},
       {speaker:'narration',text:"The question lands between them like a lantern reaching the sky. Simple. Burning. Impossible to ignore.",choices:[
         {text:'♥  "You\'re the most important person in my life."',rel:+20,next:'conf'},
@@ -879,43 +817,120 @@ const chapters=[
       {speaker:'sannu',text:"H-hey, I need those—",branch:'conf'},
       {speaker:'mossu',text:"I know. I just wanted to see your face clearly for a second.",branch:'conf'},
       {speaker:'narration',text:"He's closer than she realised. The lantern light catches in his eyes.",branch:'conf',sfx:'bond'},
-      {speaker:'narration',text:"He leans in. Slowly. And then — softly — his lips meet hers. A first kiss, warm and perfect, tasting of festival sweets and something unspoken finally spoken.",branch:'conf',onEnter:'kissScene'},
-      {speaker:'narration',text:"When they pull apart, Sannu's eyes are wide. Her face is every shade of red. Her glasses are still in his hand.",branch:'conf'},
+      {speaker:'narration',text:"He leans in. Slowly. And then — softly — his lips meet hers. A first kiss, warm and perfect.",branch:'conf',onEnter:'kissScene'},
+      {speaker:'narration',text:"When they pull apart, Sannu's eyes are wide. Her face is every shade of red.",branch:'conf'},
       {speaker:'mossu',text:"...So. I think that answers the question.",branch:'conf',sfx:'bond'},
       {speaker:'sannu',text:"Give me my glasses back.",branch:'conf'},
-      {speaker:'mossu',text:"There.",branch:'conf'},
-      {speaker:'sannu',text:"...Can we — um — can you do that again? Eventually. If you want.",branch:'conf',sfx:'bond'},
+      {speaker:'sannu',text:"...Can we — um — can you do that again? Eventually.",branch:'conf',sfx:'bond'},
       {speaker:'mossu',text:"Any time you want, Sannu.",branch:'conf'},
-      {speaker:'mossu',text:"I know what I want. I want to know what you want.",branch:'deflect'},
+      {speaker:'mossu',text:"I know what I want. I want to know what YOU want.",branch:'deflect'},
       {speaker:'sannu',text:"That's not a fair answer.",branch:'deflect'},
-      {speaker:'mossu',text:"No, but it's an honest one.",branch:'deflect'},
       {speaker:'narration',text:"Somewhere between this breath and the next, Sannu makes a decision.",branch:'deflect',onEnter:'bringClose'},
       {speaker:'sannu',text:"I want to keep being your friend. And more than that. I don't have the exact words yet.",branch:'deflect'},
       {speaker:'mossu',text:"That's enough. That's more than enough.",branch:'deflect',sfx:'bond'},
       {speaker:'narration',text:"He leans close. Slowly. Giving her time to say no. She doesn't.",branch:'deflect',onEnter:'kissScene'},
-      {speaker:'narration',text:"His lips brush her cheek — light as a petal, warm as the lantern light. It lasts only a second. But it changes everything.",branch:'deflect'},
-      {speaker:'sannu',text:"...That was my cheek.",branch:'deflect'},
-      {speaker:'mossu',text:"I know. Is that okay?",branch:'deflect'},
+      {speaker:'narration',text:"His lips brush her cheek — light as a petal. It lasts only a second. But it changes everything.",branch:'deflect'},
       {speaker:'sannu',text:"...Ask me again sometime. On my lips.",branch:'deflect',sfx:'bond'},
       {speaker:'mossu',text:"I'll hold you to that.",branch:'deflect'},
-      {speaker:'narration',text:"They stay at the river's edge long after the lanterns have faded. The music softens. The festival crowd thins."},
-      {speaker:'mossu',text:"I want to protect this. Whatever this is. Whatever we're becoming."},
+      {speaker:'narration',text:"They stay at the river's edge long after the lanterns fade. The festival crowd thins."},
+      {speaker:'mossu',text:"I want to protect this. Whatever we're becoming."},
       {speaker:'sannu',text:"So do I. ...But the world doesn't always let things stay beautiful."},
-      {speaker:'narration',text:"A strange wind passes through the square. For one cold, wrong moment — the festival lights flicker."},
+      {speaker:'narration',text:"A strange wind passes through the square. The festival lights flicker — one cold, wrong moment."},
       {speaker:'narration',text:"Far at the edge of the city, on the roof of the highest tower, a masked figure watches in silence."},
       {speaker:'narration',text:"\"So these are the ones the prophecy speaks of. Let them enjoy their little festival... while it lasts.\""},
       {speaker:'mossu',text:"Hey. You okay?"},
       {speaker:'sannu',text:"Yeah. Just... a strange feeling. Like something's watching."},
       {speaker:'mossu',text:"Nothing's getting near you. I promise."},
       {speaker:'sannu',text:"...I know you mean that. That's why I believe you."},
-      {speaker:'narration',text:"The last lantern rises into the sky — silently upward. They watch until it disappears into the stars."},
+      {speaker:'narration',text:"The last lantern rises silently into the sky. They watch until it disappears into the stars."},
       {speaker:'narration',text:"✦  — END OF CHAPTER 3 —  ✦\n\nThe story continues...",end:true}
+    ]
+  },
+  {
+    num:4,tag:'CH. 4 — THE NIGHT ATTACK',narr:'#ff8a65',
+    story:[
+      {speaker:'narration',text:"The night shatters.\n\nNot with a sound — but with the feeling that something wrong has just moved into the world. Three blocks from the festival, every streetlight dies at once."},
+      {speaker:'narration',text:"Then the sirens begin.",show:'sannu'},
+      {speaker:'sannu',text:"Mossu— those lights—",show:'mossu'},
+      {speaker:'mossu',text:"I see it. Don't move."},
+      {speaker:'narration',text:"A shockwave of dark energy ripples across the skyline. Buildings crack. Glass falls. The festival crowd breaks into screaming chaos.",sfx:'alert'},
+      {speaker:'sannu',text:"What IS that?!"},
+      {speaker:'narration',text:"From the smoke steps a soldier in black armour — then another. Then twelve more. The Shadow Syndicate has arrived."},
+      {speaker:'mossu',text:"Sannu. Listen. When I say run — you run. Don't look back."},
+      {speaker:'sannu',text:"I'm not leaving you!"},
+      {speaker:'mossu',text:"Sannu—"},
+      {speaker:'sannu',text:"I SAID I'M NOT LEAVING YOU."},
+      {speaker:'narration',text:"For a moment he looks completely stunned. Then something shifts in his eyes — something resolute.",sfx:'bond'},
+      {speaker:'mossu',text:"...Okay. Together, then."},
+      {speaker:'narration',text:"The lead soldier raises a hand. Black lightning crackles in the air.",choices:[
+        {text:'⚔️  "Mossu — can we fight them?"',rel:+10,next:'fight'},
+        {text:'🏃  "We need to run — NOW!"',rel:+8,next:'run'}
+      ]},
+      {speaker:'mossu',text:"...I don't know. But I've been waiting for this.",branch:'fight'},
+      {speaker:'narration',text:"Mossu grabs a fallen festival pole. Something about the way he stands — like he was built for this.",branch:'fight'},
+      {speaker:'sannu',text:"You've done this before. Haven't you.",branch:'fight'},
+      {speaker:'mossu',text:"My bracelet... it's not just jewellery, Sannu. It's a seal.",branch:'fight',sfx:'bond'},
+      {speaker:'mossu',text:"You're right. Grab my hand.",branch:'run'},
+      {speaker:'narration',text:"They run — through back alleys, across broken bridges, past people who have no idea what just changed forever.",branch:'run'},
+      {speaker:'narration',text:"They reach an abandoned clocktower at the edge of the old quarter — tall, silent, forgotten. Mossu pushes the door shut behind them."},
+      {speaker:'mossu',text:"You're shaking."},
+      {speaker:'sannu',text:"So are you. Your arm— Mossu, you're bleeding."},
+      {speaker:'mossu',text:"It's fine—"},
+      {speaker:'sannu',text:"SIT. DOWN."},
+      {speaker:'narration',text:"He sits. Sannu tears a strip from her sleeve and wraps his wound with steady hands. She's trembling — but her movements are precise.",sfx:'bond'},
+      {speaker:'mossu',text:"You didn't have to—"},
+      {speaker:'sannu',text:"I know. I wanted to. ...How bad does it hurt?"},
+      {speaker:'mossu',text:"Less now."},
+      {speaker:'sannu',text:"Tell me about the bracelet."},
+      {speaker:'mossu',text:"My grandfather gave it to me. He said... our family has guarded something for five hundred years. A power the Syndicate wants."},
+      {speaker:'sannu',text:"And you never told me?"},
+      {speaker:'mossu',text:"I didn't know how. I was afraid you'd leave."},
+      {speaker:'narration',text:"She looks at him for a long moment.",choices:[
+        {text:'♥  "I wouldn\'t have. Not ever."',rel:+20,next:'stay'},
+        {text:'♡  "You should have trusted me."',rel:+10,next:'trust'}
+      ]},
+      {speaker:'sannu',text:"I wouldn't have left, Mossu. I want to say that clearly.",branch:'stay'},
+      {speaker:'mossu',text:"...Sannu.",branch:'stay'},
+      {speaker:'sannu',text:"Whatever this is — the prophecy, the Syndicate — I'm not going anywhere.",branch:'stay',sfx:'bond'},
+      {speaker:'narration',text:"He reaches out and gently tucks a strand of hair behind her ear. They are very close in the dark.",branch:'stay',onEnter:'bringClose'},
+      {speaker:'mossu',text:"I don't deserve you.",branch:'stay'},
+      {speaker:'sannu',text:"You do. You just haven't figured it out yet.",branch:'stay',sfx:'bond'},
+      {speaker:'sannu',text:"I won't pretend that doesn't hurt. You should have trusted me.",branch:'trust'},
+      {speaker:'mossu',text:"I know. I'm sorry.",branch:'trust'},
+      {speaker:'sannu',text:"...But I understand being afraid of losing people. I understand that.",branch:'trust',sfx:'bond'},
+      {speaker:'mossu',text:"I won't hide things from you again. I promise.",branch:'trust'},
+      {speaker:'narration',text:"She takes his hand. In the dark clocktower, with the city still burning outside, something between them settles into something deeper.",branch:'trust',onEnter:'bringClose'},
+      {speaker:'narration',text:"Outside, the city falls quiet — the held-breath quiet after something terrible. Inside, they sit side by side, shoulders touching."},
+      {speaker:'sannu',text:"...What happens now?"},
+      {speaker:'mossu',text:"Now we figure out what the prophecy means. Together."},
+      {speaker:'sannu',text:"Together."},
+      {speaker:'narration',text:"The clocktower bell, broken for decades, makes a single soft sound. Like a sign.",sfx:'bond'},
+      {speaker:'mossu',text:"Hey, Sannu."},
+      {speaker:'sannu',text:"Hmm?"},
+      {speaker:'mossu',text:"I'm glad you didn't run.",choices:[
+        {text:'💕  "I love you, Mossu."',rel:+20,next:'love'},
+        {text:'💬  "...I\'m glad you finally told me the truth."',rel:+12,next:'truth'}
+      ]},
+      {speaker:'sannu',text:"...I love you. And I've been trying to tell you that for months.",branch:'love',sfx:'bond'},
+      {speaker:'mossu',text:"What were you waiting for?",branch:'love'},
+      {speaker:'sannu',text:"YOU! I was waiting for YOU!",branch:'love'},
+      {speaker:'narration',text:"He laughs — really laughs — for the first time all night. Sannu, despite everything, smiles back.",branch:'love',sfx:'bond'},
+      {speaker:'mossu',text:"I love you too. Obviously.",branch:'love'},
+      {speaker:'sannu',text:"Obviously? YOU had one job—",branch:'love'},
+      {speaker:'mossu',text:"I love you, Sansu. That's all I wanted to say.",branch:'truth',sfx:'bond'},
+      {speaker:'sannu',text:"...I know.",branch:'truth'},
+      {speaker:'mossu',text:"That's it? Just 'I know'?",branch:'truth'},
+      {speaker:'sannu',text:"I love you too. I just wanted to be dramatic about it.",branch:'truth',sfx:'bond'},
+      {speaker:'narration',text:"Somewhere across the city, Lord Veyron retreats to his tower. Tonight's attack failed.\n\nBut he smiles."},
+      {speaker:'narration',text:"They are stronger than he expected. Which means he'll need to be far more... creative."},
+      {speaker:'narration',text:"And in a broken clocktower, two people who found each other on an ordinary park bench sit in the dark together — not afraid.\n\nReady."},
+      {speaker:'narration',text:"✦  — END OF CHAPTER 4 —  ✦\n\n⚔️ The battle for destiny begins...",end:true}
     ]
   }
 ];
 
 // ===================== STATE =====================
-let chapterIdx=0, idx=0, relationship=30, currentBranch=null, started=false, chapterStarted=false;
+let chapterIdx=0,idx=0,relationship=30,currentBranch=null,started=false,chapterStarted=false;
 try{const s=localStorage.getItem('sm_bond');if(s!==null)relationship=parseInt(s,10);}catch(e){}
 
 const textbox=document.getElementById('textbox'),nametext=document.getElementById('nametext'),namebox=document.getElementById('namebox');
@@ -923,7 +938,7 @@ const dialogueInner=namebox.closest('.dialogue-inner'),choicesDiv=document.getEl
 const sannuEl=document.getElementById('sannu'),mossuEl=document.getElementById('mossu');
 const relfill=document.getElementById('relfill'),bondHearts=document.getElementById('bondHearts'),continueHint=document.getElementById('continueHint');
 const minigameDiv=document.getElementById('minigame'),lanternRow=document.getElementById('lanternRow'),mgScore=document.getElementById('mgScore');
-const chapterCard=document.getElementById('chapterCard'),ccChapter=document.getElementById('ccChapter'),ccHint=document.getElementById('ccHint');
+const chapterCard=document.getElementById('chapterCard'),ccChapter=document.getElementById('ccChapter');
 const chapterTagEl=document.getElementById('chapterTag');
 
 function getCh(){return chapters[chapterIdx];}
@@ -935,10 +950,8 @@ function updateRelBar(){
 }
 function showChar(who){
   const el=who==='sannu'?sannuEl:mossuEl;
-  el.classList.remove('hidden');
-  el.classList.add('bounce');
-  setTimeout(()=>el.classList.remove('bounce'),800);
-  sfx.whoosh();
+  el.classList.remove('hidden');el.classList.add('bounce');
+  setTimeout(()=>el.classList.remove('bounce'),800);sfx.whoosh();
 }
 function highlightSpeaker(speaker){
   [sannuEl,mossuEl].forEach(el=>el.classList.remove('dim','speak'));
@@ -954,29 +967,25 @@ function setNamebox(speaker){
 let typeTimer=null;
 function typeText(text){
   if(typeTimer)clearTimeout(typeTimer);
-  textbox.textContent='';
-  let i=0;
-  function next(){if(i<text.length){textbox.textContent+=text[i++];textbox.scrollTop=textbox.scrollHeight;typeTimer=setTimeout(next,20);}}
+  textbox.textContent='';let i=0;
+  function next(){if(i<text.length){textbox.textContent+=text[i++];textbox.scrollTop=textbox.scrollHeight;typeTimer=setTimeout(next,18);}}
   next();
 }
 function findNextIndex(from){
-  const story=getCh().story;
-  let i=from;
+  const story=getCh().story;let i=from;
   while(i<story.length){const n=story[i];if(n.branch===undefined||n.branch===currentBranch)return i;i++;}
   return i;
 }
 function handleOnEnter(key){
   if(key==='bringClose'){bringClose();addRomanceGlow();sfx.romance();}
-  if(key==='kissScene'){kissFlashFx();spawnHearts(10);sfx.kiss();setTimeout(()=>sfx.chapterJingle(),600);showKissOverlay();}
+  if(key==='kissScene'){kissFlashFx();spawnHearts(10);sfx.kiss();setTimeout(()=>showKissOverlay(),300);}
 }
 function startMinigame(){
-  minigameDiv.classList.remove('hidden');
-  continueHint.classList.add('hidden');
-  lanternRow.innerHTML='';
-  let lit=0;const total=6;
+  minigameDiv.classList.remove('hidden');continueHint.classList.add('hidden');
+  lanternRow.innerHTML='';let lit=0;const total=6;
   for(let i=0;i<total;i++){
     const b=document.createElement('div');b.className='lanternBtn';
-    b.innerHTML=`<div style="font-size:24px;text-align:center;padding-top:12px;">🏮</div>`;
+    b.innerHTML='<div style="font-size:24px;text-align:center;padding-top:12px">🏮</div>';
     b.onclick=()=>{
       if(b.classList.contains('lit'))return;
       b.classList.add('lit');sfx.lantern();lit++;
@@ -987,26 +996,22 @@ function startMinigame(){
   }
 }
 function renderNode(){
-  const story=getCh().story;
-  if(idx>=story.length)return;
+  const story=getCh().story;if(idx>=story.length)return;
   const node=story[idx];
   if(node.show)showChar(node.show);
   if(node.onEnter)handleOnEnter(node.onEnter);
-  highlightSpeaker(node.speaker);
-  setNamebox(node.speaker);
-  typeText(node.text);
+  highlightSpeaker(node.speaker);setNamebox(node.speaker);typeText(node.text);
   if(node.sfx==='bond'){setTimeout(()=>{sfx.bond();relationship+=5;updateRelBar();},200);}
+  if(node.sfx==='alert'){setTimeout(()=>sfx.alert(),100);}
   if(node.end){
     const isLast=chapterIdx>=chapters.length-1;
-    continueHint.textContent=isLast?'✦ To be continued... ✦':'✦ click to continue to next chapter ✦';
+    continueHint.textContent=isLast?'✦ To be continued... ✦':'▶ click to continue to next chapter';
     try{localStorage.setItem('sm_bond',String(relationship));}catch(e){}
     return;
   }
   if(node.minigame){continueHint.classList.add('hidden');setTimeout(startMinigame,600);return;}
   if(node.choices){
-    continueHint.classList.add('hidden');
-    choicesDiv.classList.remove('hidden');
-    choicesDiv.innerHTML='';
+    continueHint.classList.add('hidden');choicesDiv.classList.remove('hidden');choicesDiv.innerHTML='';
     const t=document.createElement('div');t.className='choices-title';t.textContent='— FOLLOW YOUR HEART —';choicesDiv.appendChild(t);
     node.choices.forEach(choice=>{
       const btn=document.createElement('button');btn.className='choiceBtn';btn.textContent=choice.text;
@@ -1016,8 +1021,8 @@ function renderNode(){
   } else {continueHint.classList.remove('hidden');}
 }
 
-// ===================== CHAPTER TRANSITION =====================
-const CHAPTER_NAMES=['CHAPTER I — THE PROMISE PARK','CHAPTER II — GROWING BONDS','CHAPTER III — FESTIVAL OF DREAMS'];
+// ===================== CHAPTER TRANSITIONS =====================
+const CHAPTER_NAMES=['CHAPTER I — THE PROMISE PARK','CHAPTER II — GROWING BONDS','CHAPTER III — FESTIVAL OF DREAMS','CHAPTER IV — THE NIGHT ATTACK'];
 function resetChars(){
   [sannuEl,mossuEl].forEach(el=>{
     el.classList.add('hidden');
@@ -1025,45 +1030,22 @@ function resetChars(){
   });
 }
 function loadChapter(ci){
-  chapterIdx=ci;
-  idx=0;
-  currentBranch=null;
-  chapterStarted=false;
+  chapterIdx=ci;idx=0;currentBranch=null;chapterStarted=false;
   const ch=getCh();
-
-  // Show chapter card
   ccChapter.textContent=CHAPTER_NAMES[ci];
   chapterTagEl.textContent=ch.tag;
-  addCardParticles();
-  chapterCard.classList.add('show');
-
-  // Build scene behind card
-  buildScene(ch.num);
-  resetChars();
-  startMusic(ch.num);
+  addCardParticles();chapterCard.classList.add('show');
+  buildScene(ch.num);resetChars();startMusic(ch.num);
 }
-
 function startCurrentChapter(){
-  chapterStarted=true;
-  chapterCard.classList.remove('show');
-  sfx.enter();
-  setTimeout(renderNode,400);
+  chapterStarted=true;chapterCard.classList.remove('show');
+  sfx.enter();setTimeout(renderNode,400);
 }
-
 function advance(){
-  if(!started){
-    started=true;
-    loadChapter(0);
-    return;
-  }
-  if(!chapterStarted){
-    startCurrentChapter();
-    return;
-  }
-  const story=getCh().story;
-  const node=story[idx];
+  if(!started){started=true;loadChapter(0);return;}
+  if(!chapterStarted){startCurrentChapter();return;}
+  const story=getCh().story;const node=story[idx];
   if(node.end){
-    // Go to next chapter
     if(chapterIdx<chapters.length-1){
       try{localStorage.setItem('sm_bond',String(relationship));}catch(e){}
       setTimeout(()=>loadChapter(chapterIdx+1),300);
@@ -1071,18 +1053,18 @@ function advance(){
     return;
   }
   if(node.choices||node.minigame)return;
-  sfx.click();
-  idx=findNextIndex(idx+1);
-  renderNode();
+  sfx.click();idx=findNextIndex(idx+1);renderNode();
 }
 
+// ===================== INPUT =====================
 document.getElementById('stage').addEventListener('click',function(e){
   if(e.target.classList.contains('choiceBtn'))return;
   if(e.target.classList.contains('lanternBtn')||e.target.closest('.lanternBtn'))return;
-  // If kiss overlay is showing, dismiss it first
+  // Dismiss kiss overlay first
   const ov=document.getElementById('kissOverlay');
   if(ov.classList.contains('show')){hideKissOverlay();return;}
-  const r=document.createElement('div');r.className='ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';
+  const r=document.createElement('div');r.className='ripple';
+  r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';
   document.getElementById('stage').appendChild(r);setTimeout(()=>r.remove(),600);
   advance();
 });
